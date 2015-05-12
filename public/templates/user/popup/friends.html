@@ -1,0 +1,79 @@
+<div class="wrapper" ng-controller="usersController">
+    <div class="close">
+        <i class="fa fa-close" ng-click="userCtrl.closeWindow()"></i>
+    </div>
+    <h2>Users list</h2>
+
+    <div class="content">
+        <div class="content-header">
+            <div class="pull-left">
+                <div class="counter">
+                    <select
+                        class="select-list btn btn-default"
+                        ng-model="userCtrl.user.pagination.count"
+                        ng-change="
+                                userCtrl.updateUserList(1)
+                        "
+                        >
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>
+                        records per page
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="content-body">
+            <table class="table table-bordered table-hover">
+                <colgroup>
+                    <col width="50">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col width="110">
+                    <col width="119">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in userCtrl.userList">
+                    <td ng-click="userCtrl.view(item.id)">{{item.id}}</td>
+                    <td>{{item.first_name}} {{item.last_name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-footer row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <showing-page
+                        page="userCtrl.user.pagination.page"
+                        items="userCtrl.user.pagination.items"
+                        count="userCtrl.user.pagination.count"
+                        >
+                </div>
+
+                <div class="pull-right" ng-if="userCtrl.showPagination()">
+                    <pagination
+                        boundary-links="true"
+                        items-per-page="userCtrl.user.pagination.count"
+                        total-items="userCtrl.user.pagination.items"
+                        ng-model="userCtrl.user.pagination.page"
+                        ng-change="userCtrl.updateUserList()"
+                        num-pages="userCtrl.user.pagination.maxPages"
+                        class="pagination-sm"
+                        max-size='10'
+                        rotate="false"
+                        ></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

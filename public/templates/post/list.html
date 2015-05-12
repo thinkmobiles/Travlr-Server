@@ -1,0 +1,97 @@
+<div class="wrapper">
+    <ng-include src="'templates/menu/submenu/content.html'"></ng-include>
+
+    <div class="content">
+        <div class="content-header">
+            <div class="pull-left">
+                <div class="counter">
+                    <select
+                        class="select-list btn btn-default"
+                        ng-model="postCtrl.post.pagination.count"
+                        ng-change="
+                                postCtrl.updatePostList(1)
+                        "
+                        >
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>
+                        records per page
+                    </span>
+                </div>
+            </div>
+            <div class="pull-right">
+                <div class="searchBlock">
+                    <span>Search</span>
+                    <input type="text" ng-model="postCtrl.searchTerm"
+                           ng-change="postCtrl.updatePostList()">
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <table class="table table-bordered table-hover">
+                <colgroup>
+                    <col width="50">
+                    <col width="120">
+                    <col width="150">
+                    <col width="110">
+                    <col width="119">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th ng-click="postCtrl.sortField('posts.id')"> ID
+                        <i ng-class="postCtrl.sortBy === 'posts.id' ? (postCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="postCtrl.sortField('first_name')"> Owner
+                        <i ng-class="postCtrl.sortBy === 'first_name' ? (postCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="postCtrl.sortField('description')"> Description
+                        <i ng-class="postCtrl.sortBy === 'description' ? (postCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in postCtrl.postList">
+                    <td ng-click="postCtrl.view(item.id)">{{item.id}}</td>
+                    <td>{{item.first_name}} {{item.last_name}}</td>
+                    <td>{{item.description}} </td>
+                    <td>
+                        <button ng-click="postCtrl.edit(item.id)" class="btn btn-sm btn-info">Edit</button>
+                        <button ng-click="postCtrl.delete(item.id)" class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-footer row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <showing-page
+                        page="postCtrl.post.pagination.page"
+                        items="postCtrl.post.pagination.items"
+                        count="postCtrl.post.pagination.count"
+                        >
+                </div>
+
+                <div class="pull-right" ng-if="postCtrl.showPagination()">
+                    <pagination
+                        boundary-links="true"
+                        items-per-page="postCtrl.post.pagination.count"
+                        total-items="postCtrl.post.pagination.items"
+                        ng-model="postCtrl.post.pagination.page"
+                        ng-change="postCtrl.updatePostList()"
+                        num-pages="postCtrl.post.pagination.maxPages"
+                        class="pagination-sm"
+                        max-size='10'
+                        rotate="false"
+                        ></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

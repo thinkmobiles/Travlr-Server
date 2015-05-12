@@ -1,0 +1,24 @@
+<div>
+    <ul class="dropdown-menu-list">
+        <li ng-repeat="message in menuCtrl.newMessages">
+            <table>
+                <tr>
+                    <td class="nickname">
+                        <span>{{message.user.first_name}} {{message.user.last_name}}</span>
+                    </td>
+                </tr>
+                <tr  ng-switch on="message.source_name">
+                    <td class="message" ng-switch-when="images">
+                        {{MESSAGE.IMAGE}}
+                    </td>
+                    <td class="message" ng-switch-when="comments">
+                        {{MESSAGE.COMMENT}}
+                    </td>
+                </tr>
+            </table>
+        </li>
+        <li ng-if="menuCtrl.newMsgCount == 0">
+            <span>You have not any new messages.</span>
+        </li>
+    </ul>
+</div>

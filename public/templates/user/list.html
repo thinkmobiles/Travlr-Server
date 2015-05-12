@@ -1,0 +1,108 @@
+<div class="wrapper" ng-controller="usersController">
+    <h2>Users list</h2>
+
+    <div class="content">
+        <div class="content-header">
+            <div class="pull-left">
+                <div class="counter">
+                    <select
+                        class="select-list btn btn-default"
+                        ng-model="userCtrl.user.pagination.count"
+                        ng-change="
+                                userCtrl.updateUserList(1)
+                        "
+                        >
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>
+                        records per page
+                    </span>
+                </div>
+            </div>
+            <div class="pull-right">
+                <div class="searchBlock">
+                    <span>Search</span>
+                    <input type="text" ng-model="userCtrl.searchTerm"
+                           ng-change="userCtrl.updateUserList(1)">
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <table class="table table-bordered table-hover">
+                <colgroup>
+                    <col width="50">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col width="50">
+                    <col width="110">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th ng-click="userCtrl.sortField('users.id')">ID
+                        <i ng-class="userCtrl.sortBy === 'users.id' ? (userCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="userCtrl.sortField('first_name')">Username
+                        <i ng-class="userCtrl.sortBy === 'first_name' ? (userCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="userCtrl.sortField('email')">Email
+                        <i ng-class="userCtrl.sortBy === 'email' ? (userCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="userCtrl.sortField('created_at')">User Since
+                        <i ng-class="userCtrl.sortBy === 'created_at' ? (userCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <td ng-click="userCtrl.sortField('banned')">Suspend
+                        <i ng-class="userCtrl.sortBy === 'banned' ? (userCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in userCtrl.userList">
+                    <td ng-click="userCtrl.view(item.id)">{{::item.id}}</td>
+                    <td>{{::item.first_name}} {{::item.last_name}}</td>
+                    <td>{{::item.email}}</td>
+                    <td>{{::item.created_at|date : "MM/dd/yyyy"}}</td>
+                    <td>
+                        <button ng-if="item.banned" ng-click="userCtrl.unbann(item.id)" class="btn btn-warning">true</button>
+                        <button ng-if="!item.banned" ng-click="userCtrl.bann(item.id)" class="btn btn-success">false</button>
+                    </td>
+                    <td>
+                        <button ng-click="userCtrl.edit(item.id)" class="btn btn-sm btn-info">Edit</button>
+                        <button ng-click="userCtrl.delete(item.id)" class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-footer row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <showing-page
+                        page="userCtrl.user.pagination.page"
+                        items="userCtrl.user.pagination.items"
+                        count="userCtrl.user.pagination.count"
+                        >
+                </div>
+
+                <div class="pull-right" ng-if="userCtrl.showPagination()">
+                    <pagination
+                        boundary-links="true"
+                        items-per-page="userCtrl.user.pagination.count"
+                        total-items="userCtrl.user.pagination.items"
+                        ng-model="userCtrl.user.pagination.page"
+                        ng-change="userCtrl.updateUserList()"
+                        num-pages="userCtrl.user.pagination.maxPages"
+                        class="pagination-sm"
+                        max-size='10'
+                        rotate="false"
+                        ></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

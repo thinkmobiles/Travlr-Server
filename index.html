@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <link rel="stylesheet" type="text/css" href="less/main_style.css"/>
+        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    </head>
+    <body  ng-class="{'load': isLoading}">
+        <errpopup msg="errMsg"></errpopup>
+        <header>
+            <a href="/#/">Logo</a>
+        </header>
+
+        <div class="page-content" ng-view></div>
+        <script type="text/javascript" src="dist/app.js"></script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+    </body>
+</html>

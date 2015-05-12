@@ -1,0 +1,108 @@
+<div class="wrapper">
+    <ng-include src="'templates/menu/submenu/violation.html'"></ng-include>
+
+    <div class="content">
+        <div class="content-header">
+            <div class="pull-left">
+                <div class="counter">
+                    <select
+                        class="select-list btn btn-default"
+                        ng-model="photoCtrl.violation.pagination.count"
+                        ng-change="
+                                photoCtrl.updateViolationList(1)
+                        "
+                        >
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <span>
+                        records per page
+                    </span>
+                </div>
+            </div>
+            <div class="pull-right">
+                <div class="searchBlock">
+                    <span>Search</span>
+                    <input type="text" ng-model="photoCtrl.searchTerm"
+                           ng-change="photoCtrl.updateViolationList()">
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <table class="table table-bordered table-hover">
+                <colgroup>
+                    <col width="50">
+                    <col width="120">
+                    <col width="150">
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col width="119">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th  ng-click="photoCtrl.sortField('id')"> ID
+                        <i ng-class="photoCtrl.sortBy === 'id' ? (photoCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="photoCtrl.sortField('users.first_name')"> Flag reporter
+                        <i ng-class="photoCtrl.sortBy === 'users.first_name' ? (photoCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="photoCtrl.sortField('owner_first_name')"> Photo owner
+                        <i ng-class="photoCtrl.sortBy === 'owner_first_name' ? (photoCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="photoCtrl.sortField('source_created_at')"> Date Posted
+                        <i ng-class="photoCtrl.sortBy === 'source_created_at' ? (photoCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th ng-click="photoCtrl.sortField('likes_count')"> No. Likes
+                        <i ng-class="photoCtrl.sortBy === 'likes_count' ? (photoCtrl.sortOrder == 'asc' ? 'fa fa-sort-down pull-right' : 'fa fa-sort-up pull-right' ) : 'fa fa-sort pull-right'"></i>
+                    </th>
+                    <th>Flag</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in photoCtrl.violationList">
+                    <td ng-click="photoCtrl.view(item.id)">{{item.id}}</td>
+                    <td>{{item.user.first_name}} {{item.user.last_name}}</td>
+                    <td>{{item.owner.first_name}} {{item.owner.last_name}}</td>
+                    <td>{{item.created_at|date:'MM/dd/yyyy'}}</td>
+                    <td>{{item.likes_count || 0}}</td>
+                    <td><button class="btn btn-warning" ng-click="photoCtrl.cancel(item.id)">Cancel</button></td>
+                    <td>
+                        <button ng-click="photoCtrl.edit(item.id)" class="btn btn-sm btn-info">Edit</button>
+                        <button ng-click="photoCtrl.delete(item.id)" class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-footer row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <showing-page
+                        page="photoCtrl.violation.pagination.page"
+                        items="photoCtrl.violation.pagination.items"
+                        count="photoCtrl.violation.pagination.count"
+                        >
+                </div>
+
+                <div class="pull-right" ng-if="photoCtrl.showPagination()">
+                    <pagination
+                        boundary-links="true"
+                        items-per-page="photoCtrl.violation.pagination.count"
+                        total-items="photoCtrl.violation.pagination.items"
+                        ng-model="photoCtrl.violation.pagination.page"
+                        ng-change="photoCtrl.updateViolationList()"
+                        num-pages="photoCtrl.violation.pagination.maxPages"
+                        class="pagination-sm"
+                        max-size='10'
+                        rotate="false"
+                        ></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
