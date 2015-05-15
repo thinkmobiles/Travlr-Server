@@ -15,7 +15,6 @@ describe('Posts Test:', function () {
     }
 
     this.timeout(12500);
-    var agent = request.agent(url);
 
     it('Get posts', function (done) {
         agent
@@ -35,7 +34,9 @@ describe('Posts Test:', function () {
         var postData = {
             'title': 'Title ' + getRandomInt(),
             'body' : 'Body is #' + getRandomInt(),
-            'countryId': 1
+            "lon": 41.850033,
+            "lat": -87.6500523,
+            "type": [1,2,4,5]
         };
 
         agent
