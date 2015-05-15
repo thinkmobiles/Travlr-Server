@@ -15,19 +15,5 @@ module.exports = function (PostGre, app) {
         res.status(200).send();
     });
 
-    router.route('/')
-        .post(session.isSuperAdminUser, usersHandler.createUser)
-        .get(session.isAdminUser, usersHandler.getUsers);
-
-    router.get('/count', session.isAdminUser, usersHandler.getUsersCount);
-
-    router.post('/login', usersHandler.login);
-    router.get('/logout', usersHandler.logout);
-
-    router.route('/:id')
-        .get(session.isAdminUser, usersHandler.getUserById)
-        .delete(session.isSuperAdminUser, usersHandler.deleteUserById)
-        .put(session.isSuperAdminUser, usersHandler.updateUserById);
-
     return router;
 };
