@@ -1,6 +1,3 @@
-/**
- * Created by soundstorm on 24.03.15.
- */
 var RESPONSES = require('../constants/responseMessages');
 var TABLES = require('../constants/tables');
 var usersValidation = require('../helpers/validation');
@@ -15,12 +12,7 @@ var UsersHelper = require('../helpers/users');
 Users = function (PostGre) {
     var UserModel = PostGre.Models.users;
     var usersHelper = new UsersHelper(PostGre);
-
-    function getEncryptedPass(pass) {
-        var shaSum = crypto.createHash('sha256');
-        shaSum.update(pass);
-        return shaSum.digest('hex');
-    };
+    var session = new Session(PostGre);
 
     this.signUp = function (req, res, next) {
         var options = req.body;
@@ -29,7 +21,6 @@ Users = function (PostGre) {
             last_name: options.lastName,
             email: options.email,
             gender: options.gender,
-            age: options.age,
             birthday: options.birthday,
             password: cryptoPass.getEncryptedPass(options.password)
         };
@@ -38,11 +29,36 @@ Users = function (PostGre) {
             if (err) {
                 next (err)
             } else {
+                req.session.userId = user.id;
                 res.status(200).send(RESPONSES.WAS_CREATED)
             }
-        }/*, {checkFunctions : ['checkUniqueEmail']}*/)
+        }, {checkFunctions : ['checkUniqueEmail']})
 
 
+    };
+
+    this.signIn = function (req, res, next) {
+        var options = req.body;
+
+        if (options && options.email && options.password) {
+            UserModel
+                .forge({
+                    email: options.email,
+                    password: cryptoPass.getEncryptedPass(options.password)
+                })
+                .fetch()
+                .then(function (user) {
+                    if (user && user.id) {
+                        user = user.toJSON();
+                        session.register(req, res, user)
+                    } else {
+                        res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+                    }
+                })
+                .otherwise(next)
+        } else {
+            res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+        }
     };
 
 

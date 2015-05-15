@@ -10,23 +10,13 @@ Users = function (PostGre) {
     var self = this;
     var UserModel = PostGre.Models.users;
 
-    this.checkCreateUserOptions = new Validation.Check({
-        first_name: ['required'],
-        last_name: ['required'],
-        password: ['required'],
-        email: ['required', 'isEmail'],
-        gender: ['isInt'],
-        age: ['isInt'],
-        birthday: ['isDate']
-    }, self.checkFunctions);
-
     this.checkFunctions = {
-        checkUniqueEmail: function(options, callback) {
+        checkUniqueEmail: function (options, validOptions, callback) {
 
             if (options.email) {
                 UserModel
                     .forge()
-                    .query(function(qb) {
+                    .query(function (qb) {
                         qb.where('email', options.email);
 
                         if (options.id) {
@@ -34,11 +24,11 @@ Users = function (PostGre) {
                         }
                     })
                     .fetch()
-                    .then(function(user) {
+                    .then(function (user) {
                         if (user && user.id) {
-                            callback(null, false);
+                            callback(RESPONSES.NOT_UNIQUE_EMAIL);
                         } else {
-                            callback(null, true);
+                            callback();
                         }
                     })
                     .otherwise(callback);
@@ -49,19 +39,29 @@ Users = function (PostGre) {
                 })
             }
         }
-    }
+    };
+
+    this.checkCreateUserOptions = new Validation.Check({
+        first_name: ['required'],
+        last_name: ['required'],
+        password: ['required'],
+        email: ['required', 'isEmail'],
+        gender: ['isInt'],
+        birthday: ['isDate']
+    }, self.checkFunctions);
+
 
     this.createUserByOptions = function (options, callback, settings) {
-        self.checkCreateUserOptions.run(options, function (err, validoptions){
-            UserModel
-                .forge()
-                .save(validoptions)
-                .then(function (user) {
-                    callback(null, user);
-                })
-                .otherwise(function (err) {
-                    callback(err);
-                })
+        self.checkCreateUserOptions.run(options, function (err, validOptions) {
+            if (err) {
+                callback(err)
+            } else {
+
+                UserModel
+                    .forge()
+                    .save(validOptions)
+                    .exec(callback)
+            }
         }, settings)
     }
 
