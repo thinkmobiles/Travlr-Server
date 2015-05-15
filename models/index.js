@@ -1,7 +1,3 @@
-/**
- * Created by Roman on 23.02.2015.
- */
-
 var TABLES = require('../constants/tables');
 
 var Models = function (PostGre) {
@@ -39,5 +35,6 @@ var Models = function (PostGre) {
     });
 
     this[TABLES.USERS] = require('./users')(PostGre, Model);
+    this[TABLES.POSTS] = require('./posts')(PostGre, Model);
 };
 module.exports = Models;

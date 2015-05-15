@@ -1,7 +1,3 @@
-/**
- * Created by soundstorm on 24.03.15.
- */
-
 var express = require('express');
 var router = express.Router();
 var UsersHandler = require('../handlers/users');

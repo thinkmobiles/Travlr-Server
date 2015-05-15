@@ -33,8 +33,6 @@ Users = function (PostGre) {
                 }
             }
         })
-
-
     };
 
 

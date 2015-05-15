@@ -8,8 +8,10 @@ module.exports = function (app, PostGre) {
     var RESPONSES = require('../constants/responseMessages');
 
 
+
     //Routers
     var usersRouter = require('./users')(PostGre, app);
+    var postsRouter = require('./posts')(PostGre, app);
     var session = new Session(PostGre);
 
     app.get('/', function (req, res, next) {
@@ -19,6 +21,8 @@ module.exports = function (app, PostGre) {
     app.get('/isAuth', session.isAuthorizedUser);
 
     app.use('/users', usersRouter);
+
+    app.use('/posts', postsRouter);
 
     app.post('/authenticate', function (req, res, next) {
         var cid = req.body.cid;
