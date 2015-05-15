@@ -1,7 +1,7 @@
 var request = require('supertest');
 var chai = require('chai');
 var expect = require('chai').expect;
-//var url = 'http://localhost:8835';
+var url = 'http://localhost:8835';
 var app = require('../app.js');
 var agent = request.agent(app);
 
