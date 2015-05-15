@@ -1,8 +1,6 @@
 module.exports = {
-    IMAGES: 'images',
     USERS: 'users',
     POSTS: 'posts',
-    FEEDBACKS: 'feedbacks',
     FEEDBACKS: 'feedbacks',
     IMAGES: 'images',
     COMPLAINTS: 'complaints',

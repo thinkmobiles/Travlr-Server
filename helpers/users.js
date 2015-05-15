@@ -1,6 +1,6 @@
 var RESPONSES = require('../constants/responseMessages');
-var TABLES = require('../constants/tables');
 var Session = require('../handlers/sessions');
+var TABLES = require('../constants/tables');
 var _ = require('../node_modules/underscore');
 var async = require('../node_modules/async');
 var Validation = require('../helpers/validation');
@@ -51,6 +51,19 @@ Users = function (PostGre) {
         }
     }
 
+    this.createUserByOptions = function (options, callback, settings) {
+        self.checkCreateUserOptions.run(options, function (err, validoptions){
+            UserModel
+                .forge()
+                .save(validoptions)
+                .then(function (user) {
+                    callback(null, user);
+                })
+                .otherwise(function (err) {
+                    callback(err);
+                })
+        }, settings)
+    }
 
 };
 

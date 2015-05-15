@@ -11,7 +11,6 @@ var Models = function (PostGre) {
 
     var Model = PostGre.Model.extend({
         hasTimestamps: true,
-        idAttribute: 'ID',
         getName: function () {
             return this.tableName.replace(/s$/, '')
         }

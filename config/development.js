@@ -5,6 +5,7 @@ process.env.DB_USER = "postgres";
 process.env.DB_PASS = "postgres";
 process.env.DB_NAME = "travlr_dev";
 process.env.DB_PORT = 5432;
+process.env.PORT = 3035;
 
 process.env.UPLOADING_TYPE = 'FileSystem';
 
