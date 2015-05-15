@@ -7,6 +7,14 @@ var agent = request.agent(app);
 
 
 describe('Posts Test:', function () {
+
+    function getRandomInt() {
+        var min = 1;
+        var max = 100;
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+
     this.timeout(12500);
     var agent = request.agent(url);
 
@@ -22,5 +30,26 @@ describe('Posts Test:', function () {
                 }
             });
     });
+
+    it('Create posts', function (done) {
+
+        var postData = {
+            'title': 'Title ' + getRandomInt(),
+            'body' : 'Body is #' + getRandomInt()
+        };
+
+        agent
+            .post('/posts')
+            .send(postData)
+            .expect(201)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
 
 });
