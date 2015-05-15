@@ -1,7 +1,7 @@
 var request = require('supertest');
 var chai = require('chai');
 var expect = require('chai').expect;
-var url = 'http://localhost:8835';
+//var url = 'http://localhost:8835';
 var app = require('../app.js');
 var agent = request.agent(app);
 
@@ -13,7 +13,6 @@ describe('Posts Test:', function () {
         var max = 100;
         return Math.floor(Math.random() * (max - min)) + min;
     }
-
 
     this.timeout(12500);
     var agent = request.agent(url);
@@ -35,7 +34,8 @@ describe('Posts Test:', function () {
 
         var postData = {
             'title': 'Title ' + getRandomInt(),
-            'body' : 'Body is #' + getRandomInt()
+            'body' : 'Body is #' + getRandomInt(),
+            'countryId': 1
         };
 
         agent
