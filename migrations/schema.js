@@ -13,7 +13,6 @@ module.exports = function (knex, Promise) {
                     row.string('last_name', 50).notNullable();
                     row.string('email', 50).notNullable().unique();
                     row.string('password');
-                    row.string('age',10);
                     row.string('gender',10);
                     row.string('confirm_token',75);
                     row.timestamp('birthday');
