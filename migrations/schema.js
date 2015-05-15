@@ -20,8 +20,8 @@ module.exports = function (knex, Promise) {
                     row.integer('facebook_id');
                     row.integer('role');
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -31,14 +31,15 @@ module.exports = function (knex, Promise) {
 
             createTable(TABLES.POSTS, function (row) {
                     row.increments('id').primary();
-                    row.integer('author_id', 50).notNullable();
+                    row.integer('author_id').notNullable();
+                    row.string('title',100).notNullable();
                     row.string('body').notNullable();
                     row.string('city_id');
                     row.string('country_id');
                     row.specificType('type', 'int[]');
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -70,8 +71,8 @@ module.exports = function (knex, Promise) {
                     row.integer('author_id').notNullable();
                     row.string('body', 150).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -84,8 +85,8 @@ module.exports = function (knex, Promise) {
                     row.integer('author_id').notNullable();
                     row.integer('post_id').notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -99,8 +100,8 @@ module.exports = function (knex, Promise) {
                     row.string('imageable_type', 50).notNullable();
                     row.string('name', 50).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -113,8 +114,8 @@ module.exports = function (knex, Promise) {
                     row.string('type', 50).notNullable();
                     row.string('body', 250).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -127,8 +128,8 @@ module.exports = function (knex, Promise) {
                     row.string('name', 50).notNullable();
                     row.string('code', 50).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -140,8 +141,8 @@ module.exports = function (knex, Promise) {
                     row.increments('id').primary();
                     row.string('name', 75).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
@@ -153,8 +154,8 @@ module.exports = function (knex, Promise) {
                     row.increments('id').primary();
                     row.string('name', 50).notNullable();
 
-                    row.timestamp('ModifiedAt', true);
-                    row.timestamp('CreatedAt', true);
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 },
                 function (err) {
                     if (!err) {
