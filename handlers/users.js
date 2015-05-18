@@ -66,6 +66,10 @@ Users = function (PostGre) {
         }
     };
 
+    this.signInViaFB = function (req, res, next) {
+        var options = req.body;
+    };
+
     this.getUserById = function (req, res, next) {
         var userId = req.params.id;
 
