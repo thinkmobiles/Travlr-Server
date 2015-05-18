@@ -18,5 +18,7 @@ module.exports = function (PostGre, app) {
     router.get('/:id',usersHandler.getUserById);
     router.get('/',usersHandler.getUsers);
 
+    router.put('/',usersHandler.updateUser);
+
     return router;
 };

@@ -117,6 +117,30 @@ Users = function (PostGre) {
             .otherwise(next)
     };
 
+    this.updateUser = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var userBody = {
+            first_name: options.firstName,
+            last_name: options.lastName,
+            email: options.email,
+            gender: options.gender,
+            birthday: options.birthday,
+            password: cryptoPass.getEncryptedPass(options.password),
+            id: userId
+        };
+
+        if (!options.role) {
+            userBody.role = CONSTANTS.USERS_ROLES.USER
+        }
+        usersHelper.updateUserByOptions(userBody, function (err, user) {
+            if (err) {
+                next(err)
+            } else {
+                res.status(200).send(RESPONSES.UPDATED_SUCCESS)
+            }
+        }, {checkFunctions: ['checkUniqueEmail']})
+    };
 
 };
 
