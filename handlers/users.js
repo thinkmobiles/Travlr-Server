@@ -126,7 +126,6 @@ Users = function (PostGre) {
             email: options.email,
             gender: options.gender,
             birthday: options.birthday,
-            password: cryptoPass.getEncryptedPass(options.password),
             id: userId
         };
 

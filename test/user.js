@@ -52,12 +52,35 @@ describe('users', function () {
                 if (err) {
                     return done(err)
                 } else {
-                    userId = res.body.id
+                    userId = res.body.id;
                     done();
                 }
             });
     });
 
+    it('Update user', function (done) {
+        var data = {
+            firstName: 'Admin',
+            lastName: 'Admin',
+            email: 'admin@admin.com',
+            gender: 1,
+            id: userId
+        };
+
+        agent
+            .put('/users')
+            .send(data)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err)
+                } else {
+                    done();
+                }
+
+            });
+
+    });
     it('Get user by ID', function (done) {
 
             agent
