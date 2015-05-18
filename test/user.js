@@ -18,7 +18,7 @@ describe('users', function () {
         var data = {
             firstName: 'admin',
             lastName: 'admin',
-            email: getRandomInt() + 'admin@admin.com',
+            email: /*getRandomInt() +*/ 'admin@admin.com',
             password: 'admin',
             gender: 1
         };
@@ -40,7 +40,7 @@ describe('users', function () {
 
     it('Login admin/admin', function (done) {
         var loginData = {
-            username: 'admin',
+            email: 'admin@admin.com',
             password: 'admin'
         };
 
@@ -52,12 +52,13 @@ describe('users', function () {
                 if (err) {
                     return done(err)
                 } else {
+                    userId = res.body.id
                     done();
                 }
             });
     });
 
-    /*it('Get user by ID', function (done) {
+    it('Get user by ID', function (done) {
 
             agent
                 .get('/users/' + userId)
@@ -66,17 +67,50 @@ describe('users', function () {
                     if (err) {
                         return done(err);
                     } else {
-                        expect(res.body).to.have.property('firstname');
-                        expect(res.body).to.have.property('lastname');
-                        expect(res.body).to.have.property('username');
-                        expect(res.body).to.have.property('email');
+                        expect(res.body).to.have.property('first_name');
+                        expect(res.body).to.have.property('last_name');
                         done();
 
                     }
                 });
 
-    });*/
+    });
 
+    it('Get users', function (done) {
+
+        agent
+            .get('/users/')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                } else {
+                    expect(res.body).to.be.instanceOf(Array);
+                    expect(res.body[0]).to.have.property('first_name');
+                    expect(res.body[0]).to.have.property('last_name');
+                    done();
+
+                }
+            });
+
+    });
+
+    it('Get users count', function (done) {
+
+        agent
+            .get('/users/')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                } else {
+                    expect(res.body).to.be.instanceOf(Object);
+                    done();
+
+                }
+            });
+
+    });
    /* it('Delete user', function (done) {
         agent
             .delete('/users/' + userId)

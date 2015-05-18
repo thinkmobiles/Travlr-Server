@@ -47,7 +47,8 @@ Users = function (PostGre) {
         password: ['required'],
         email: ['required', 'isEmail'],
         gender: ['isInt'],
-        birthday: ['isDate']
+        birthday: ['isDate'],
+        role: ['isInt']
     }, self.checkFunctions);
 
 

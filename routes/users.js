@@ -14,5 +14,9 @@ module.exports = function (PostGre, app) {
     router.post('/signUp',usersHandler.signUp);
     router.post('/signIn',usersHandler.signIn);
 
+    router.get('/count',usersHandler.getUsersCount);
+    router.get('/:id',usersHandler.getUserById);
+    router.get('/',usersHandler.getUsers);
+
     return router;
 };
