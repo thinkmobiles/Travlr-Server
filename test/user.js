@@ -38,25 +38,26 @@ describe('users', function () {
 
     });
 
-   /* it('Login admin/admin', function (done) {
+    it('Login admin/admin', function (done) {
         var loginData = {
             username: 'admin',
             password: 'admin'
         };
 
         agent
-            .post('/users/login')
+            .post('/users/signIn')
             .send(loginData)
             .expect(200)
             .end(function (err, res) {
                 if (err) {
                     return done(err)
+                } else {
+                    done();
                 }
-                done();
             });
     });
 
-    it('Get user by ID', function (done) {
+    /*it('Get user by ID', function (done) {
 
             agent
                 .get('/users/' + userId)
@@ -74,9 +75,9 @@ describe('users', function () {
                     }
                 });
 
-    });
+    });*/
 
-    it('Delete user', function (done) {
+   /* it('Delete user', function (done) {
         agent
             .delete('/users/' + userId)
             .expect(200)
