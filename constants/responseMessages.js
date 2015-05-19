@@ -8,8 +8,6 @@ module.exports = {
     FORBIDDEN: 'Access denied',
     UNAUTHORIZED : 'Unauthorized',
     AUTHORIZED : 'Authorized',
-    RENEW_ERROR : 'You already active',
-    FAMILY_AGE_ERROR : 'Your children are too old',
     INCORRECT_ID_PASSWORD: 'Incorrect ID or Password',
     FAMILY_CONTACT: 'Can\'t remove family contact member',
     // Validation errors

@@ -18,23 +18,15 @@ Users = function (PostGre) {
 
     this.signUp = function (req, res, next) {
         var options = req.body;
-        //TODO use just options
-        var userBody = {
-            first_name: options.firstName,
-            last_name: options.lastName,
-            email: options.email,
-            gender: options.gender,
-            birthday: options.birthday,
-            password: cryptoPass.getEncryptedPass(options.password),
-            role: CONSTANTS.USERS_ROLES.USER
-        };
+        options.role = CONSTANTS.USERS_ROLES.USER;
+        options.password = cryptoPass.getEncryptedPass(options.password);
 
-        usersHelper.createUserByOptions(userBody, function (err, user) {
+        usersHelper.createUserByOptions(options, function (err, user) {
             if (err) {
                 next(err)
             } else {
                 req.session.userId = user.id;
-                res.status(201).send(RESPONSES.WAS_CREATED)
+                res.status(201).send({success: RESPONSES.WAS_CREATED})
             }
         }, {checkFunctions: ['checkUniqueEmail']})
 
@@ -56,12 +48,12 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         session.register(req, res, user)
                     } else {
-                        res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+                        res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
                     }
                 })
                 .otherwise(next)
         } else {
-            res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+            res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
         }
     };
 
@@ -85,7 +77,6 @@ Users = function (PostGre) {
                     columns: [
                         'first_name',
                         'last_name',
-                        'age',
                         'birthday'
                     ]
                 })
@@ -94,26 +85,30 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         res.status(200).send(user)
                     } else {
-                        res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+                        res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
                     }
                 })
                 .otherwise(next)
         } else {
-            res.status(400).send(RESPONSES.INVALID_PARAMETERS)
+            res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
         }
     };
 
     this.getUsers = function (req, res, next) {
-        //TODO add page count and page number
+        var page = req.query.page || 1;
+        var limit = req.query.count || 25;
+
         UserCollection
             .query(function (qb) {
                 qb.where('role', '=', CONSTANTS.USERS_ROLES.USER)
+                    .offset(( page - 1 ) * limit)
+                    .limit(limit)
             })
             .fetch({
                 columns: [
+                    'id',
                     'first_name',
                     'last_name',
-                    'age',
                     'birthday',
                     'role'
                 ]
@@ -139,30 +134,35 @@ Users = function (PostGre) {
     this.updateUser = function (req, res, next) {
         var options = req.body;
         var userId = req.session.userId;
-        //TODO use options instead userBody
-        var userBody = {
-            first_name: options.firstName,
-            last_name: options.lastName,
-            email: options.email,
-            gender: options.gender,
-            birthday: options.birthday,
-            id: userId
-        };
 
-        if (!options.role) {
-            userBody.role = CONSTANTS.USERS_ROLES.USER
-        }
-        usersHelper.updateUserByOptions(userBody, function (err, user) {
+            options.role = CONSTANTS.USERS_ROLES.USER;
+            options.id = userId;
+
+        usersHelper.updateUserByOptions(options, function (err, user) {
             if (err) {
                 next(err)
             } else {
-                res.status(200).send(RESPONSES.UPDATED_SUCCESS)
+                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
             }
         }, {checkFunctions: ['checkUniqueEmail']})
     };
 
     this.deleteUser = function (req, res, next) {
         var userId = req.params.id;
+
+        if (req.session.userId === parseInt(userId)) {
+            UserModel
+                .forge({
+                    id: userId
+                })
+                .destroy()
+                .then(function () {
+                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+                })
+                .otherwise(next)
+        } else {
+            res.status(403).send({error: RESPONSES.FORBIDDEN})
+        }
     };
 
 };

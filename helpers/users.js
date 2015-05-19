@@ -8,8 +8,7 @@ var Users;
 
 Users = function (PostGre) {
     var self = this;
-    //TODO use constants for get model;
-    var UserModel = PostGre.Models.users;
+    var UserModel = PostGre.Models[TABLES.USERS];
 
     this.checkFunctions = {
         checkUniqueEmail: function (options, validOptions, callback) {
