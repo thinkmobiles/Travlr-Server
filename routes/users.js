@@ -13,6 +13,7 @@ module.exports = function (PostGre, app) {
 
     router.post('/signUp',usersHandler.signUp);
     router.post('/signIn',usersHandler.signIn);
+    router.post('/forgotPass',usersHandler.forgotPassword);
     router.post('/signInViaFB',usersHandler.signInViaFB);
 
     router.get('/signOut',usersHandler.signOut);
