@@ -37,5 +37,8 @@ var Models = function (PostGre) {
     this[MODELS.POST] = require('./posts')(PostGre, Model);
     this[MODELS.CITY] = require('./cities')(PostGre, Model);
     this[MODELS.COUNTRY] = require('./countries')(PostGre, Model);
+    this[MODELS.FEEDBACK] = require('./feedbacks')(PostGre, Model);
+    this[MODELS.COMPLAINT] = require('./complaints')(PostGre, Model);
+    this[MODELS.IMAGE] = require('./images')(PostGre, Model);
 };
 module.exports = Models;

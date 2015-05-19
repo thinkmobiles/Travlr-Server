@@ -1,6 +1,7 @@
 var RESPONSES = require('../constants/responseMessages');
 var Session = require('../handlers/sessions');
 var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 var _ = require('../node_modules/underscore');
 var async = require('../node_modules/async');
 var Validation = require('../helpers/validation');
@@ -8,7 +9,7 @@ var Users;
 
 Users = function (PostGre) {
     var self = this;
-    var UserModel = PostGre.Models[TABLES.USERS];
+    var UserModel = PostGre.Models[MODELS.USER];
 
     this.checkFunctions = {
         checkUniqueEmail: function (options, validOptions, callback) {

@@ -1,5 +1,6 @@
 var RESPONSES = require('../constants/responseMessages');
 var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 var CONSTANTS = require('../constants/constants');
 var usersValidation = require('../helpers/validation');
 var Session = require('../handlers/sessions');
@@ -11,7 +12,7 @@ var crypto = require("crypto");
 var UsersHelper = require('../helpers/users');
 
 Users = function (PostGre) {
-    var UserModel = PostGre.Models[TABLES.USERS];
+    var UserModel = PostGre.Models[MODELS.USER];
     var UserCollection = PostGre.Collections[TABLES.USERS];
     var usersHelper = new UsersHelper(PostGre);
     var session = new Session(PostGre);

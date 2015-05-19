@@ -1,4 +1,5 @@
 var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 var async = require('async');
 
 module.exports = function (PostGre, ParentModel) {
@@ -8,47 +9,61 @@ module.exports = function (PostGre, ParentModel) {
         initialize: function () {
             this.on('destroying', this.removeDependencies);
         },
-        
+
         removeDependencies: function (user) {
             var userId = user.id;
 
             async.parallel([
                 function (cb) {
-                    function destroyPosts(post, cb) {
-                        post
-                            .destroy()
-                            .exec(cb)
-                    }
-
-                    PostGre.Models[TABLES.POSTS]
-                        .forge()
-                        .query(function (qb) {
-                            qb.where({
-                                author_id: userId
-                            });
-
-                            return qb;
+                    PostGre.knex
+                        .raw(
+                        'DELETE FROM "' + TABLES.IMAGES + '" i USING "' + TABLES.POSTS + '" p '
+                        + 'where  p."id" = i."imageable_id" AND i."imageable_type" = \'' + TABLES.POSTS + '\' AND p."author_id" =' + userId
+                        )
+                        .then(function () {
+                            PostGre.knex(TABLES.POSTS)
+                                .where({
+                                    author_id: userId
+                                })
+                                .delete()
+                                .exec(cb)
                         })
-                        .fetchAll()
-                        .then(function (posts) {
-                            async.each(posts, destroyPosts, function (err) {
-                                if (err) {
-                                    cb(err);
-                                } else {
-                                    cb(null);
-                                }
-                            });
-                        })
-                        .catch(function (err) {
+                        .otherwise(function (err) {
                             cb(err);
                         });
+                },
+                function (cb) {
+                    PostGre.knex(TABLES.FEEDBACKS)
+                        .where({
+                                author_id: userId
+                            })
+                        .delete()
+                        .exec(cb)
+
+                },
+                function (cb) {
+                    PostGre.knex(TABLES.COMPLAINTS)
+                        .where({
+                                author_id: userId
+                            })
+                        .delete()
+                        .exec(cb)
+
+                },
+                function (cb) {
+                    PostGre.knex(TABLES.IMAGES)
+                        .where({
+                                imageable_id: userId,
+                                imageable_type: TABLES.USERS
+                            })
+                        .delete()
+                        .exec(cb)
+
                 }
 
             ], function (err) {
                 if (err) {
-                    console.log('>>>>>>>>>>>>')
-                    console.log(err)
-                    console.log('>>>>>>>>>>>>')
+                    console.log(err);
                 }
             });
         }
