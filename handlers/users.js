@@ -35,7 +35,7 @@ Users = function (PostGre) {
                 next(err)
             } else {
                 req.session.userId = user.id;
-                res.status(200).send(RESPONSES.WAS_CREATED)
+                res.status(201).send(RESPONSES.WAS_CREATED)
             }
         }, {checkFunctions: ['checkUniqueEmail']})
 
@@ -64,6 +64,10 @@ Users = function (PostGre) {
         } else {
             res.status(400).send(RESPONSES.INVALID_PARAMETERS)
         }
+    };
+
+    this.signOut = function (req, res, next){
+        session.kill(req, res);
     };
 
     this.signInViaFB = function (req, res, next) {
@@ -143,6 +147,10 @@ Users = function (PostGre) {
                 res.status(200).send(RESPONSES.UPDATED_SUCCESS)
             }
         }, {checkFunctions: ['checkUniqueEmail']})
+    };
+
+    this.deleteUser = function (req, res, next) {
+        var userId = req.params.id;
     };
 
 };

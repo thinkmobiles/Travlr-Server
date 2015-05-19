@@ -15,11 +15,14 @@ module.exports = function (PostGre, app) {
     router.post('/signIn',usersHandler.signIn);
     router.post('/signInViaFB',usersHandler.signInViaFB);
 
+    router.get('/signOut',usersHandler.signOut);
     router.get('/count',usersHandler.getUsersCount);
     router.get('/:id',usersHandler.getUserById);
     router.get('/',usersHandler.getUsers);
 
     router.put('/',usersHandler.updateUser);
+
+    router.delete('/:id',usersHandler.deleteUser);
 
     return router;
 };
