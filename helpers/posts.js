@@ -15,7 +15,7 @@ Posts = function (PostGre) {
         author_id: ['required'],
         email: ['required', 'isEmail'],
         city_id: ['isInt'],
-        country_id: ['isInt'],
+        country_id: ['isInt']
     });
 
     this.getCountryCity = function (location, callback) {

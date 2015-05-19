@@ -8,10 +8,12 @@ var Users;
 
 Users = function (PostGre) {
     var self = this;
+    //TODO use constants for get model;
     var UserModel = PostGre.Models.users;
 
     this.checkFunctions = {
         checkUniqueEmail: function (options, validOptions, callback) {
+            var err;
 
             if (options.email) {
                 UserModel
@@ -26,17 +28,20 @@ Users = function (PostGre) {
                     .fetch()
                     .then(function (user) {
                         if (user && user.id) {
-                            callback(RESPONSES.NOT_UNIQUE_EMAIL);
+                            err = new Error(RESPONSES.NOT_UNIQUE_EMAIL);
+                            err.status = 400;
+
+                            callback(err);
                         } else {
                             callback();
                         }
                     })
                     .otherwise(callback);
             } else {
-                callback({
-                    status: 400,
-                    error: RESPONSES.INVALID_PARAMETERS
-                })
+                err = new Error(RESPONSES.INVALID_PARAMETERS);
+                err.status = 400;
+
+                callback(err)
             }
         }
     };
@@ -64,15 +69,14 @@ Users = function (PostGre) {
     this.createUserByOptions = function (options, callback, settings) {
         self.checkCreateUserOptions.run(options, function (err, validOptions) {
             if (err) {
-                callback(err)
+                callback(err);
             } else {
-
                 UserModel
                     .forge()
                     .save(validOptions)
-                    .exec(callback)
+                    .exec(callback);
             }
-        }, settings)
+        }, settings);
     };
 
     this.updateUserByOptions = function (options, callback, settings) {
@@ -85,10 +89,9 @@ Users = function (PostGre) {
                     .forge({
                         id: options.id
                     })
-                    .save(
-                    validOptions,
-                    {patch: true}
-                    )
+                    .save(validOptions, {
+                        patch: true
+                    })
                     .exec(callback)
             }
         }, settings)
