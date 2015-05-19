@@ -193,7 +193,7 @@ Users = function (PostGre) {
                         };
 
                         mailer.forgotPassword(mailOptions);
-                        res.status(200).send('OK')
+                        res.status(200).send({success: RESPONSES.CHANGE_PASSWORD})
                     })
                     .otherwise(next)
             })
