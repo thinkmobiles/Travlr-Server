@@ -1,5 +1,4 @@
 var TABLES = require('../constants/tables');
-var MODELS = require('../constants/models');
 var async = require('async');
 
 module.exports = function (PostGre, ParentModel) {
