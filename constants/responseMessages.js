@@ -1,6 +1,3 @@
-/**
- * Created by Roman on 24.02.2015.
- */
 module.exports = {
     PAGE_NOT_FOUND: 'Page Not Found',
 
