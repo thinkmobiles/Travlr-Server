@@ -7,8 +7,6 @@ module.exports = function (app, PostGre) {
     //Constants
     var RESPONSES = require('../constants/responseMessages');
 
-
-
     //Routers
     var usersRouter = require('./users')(PostGre, app);
     var postsRouter = require('./posts')(PostGre, app);
@@ -23,15 +21,6 @@ module.exports = function (app, PostGre) {
     app.use('/users', usersRouter);
 
     app.use('/posts', postsRouter);
-
-    app.post('/authenticate', function (req, res, next) {
-        var cid = req.body.cid;
-        if (cid) {
-            session.register(req, res, {cid: cid});
-        } else {
-            next(badRequests.invalidValue());
-        }
-    });
 
     function notFound(req, res, next) {
         res.status(404);
