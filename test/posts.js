@@ -8,6 +8,9 @@ var agent = request.agent(app);
 
 describe('Posts Test:', function () {
 
+    var postId;
+
+
     function getRandomInt() {
         var min = 1;
         var max = 100;
@@ -47,6 +50,30 @@ describe('Posts Test:', function () {
                 if (err) {
                     done(err);
                 } else {
+                    postId = res.body.postId;
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Get post by ID', function(done){
+        agent
+            .get('/posts/' + postId)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    var post = res.body;
+                    expect(post).to.have.property('body');
+                    expect(post).to.have.property('title');
+                    //expect(post).to.have.property('country');
+                    //expect(post).to.have.property('city');
+                    expect(post).to.have.property('author');
+                    expect(post).to.have.property('latitude');
+                    expect(post).to.have.property('longitude');
+
+
                     done(null, res);
                 }
             });

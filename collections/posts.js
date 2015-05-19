@@ -1,8 +1,8 @@
-var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 
 module.exports = function (PostGre, ParentCollection) {
     var Collection = ParentCollection.extend({
-        model: PostGre.Models[TABLES.POSTS]
+        model: PostGre.Models[MODELS.POST]
     });
 
     return Collection;

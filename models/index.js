@@ -1,4 +1,4 @@
-var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 
 var Models = function (PostGre) {
     "use strict";
@@ -33,9 +33,9 @@ var Models = function (PostGre) {
         }
     });
 
-    this[TABLES.USERS] = require('./users')(PostGre, Model);
-    this[TABLES.POSTS] = require('./posts')(PostGre, Model);
-    this[TABLES.CITIES] = require('./cities')(PostGre, Model);
-    this[TABLES.COUNTRIES] = require('./countries')(PostGre, Model);
+    this[MODELS.USER] = require('./users')(PostGre, Model);
+    this[MODELS.POST] = require('./posts')(PostGre, Model);
+    this[MODELS.CITY] = require('./cities')(PostGre, Model);
+    this[MODELS.COUNTRY] = require('./countries')(PostGre, Model);
 };
 module.exports = Models;

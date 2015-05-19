@@ -28,6 +28,7 @@ module.exports = function (knex, Promise) {
                     }
                 }),
 
+
             createTable(TABLES.POSTS, function (row) {
                     row.increments('id').primary();
                     row.integer('author_id').notNullable();

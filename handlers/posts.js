@@ -50,11 +50,33 @@ Posts = function (PostGre) {
             .otherwise(next);
     };
 
-    this.createPost = function (req, res, next) {
+    this.getPostById = function (req, res, next) {
+        var postId = req.params.id;
 
+        if (postId) {
+            PostModel
+                .forge({id: postId})
+                .query(function(qb){
+                    var location = PostGre.knex.raw(" ST_X(location::geometry) as longitude, ST_Y(location::geometry) as latitude");
+                    qb.column(location);
+                })
+                .fetch({
+                    withRelated: ['author', 'city', 'country']
+                })
+                .then(function (postModel) {
+                    if (postModel.id) {
+                        res.status(200).send(postModel);
+                    } else {
+                        next(RESPONSES.INTERNAL_ERROR);
+                    }
+                })
+                .otherwise(next);
+        }
+
+    };
+
+    this.createPost = function (req, res, next) {
         var options = req.body;
-        var cityId;
-        var countryId;
         var location;
         var saveData;
 
@@ -70,12 +92,9 @@ Posts = function (PostGre) {
             }
         }
 
-        if(location){
+        if (location) {
             postsHelper.getCountryCity(location, function (err, resp) {
                 if (!err) {
-                    console.log(resp.country);
-                    console.log(resp.city);
-
                     async.parallel([
                             function (callback) {
                                 cityModel.createCity(resp.city, callback);
@@ -84,10 +103,8 @@ Posts = function (PostGre) {
                                 countryModel.createCountry(resp.country, callback);
                             }
                         ],
-
                         function (err, results) {
-                            if(!err){
-
+                            if (!err) {
                                 saveData.city_id = results[0].cityId;
                                 saveData.country_id = results[1].countryId;
 
@@ -99,31 +116,27 @@ Posts = function (PostGre) {
                                             if (location) {
                                                 postsHelper.saveLocation(TABLES.POSTS, post.id, location, function (err, resp) {
                                                     if (err) {
-                                                        res.status(400).send(err);
+                                                        next(err);
                                                     } else {
-                                                        res.status(201).send(RESPONSES.WAS_CREATED);
+                                                        res.status(201).send({message: RESPONSES.WAS_CREATED, postId: post.id});
                                                     }
                                                 })
                                             }
                                         } else {
-                                            res.status(500).send(RESPONSES.INTERNAL_ERROR);
+                                            next(RESPONSES.INTERNAL_ERROR);
                                         }
                                     })
                                     .otherwise(next);
+                            } else {
+                                next(err);
                             }
                         });
-
-
                 } else {
                     next(err);
                 }
             });
-
         }
-
-
     }
-
 };
 
 module.exports = Posts;
