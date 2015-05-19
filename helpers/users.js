@@ -47,7 +47,17 @@ Users = function (PostGre) {
         password: ['required'],
         email: ['required', 'isEmail'],
         gender: ['isInt'],
-        birthday: ['isDate']
+        birthday: ['isDate'],
+        role: ['isInt']
+    }, self.checkFunctions);
+
+    this.checkUpdateUserOptions = new Validation.Check({
+        first_name: ['required'],
+        last_name: ['required'],
+        email: ['required', 'isEmail'],
+        gender: ['isInt'],
+        birthday: ['isDate'],
+        role: ['isInt']
     }, self.checkFunctions);
 
 
@@ -60,6 +70,25 @@ Users = function (PostGre) {
                 UserModel
                     .forge()
                     .save(validOptions)
+                    .exec(callback)
+            }
+        }, settings)
+    };
+
+    this.updateUserByOptions = function (options, callback, settings) {
+        self.checkUpdateUserOptions.run(options, function (err, validOptions) {
+            if (err) {
+                callback(err)
+            } else {
+
+                UserModel
+                    .forge({
+                        id: options.id
+                    })
+                    .save(
+                    validOptions,
+                    {patch: true}
+                    )
                     .exec(callback)
             }
         }, settings)

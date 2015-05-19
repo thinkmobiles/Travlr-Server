@@ -13,6 +13,13 @@ module.exports = function (PostGre, app) {
 
     router.post('/signUp',usersHandler.signUp);
     router.post('/signIn',usersHandler.signIn);
+    router.post('/signInViaFB',usersHandler.signInViaFB);
+
+    router.get('/count',usersHandler.getUsersCount);
+    router.get('/:id',usersHandler.getUserById);
+    router.get('/',usersHandler.getUsers);
+
+    router.put('/',usersHandler.updateUser);
 
     return router;
 };
