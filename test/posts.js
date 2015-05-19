@@ -67,11 +67,11 @@ describe('Posts Test:', function () {
                     var post = res.body;
                     expect(post).to.have.property('body');
                     expect(post).to.have.property('title');
-                    //expect(post).to.have.property('country');
-                    //expect(post).to.have.property('city');
+                    expect(post).to.have.property('country');
+                    expect(post).to.have.property('city');
                     expect(post).to.have.property('author');
-                    expect(post).to.have.property('latitude');
-                    expect(post).to.have.property('longitude');
+                    expect(post).to.have.property('lat');
+                    expect(post).to.have.property('lon');
 
 
                     done(null, res);

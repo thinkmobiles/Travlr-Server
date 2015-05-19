@@ -1,17 +1,19 @@
 var RESPONSES = require('../constants/responseMessages');
 var TABLES = require('../constants/tables');
-var Cities = require('./cities');
-var Countries = require('./countries');
+var COLLECTIONS = require('../constants/collections');
+var MODELS = require('../constants/models');
 var Posts;
 var async = require('async');
 var PostsHelper = require('../helpers/posts');
+var CityHelper = require('../helpers/cities');
+var CountryHelper = require('../helpers/countries');
 
 Posts = function (PostGre) {
-    var PostModel = PostGre.Models.posts;
-    var PostCollection = PostGre.Collections.posts;
+    var PostModel = PostGre.Models[MODELS.POST];
+    var PostCollection = PostGre.Collections[COLLECTIONS.POSTS];
     var postsHelper = new PostsHelper(PostGre);
-    var cityModel = new Cities(PostGre);
-    var countryModel = new Countries(PostGre);
+    var cityHelper = new CityHelper(PostGre);
+    var countryHelper = new CountryHelper(PostGre);
 
     this.getPosts = function (req, res, next) {
         var page = req.query.page || 1;
@@ -30,18 +32,12 @@ Posts = function (PostGre) {
                         "LOWER(body) LIKE '%" + searchTerm + "%' "
                     )
                 }
-
                 qb.offset(( page - 1 ) * limit)
                     .limit(limit);
 
                 if (orderBy) {
                     qb.orderBy(orderBy, order);
                 }
-
-                var location = PostGre.knex.raw(" ST_X(location::geometry) as longitude, ST_Y(location::geometry) as latitude");
-                qb.select(location);
-
-
             })
             .fetch()
             .then(function (postCollection) {
@@ -57,10 +53,6 @@ Posts = function (PostGre) {
         if (postId) {
             PostModel
                 .forge({id: postId})
-                .query(function(qb){
-                    var location = PostGre.knex.raw(" ST_X(location::geometry) as longitude, ST_Y(location::geometry) as latitude");
-                    qb.column(location);
-                })
                 .fetch({
                     withRelated: ['author', 'city', 'country']
                 })
@@ -87,47 +79,39 @@ Posts = function (PostGre) {
         saveData = postsHelper.getSaveData(options);
 
         if (options && options.lat && options.lon) {
-            location = {
-                'lat': options.lat,
-                'lon': options.lon
-            }
+            saveData.lat = options.lat;
+            saveData.lon = options.lon;
         }
 
-        if (location) {
-            postsHelper.getCountryCity(location, function (err, resp) {
+        if (saveData.lat && saveData.lon) {
+            postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
                 if (!err) {
                     async.parallel([
                             function (callback) {
-                                cityModel.createCity(resp.city, callback);
+                                var cityData = {
+                                    name: resp.city
+                                };
+                                cityHelper.createCityByOptions(cityData, callback);
                             },
                             function (callback) {
-                                countryModel.createCountry(resp.country, callback);
+                                var countryData = {
+                                    name: resp.country.name,
+                                    code: resp.country.code
+                                };
+                                countryHelper.createCountryByOptions(countryData, callback);
                             }
                         ],
                         function (err, results) {
                             if (!err) {
-                                saveData.city_id = results[0].cityId;
-                                saveData.country_id = results[1].countryId;
-
-                                PostModel
-                                    .forge(saveData)
-                                    .save()
-                                    .then(function (post) {
-                                        if (post.id) {
-                                            if (location) {
-                                                postsHelper.saveLocation(TABLES.POSTS, post.id, location, function (err, resp) {
-                                                    if (err) {
-                                                        next(err);
-                                                    } else {
-                                                        res.status(201).send({message: RESPONSES.WAS_CREATED, postId: post.id});
-                                                    }
-                                                })
-                                            }
-                                        } else {
-                                            next(RESPONSES.INTERNAL_ERROR);
-                                        }
-                                    })
-                                    .otherwise(next);
+                                saveData.city_id = results[0].id;
+                                saveData.country_id = results[1].id;
+                                postsHelper.createPostByOptions(saveData, function (err, resp) {
+                                    if (err) {
+                                        next(err);
+                                    } else {
+                                        res.status(201).send({message: RESPONSES.WAS_CREATED, postId: resp.id});
+                                    }
+                                });
                             } else {
                                 next(err);
                             }

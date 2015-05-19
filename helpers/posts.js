@@ -1,5 +1,6 @@
 var RESPONSES = require('../constants/responseMessages');
 var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 var _ = require('../node_modules/underscore');
 var Validation = require('../helpers/validation');
 var Posts;
@@ -8,12 +9,15 @@ var gm = require('googlemaps');
 
 Posts = function (PostGre) {
     var self = this;
-    var PostsModel = PostGre.Models.posts;
+    var PostsModel = PostGre.Models[MODELS.POST];
 
     this.checkCreatePostOptions = new Validation.Check({
         body: ['required'],
         author_id: ['required'],
         email: ['required', 'isEmail'],
+        title: ['required'],
+        lon: ['required'],
+        lat: ['required'],
         city_id: ['isInt'],
         country_id: ['isInt']
     });
@@ -81,31 +85,19 @@ Posts = function (PostGre) {
         return saveData
     };
 
-    this.saveLocation = function (table, modelId, location, callback) {
-        var localDestination = "saveLocation";
 
-        if (location.lon && location.lat) {
-            var locationString = location.lon + " " + location.lat;
-            PostGre.knex
-                .raw("UPDATE " + table + " SET location=ST_GeographyFromText('SRID=4326;POINT(" + locationString + ")') WHERE id=" + modelId + ";")
-                .then(function (resp) {
-                    if (callback && typeof callback === "function") {
-                        callback(null, resp);
-                    }
-                })
-                .otherwise(function (err) {
-                    if (callback && typeof callback === "function") {
-                        //      logWriter.log(destenation + ' -> ' + localDestination, err);
-                        callback(err);
-                    }
-                });
-        } else {
-            if (callback && typeof callback === "function") {
-                //logWriter.log(destenation + ' -> ' + localDestination, {error: "Bad incoming parameters"});
-                callback({error: "Bad incoming parameters"});
+    this.createPostByOptions = function (options, callback, settings) {
+        self.checkCreatePostOptions.run(options, function (err, validOptions) {
+            if (err) {
+                callback(err);
+            } else {
+                PostsModel
+                    .forge()
+                    .save(validOptions)
+                    .exec(callback);
             }
-        }
-    }
+        }, settings);
+    };
 
 
 };
