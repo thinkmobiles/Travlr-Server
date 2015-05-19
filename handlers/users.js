@@ -4,8 +4,10 @@ var MODELS = require('../constants/models');
 var CONSTANTS = require('../constants/constants');
 var usersValidation = require('../helpers/validation');
 var Session = require('../handlers/sessions');
-var crypPass = require('../helpers/cryptoPass')
+var crypPass = require('../helpers/cryptoPass');
 var cryptoPass = new crypPass();
+var generator = require('../helpers/randomPass.js');
+var Mailer = require('../helpers/mailer.js');
 var Users;
 var async = require('async');
 var crypto = require("crypto");
@@ -16,6 +18,7 @@ Users = function (PostGre) {
     var UserCollection = PostGre.Collections[TABLES.USERS];
     var usersHelper = new UsersHelper(PostGre);
     var session = new Session(PostGre);
+    var mailer = new Mailer();
 
     this.signUp = function (req, res, next) {
         var options = req.body;
@@ -164,6 +167,37 @@ Users = function (PostGre) {
         } else {
             res.status(403).send({error: RESPONSES.FORBIDDEN})
         }
+    };
+
+    this.forgotPassword = function (req, res, next) {
+        var email = req.body.email;
+        var newPass = generator.generate(8);
+        var mailOptions;
+
+        UserModel
+            .forge({
+                email: email
+            })
+            .fetch()
+            .then(function (user) {
+                user
+                    .save({
+                        password: cryptoPass.getEncryptedPass(newPass)
+                    }, {
+                        patch: true
+                    })
+                    .then(function (){
+                        mailOptions = {
+                            password: newPass,
+                            email: email
+                        };
+
+                        mailer.forgotPassword(mailOptions);
+                        res.status(200).send({success: RESPONSES.CHANGE_PASSWORD})
+                    })
+                    .otherwise(next)
+            })
+            .otherwise(next)
     };
 
 };
