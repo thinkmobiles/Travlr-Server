@@ -1,5 +1,5 @@
 module.exports = function (app) {
-    var _ = require('../public/js/libs/underscore-min.js');
+    var _ = require('./underscore-min.js');
     var nodemailer = require("nodemailer");
     var smtpTransport = require('nodemailer-smtp-transport');
     var fs = require('fs');

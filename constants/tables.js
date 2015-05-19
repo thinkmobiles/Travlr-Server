@@ -8,5 +8,4 @@ module.exports = {
     CITIES: 'cities',
     COUNTRIES: 'countries',
     STATIC_INFO: 'static_info'
-
 };
