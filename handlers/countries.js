@@ -4,26 +4,26 @@ var Countries;
 
 Countries = function (PostGre) {
     var CountryModel = PostGre.Models.countries;
-   
+
     this.createCountry = function (country, callback) {
-        if(country){
+        if (country) {
             CountryModel
                 .forge({'code': country.code})
                 .fetch()
-                .then(function(countryModel){
-                    if(countryModel && countryModel.id){
+                .then(function (countryModel) {
+                    if (countryModel && countryModel.id) {
                         callback(null, {'countryId': countryModel.id});
-                    }else{
+                    } else {
                         CountryModel
                             .forge({
                                 'code': country.code,
                                 'name': country.name
                             })
                             .save()
-                            .then(function(model){
-                                if(model.id){
+                            .then(function (model) {
+                                if (model.id) {
                                     callback(null, {'countryId': model.id});
-                                }else{
+                                } else {
                                     callback(RESPONSES.INTERNAL_ERROR);
                                 }
                             })
@@ -32,7 +32,7 @@ Countries = function (PostGre) {
                 })
                 .otherwise()
 
-        }else{
+        } else {
             callback(RESPONSES.NOT_ENOUGH_PARAMETERS);
         }
     }

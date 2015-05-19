@@ -18,24 +18,23 @@ Users = function (PostGre) {
 
     this.signUp = function (req, res, next) {
         var options = req.body;
+        //TODO use just options
         var userBody = {
             first_name: options.firstName,
             last_name: options.lastName,
             email: options.email,
             gender: options.gender,
             birthday: options.birthday,
-            password: cryptoPass.getEncryptedPass(options.password)
+            password: cryptoPass.getEncryptedPass(options.password),
+            role: CONSTANTS.USERS_ROLES.USER
         };
 
-        if (!options.role) {
-            userBody.role = CONSTANTS.USERS_ROLES.USER
-        }
         usersHelper.createUserByOptions(userBody, function (err, user) {
             if (err) {
                 next(err)
             } else {
                 req.session.userId = user.id;
-                res.status(200).send(RESPONSES.WAS_CREATED)
+                res.status(201).send(RESPONSES.WAS_CREATED)
             }
         }, {checkFunctions: ['checkUniqueEmail']})
 
@@ -79,7 +78,12 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
-                    columns: ['first_name', 'last_name', 'age', 'birthday']
+                    columns: [
+                        'first_name',
+                        'last_name',
+                        'age',
+                        'birthday'
+                    ]
                 })
                 .then(function (user) {
                     if (user && user.id) {
@@ -96,12 +100,19 @@ Users = function (PostGre) {
     };
 
     this.getUsers = function (req, res, next) {
+        //TODO add page count and page number
         UserCollection
             .query(function (qb) {
                 qb.where('role', '=', CONSTANTS.USERS_ROLES.USER)
             })
             .fetch({
-                columns: ['first_name', 'last_name', 'age', 'birthday', 'role']
+                columns: [
+                    'first_name',
+                    'last_name',
+                    'age',
+                    'birthday',
+                    'role'
+                ]
             })
             .then(function (users) {
                 res.status(200).send(users)
@@ -124,6 +135,7 @@ Users = function (PostGre) {
     this.updateUser = function (req, res, next) {
         var options = req.body;
         var userId = req.session.userId;
+        //TODO use options instead userBody
         var userBody = {
             first_name: options.firstName,
             last_name: options.lastName,

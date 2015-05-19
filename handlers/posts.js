@@ -16,6 +16,7 @@ Posts = function (PostGre) {
     this.getPosts = function (req, res, next) {
         var page = req.query.page || 1;
         var limit = req.query.count || 25;
+        //TODO change order by logic
         var orderBy = req.query.orderBy;
         var order = req.query.order || 'ASC';
         var searchTerm = req.query.searchTerm;
