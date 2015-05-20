@@ -16,8 +16,8 @@ describe('users', function () {
 
     it('Create user', function (done) {
         var data = {
-            firstName: 'admin',
-            lastName: 'admin',
+            first_name: 'admin',
+            last_name: 'admin',
             email: /*getRandomInt() +*/ 'admin@admin.com',
             password: 'admin',
             gender: 1
@@ -26,7 +26,7 @@ describe('users', function () {
             agent
                 .post('/users/signUp')
                 .send(data)
-                .expect(200)
+                .expect(201)
                 .end(function (err, res) {
                     if (err) {
                         return done(err)
@@ -60,8 +60,8 @@ describe('users', function () {
 
     it('Update user', function (done) {
         var data = {
-            firstName: 'Admin',
-            lastName: 'Admin',
+            first_name: 'Admin',
+            last_name: 'Admin',
             email: 'admin@admin.com',
             gender: 1,
             id: userId
@@ -99,6 +99,22 @@ describe('users', function () {
 
     });
 
+    it('Delete user', function (done) {
+
+        agent
+            .delete('/users/' + userId)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                } else {
+                    done();
+
+                }
+            });
+
+    });
+
     it('Get users', function (done) {
 
         agent
@@ -121,7 +137,7 @@ describe('users', function () {
     it('Get users count', function (done) {
 
         agent
-            .get('/users/')
+            .get('/users/count')
             .expect(200)
             .end(function (err, res) {
                 if (err) {
@@ -134,17 +150,5 @@ describe('users', function () {
             });
 
     });
-   /* it('Delete user', function (done) {
-        agent
-            .delete('/users/' + userId)
-            .expect(200)
-            .end(function (err, res) {
-                if (err) {
-                    return done(err)
-                }
-                done();
-            });
-    });*/
-
 
 });
