@@ -78,7 +78,9 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
+                    withRelated: ['image'],
                     columns: [
+                        'id',
                         'first_name',
                         'last_name',
                         'birthday'

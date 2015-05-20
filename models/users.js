@@ -1,4 +1,5 @@
 var TABLES = require('../constants/tables');
+var MODELS = require('../constants/models');
 var async = require('async');
 
 module.exports = function (PostGre, ParentModel) {
@@ -7,6 +8,10 @@ module.exports = function (PostGre, ParentModel) {
         tableName: TABLES.USERS,
         initialize: function () {
             this.on('destroying', this.removeDependencies);
+        },
+
+        image: function () {
+            return this.hasOne(PostGre.Models[MODELS.IMAGE], 'imageable_id').query({where: {imageable_type: TABLES.USERS}})
         },
 
         removeDependencies: function (user) {
