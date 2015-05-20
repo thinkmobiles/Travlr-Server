@@ -1,7 +1,6 @@
 var request = require('supertest');
 var chai = require('chai');
 var expect = require('chai').expect;
-var url = 'http://localhost:8835';
 var Config = require('./config');
 
 
