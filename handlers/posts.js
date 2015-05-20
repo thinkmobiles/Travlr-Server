@@ -121,7 +121,7 @@ Posts = function (PostGre) {
                 }
             });
         }
-    }
+    };
 
     this.deletePost = function (req, res, next) {
         var postId = req.params.id;
