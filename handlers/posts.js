@@ -122,6 +122,36 @@ Posts = function (PostGre) {
             });
         }
     }
+
+    this.deletePost = function (req, res, next) {
+        var postId = req.params.id;
+        var authorId = req.session.userId;
+
+        if (postId) {
+            PostModel
+                .forge({
+                    id: postId
+                })
+                .fetch()
+                .then(function(postModel){
+                    if(postModel && postModel.id){
+                        if(postModel.author_id == authorId){
+                            postModel
+                                .destroy()
+                                .then(function () {
+                                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+                                })
+                                .otherwise(next);
+                        }
+                    }else{
+                        next(RESPONSES.INVALID_PARAMETERS);
+                    }
+                })
+                .otherwise(next)
+        } else {
+            next(RESPONSES.INVALID_PARAMETERS);
+        }
+    }
 };
 
 module.exports = Posts;

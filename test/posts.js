@@ -36,10 +36,10 @@ describe('Posts Test:', function () {
 
         var postData = {
             'title': 'Title ' + getRandomInt(),
-            'body' : 'Body is #' + getRandomInt(),
+            'body': 'Body is #' + getRandomInt(),
             "lon": 41.850033,
             "lat": -87.6500523,
-            "type": [1,2,4,5]
+            "type": [1, 2, 4, 5]
         };
 
         agent
@@ -56,7 +56,7 @@ describe('Posts Test:', function () {
             });
     });
 
-    it('Get post by ID', function(done){
+    it('Get post by ID', function (done) {
         agent
             .get('/posts/' + postId)
             .expect(200)
@@ -72,12 +72,22 @@ describe('Posts Test:', function () {
                     expect(post).to.have.property('author');
                     expect(post).to.have.property('lat');
                     expect(post).to.have.property('lon');
-
-
                     done(null, res);
                 }
             });
     });
 
+    it('Delete post by ID', function (done) {
+        agent
+            .delete('/posts/' + postId)
+            .expect(200)
+            .end(function (err, resp) {
+                if (err) {
+                    done(err);
+                } else {
+                    done();
+                }
+            });
 
+    });
 });
