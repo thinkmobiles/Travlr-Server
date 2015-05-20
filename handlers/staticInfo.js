@@ -63,8 +63,14 @@ Static_Info = function (PostGre) {
     };
 
     this.getInfo = function (req, res, next) {
+        var page = req.query.page || 1;
+        var limit = req.query.count || 25;
+
         StaticCollection
-            .forge()
+            .query(function (qb) {
+                qb.offset(( page - 1 ) * limit)
+                    .limit(limit)
+            })
             .fetch({
                 columns: [
                     'id',
@@ -93,7 +99,11 @@ Static_Info = function (PostGre) {
                 ]
             })
             .then(function (info) {
-                res.status(200).send(info)
+                if (info && info.id) {
+                    res.status(200).send(info)
+                } else {
+                    res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                }
             })
             .otherwise(next)
     };
