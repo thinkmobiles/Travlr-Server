@@ -1,0 +1,57 @@
+<div class="edit_user">
+  <table width="100%">
+	<col width="50%"/>
+	<col width="50%"/>
+    <tr>
+      <td>
+        <label>Likes</label>
+      </td>
+      <td>
+        <input type="text" placeholder="Likes" id="likes" value="<%=model.fake_likes%>" maxlength="30"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label>User</label>
+      </td>
+      <td>
+		<select class="selectUser">
+		  <% users.forEach(function(user, index){ %>
+		  <option data-id="<%=user.id%>" <%if (user.id==model.author_id){%>selected="selected"<%}%> ><%=_.escape(user.user_name)%></option>
+		  <%})%>
+		</select>
+      </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Show in Hot Feed</label>
+        </td>
+        <td>
+            <input type="checkbox" id="show_hot" <%if (model.show_hot){%>checked<%}%> />
+        </td>
+    </tr>
+  </table>
+  <center><b><label>Location</label></b></center>
+  <table width="100%">
+	<col width="50%"/>
+	<col width="50%"/>
+    <tr>
+      <td>
+        <label>Latitude</label>
+      </td>
+      <td>
+        <input type="text" placeholder="Latitude" id="latitude" value="<%=model.location?model.location.lat:0%>" maxlength="30"/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label>Longitude</label>
+      </td>
+      <td>
+        <input type="text" placeholder="Longitude" id="longitude" value="<%=model.location?model.location.lon:0%>" maxlength="30"/>
+      </td>
+    </tr>
+ 
+  </table>
+  <hr/>
+</div>
