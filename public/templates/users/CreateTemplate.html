@@ -1,38 +1,48 @@
 <div class="create_user">
-  <div id="uploadAvatar">
-    <div id="add_avatar">
-      <div>Upload photo</div>
-      <input type="file" value="Edit" id="inputImg" accept="image/*">
+    <div id="uploadAvatar">
+        <div id="add_avatar">
+            <div>Upload photo</div>
+            <input type="file" value="Edit" id="inputImg" accept="image/*">
 
-	  <canvas id="avatar" width="140" height="140"></canvas>
+            <canvas id="avatar" width="140" height="140"></canvas>
 
+        </div>
     </div>
-  </div>
-  <div id="uploadInfo">
-    <table>
-	  <tr>
-        <td>
-          <label>Name</label>
-        </td>
-        <td>
-          <input type="text" placeholder="Name" id="name" maxlength="30"/>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label>Email</label>
-        </td>
-        <td>
-          <input type="text" placeholder="Email" id="email" maxlength="30"/>
-        </td>
-      </tr>
-      
-    </table>
-  </div>
-  <div class="cropImages form" style="display:none;">
-    <div class="image_input" style="float: left;margin-right: 20px;"></div>
-    <img class="image_output" />
-    <div class="clear"></div>
-  </div>
-  <hr/>
+    <div id="uploadInfo">
+        <table>
+            <tr>
+                <td>
+                    <label>First name</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="First name" id="firstName" maxlength="30"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Last name</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="Last name" id="lastName" maxlength="30"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Email</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="Email" id="email" maxlength="30"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="cropImages form" style="display:none;">
+        <div class="image_input" style="float: left;margin-right: 20px;"></div>
+        <img class="image_output"/>
+
+        <div class="clear"></div>
+    </div>
+    <hr/>
 </div>

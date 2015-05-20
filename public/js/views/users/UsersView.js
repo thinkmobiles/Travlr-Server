@@ -1,51 +1,53 @@
 define([
-	'js/views/users/EditUserView',
-	'js/views/users/CreateUserView',
+    'js/views/users/EditUserView',
+    'js/views/users/CreateUserView',
     "js/collections/users/usersCollections",
     'text!templates/users/UsersTemplate.html',
     'text!templates/users/ListTemplate.html',
-	'custom'
-], function (EditUserView, CreateUserView, userCollection, UsersTemplate, ListTemplate, custom) {
+    'custom',
+    'constants/responses'
+], function (EditUserView, CreateUserView, userCollection, UsersTemplate, ListTemplate, custom, RESPONSES) {
 
     var UsersView = Backbone.View.extend({
         el: '#content-holder',
-		template: _.template(UsersTemplate),
+        template: _.template(UsersTemplate),
         initialize: function (options) {
             this.collection = options.usersCollection;
-			this.checkItemCount = 0;
-			this.contentType = "users"
-			this.sort = this.collection.sort;
-			this.page = this.collection.page;
-			this.defaultItemsNumber = this.collection.count || 50;
-			this.collection.bind('add', this.addElement, this);
-			this.getTotalLength(null, this.defaultItemsNumber);
+            this.checkItemCount = 0;
+            this.contentType = "users";
+            this.sort = this.collection.sort;
+            this.page = this.collection.page;
+            this.defaultItemsNumber = this.collection.count || 50;
+            this.collection.bind('add', this.addElement, this);
+            this.getTotalLength(null, this.defaultItemsNumber);
             this.render();
         },
         events: {
-			"click .edit" : "editUser",
-			"click .remove" : "removeUsers",
-			"click .create" : "createUser",
-			"click .checkAll" : "checkAll",
-			"click table.fakeUserList tr" : "check",
-			"click .oe-sortable" : "goSort",
-			"click .itemsNumber": "switchPageCounter",
-			"click #itemsButton": "itemsNumber",
-			"click .currentPageList": "itemsNumber",
-			"click .showPage": "showPage",
-			"click #firstShowPage": "firstPage",
+            "click .edit": "editUser",
+            "click .editButton": "editUser",
+            "click .remove": "removeUsers",
+            "click .create": "createUser",
+            "click .checkAll": "checkAll",
+            "click table.fakeUserList tr": "check",
+            "click .oe-sortable": "goSort",
+            "click .itemsNumber": "switchPageCounter",
+            "click #itemsButton": "itemsNumber",
+            "click .currentPageList": "itemsNumber",
+            "click .showPage": "showPage",
+            "click #firstShowPage": "firstPage",
             "click #lastShowPage": "lastPage",
-			"click #previousPage": "previousPage",
+            "click #previousPage": "previousPage",
             "click #nextPage": "nextPage"
         },
 
-		previousPage: function (event) {
+        previousPage: function (event) {
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
             event.preventDefault();
             custom.prevP.call(this, {
                 sort: this.sort
             }, custom);
-			this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber);
         },
 
         nextPage: function (event) {
@@ -55,7 +57,7 @@ define([
             custom.nextP.call(this, {
                 sort: this.sort
             }, custom);
-			this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber);
         },
 
         lastPage: function (event) {
@@ -63,9 +65,9 @@ define([
             $('#check_all').prop('checked', false);
             event.preventDefault();
             custom.lastP.call(this, {
-                sort: this.sort,
+                sort: this.sort
             }, custom);
-			this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber);
         },  //end first last page in paginations
 
         firstPage: function (event) {
@@ -73,30 +75,30 @@ define([
             $('#check_all').prop('checked', false);
             event.preventDefault();
             custom.firstP.call(this, {
-                sort: this.sort,
+                sort: this.sort
             }, custom);
-			this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber);
         },
 
-		showPage: function (event) {
+        showPage: function (event) {
             event.preventDefault();
-            custom.showP.call(this,event, { sort: this.sort }, custom);
+            custom.showP.call(this, event, { sort: this.sort }, custom);
         },
 
-		itemsNumber: function (e) {
+        itemsNumber: function (e) {
             $(e.target).closest("button").next("ul").toggle();
             return false;
         },
 
         switchPageCounter: function (e) {
             e.preventDefault();
-			$(e.target).closest(".popUp").hide();
+            $(e.target).closest(".popUp").hide();
             this.startTime = new Date();
             var itemsNumber = event.target.textContent;
             this.defaultItemsNumber = itemsNumber;
             this.getTotalLength(null, itemsNumber);
             this.page = 1;
-			this.fetchCollection();
+            this.fetchCollection();
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
             custom.changeLocationHash.call(this, 1, itemsNumber);
@@ -104,9 +106,9 @@ define([
 
 
         fetchCollection: function () {
-			this.checkItemCount=0;
-			this.$el.find(".remove").hide();
-			this.$el.find(".edit").hide();
+            this.checkItemCount = 0;
+            this.$el.find(".remove").hide();
+            this.$el.find(".edit").hide();
             this.collection = new userCollection({
                 sort: this.sort,
                 page: this.page,
@@ -114,45 +116,45 @@ define([
             });
             this.collection.bind('reset', this.renderContent, this);
 //			this.collection.bind('remove', this.deleteElement, this);
-			this.collection.bind('add', this.addElement, this);
+            this.collection.bind('add', this.addElement, this);
         },
-		
-		goSort: function (e) {
-			this.collection.unbind('reset');
-			var target$ = $(e.target).closest(".oe-sortable");
-			var currentParrentSortClass = target$.attr('class');
-			var sortClass = currentParrentSortClass.split(' ')[1];
-			var sortConst = 1;
-			var sortBy = target$.data('sort');
-			var sortObject = {};
-			if (!sortClass) {
-				target$.addClass('sortDn');
-				sortClass = "sortDn";
-			}
-			switch (sortClass) {
+
+        goSort: function (e) {
+            this.collection.unbind('reset');
+            var target$ = $(e.target).closest(".oe-sortable");
+            var currentParrentSortClass = target$.attr('class');
+            var sortClass = currentParrentSortClass.split(' ')[1];
+            var sortConst = 1;
+            var sortBy = target$.data('sort');
+            var sortObject = {};
+            if (!sortClass) {
+                target$.addClass('sortDn');
+                sortClass = "sortDn";
+            }
+            switch (sortClass) {
                 case "sortDn":
-                    {
-                        target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                        target$.removeClass('sortDn').addClass('sortUp');
-                        sortConst = 1;
-                    }
+                {
+                    target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                    target$.removeClass('sortDn').addClass('sortUp');
+                    sortConst = 1;
+                }
                     break;
                 case "sortUp":
-                    {
-                        target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
-                        target$.removeClass('sortUp').addClass('sortDn');
-                        sortConst = -1;
-                    }
+                {
+                    target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                    target$.removeClass('sortUp').addClass('sortDn');
+                    sortConst = -1;
+                }
                     break;
             }
-			sortObject[sortBy] = sortConst;
+            sortObject[sortBy] = sortConst;
             this.sort = sortObject;
-			this.fetchCollection();
+            this.fetchCollection();
             custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
-		},
+        },
 
         getTotalLength: function (currentNumber, itemsNumber) {
-			var self = this;
+            var self = this;
             custom.getData('/users/count', {
             }, function (response) {
                 var page = self.page || 1;
@@ -168,107 +170,137 @@ define([
 
         },
 
-		check: function(e){
-			var currentCheckbox = $(e.target);
-			if(!$(e.target).hasClass("checkbox")){
-				currentCheckbox = $(e.target).parents("tr").find(".checkbox");
-				currentCheckbox.prop("checked", !currentCheckbox.prop("checked"));
-			}
-			if(currentCheckbox.prop( "checked" )){
-				this.checkItemCount++;
-			}else{
-				this.checkItemCount--;
-			}
-			if (this.checkItemCount){
-				this.$el.find(".remove").show();
-				if (this.checkItemCount==1){
-					this.$el.find(".edit").show();
-				}else{
-					this.$el.find(".edit").hide();
-				}
-			} else {
-				this.$el.find(".remove").hide();
-				this.$el.find(".edit").hide();
-			}
-		},
-		checkAll:function(e){
-			if($(e.target).prop( "checked" )){
-				this.checkItemCount = this.$el.find("table tr td input").length;
-				this.$el.find("table tr td input").each(function(){
-					$(this).prop("checked", true);
-				});
-				this.$el.find(".remove").show();
-				if (this.checkItemCount==1){
-					this.$el.find(".edit").show();
-				}else{
-					this.$el.find(".edit").hide();
-				}
-			}else{
-				this.checkItemCount = 0;
-				this.$el.find("table tr td input").each(function(){
-					$(this).prop("checked", false);
-				});
-				this.$el.find(".remove").hide();
-			}
-		},
-		removeUsers:function(e){
-			var self = this;
-			this.$el.find("table tr th input").prop("checked", false);
-			this.$el.find(".remove").hide();
-			var count = this.$el.find("table tr td input:checked").length;
-			this.$el.find("table tr td input").each(function(){
-				if($(this).prop( "checked" )){
-					var model = self.collection.get($(this).closest("tr").data("id"));
-                    model.destroy({
-                        wait:true,
-                        success:function(){
-							count--;
-							if (!count){
-								self.fetchCollection();
-								self.getTotalLength(null, self.defaultItemsNumber);
-							}
-                        },
-                        error: function (model, res) {
-                        }
-                    });
-				}
-			});
-		},
-		deleteElement:function(model){
-			/*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
-			this.fetchCollection();
-			this.getTotalLength(null, this.defaultItemsNumber);
-		},
-		updateElement:function(model){
-	
-			this.fetchCollection();
-			this.getTotalLength(null, this.defaultItemsNumber);
-		},
-		addElement:function(model){
-			this.fetchCollection();
-			this.getTotalLength(null, this.defaultItemsNumber);
-		},
-		editUser:function(e){
-			var id = this.$el.find("table tr td input:checked").eq(0).closest("tr").data("id");
-			var model = this.collection.get(id);
-			model.bind('change', this.updateElement, this)
-			new EditUserView({model:model});
-			return false;
-		},
-		createUser:function(e){
-			new CreateUserView({collection:this.collection});
-			return false;
-		},
-        render: function(options){
+        check: function (e) {
+            var currentCheckbox = $(e.target);
+            if (!$(e.target).hasClass("checkbox")) {
+                currentCheckbox = $(e.target).parents("tr").find(".checkbox");
+                currentCheckbox.prop("checked", !currentCheckbox.prop("checked"));
+            }
+            if (currentCheckbox.prop("checked")) {
+                this.checkItemCount++;
+            } else {
+                this.checkItemCount--;
+            }
+            if (this.checkItemCount) {
+                this.$el.find(".remove").show();
+                if (this.checkItemCount == 1) {
+                    this.$el.find(".edit").show();
+                } else {
+                    this.$el.find(".edit").hide();
+                }
+            } else {
+                this.$el.find(".remove").hide();
+                this.$el.find(".edit").hide();
+            }
+        },
+        checkAll: function (e) {
+            if ($(e.target).prop("checked")) {
+                this.checkItemCount = this.$el.find("table tr td input").length;
+                this.$el.find("table tr td input").each(function () {
+                    $(this).prop("checked", true);
+                });
+                this.$el.find(".remove").show();
+                if (this.checkItemCount == 1) {
+                    this.$el.find(".edit").show();
+                } else {
+                    this.$el.find(".edit").hide();
+                }
+            } else {
+                this.checkItemCount = 0;
+                this.$el.find("table tr td input").each(function () {
+                    $(this).prop("checked", false);
+                });
+                this.$el.find(".remove").hide();
+            }
+        },
+        removeUsers: function (e) {
+            var id;
+            var model;
+            var self = this;
+            var targetClass = $(e.target).attr('class');
+            if (targetClass.indexOf('deleteButton') !== -1) {
+                id = $(e.target).closest("tr").data("id");
+                model = self.collection.get(id);
+                model.destroy({
+                    wait: true,
+                    success: function () {
+                            self.fetchCollection();
+                            self.getTotalLength(null, self.defaultItemsNumber);
+                    },
+                    error: function (err) {
+                        alert(RESPONSES.SERVER_ERROR);
+                    }
+                });
+            } else {
+                this.$el.find("table tr th input").prop("checked", false);
+                this.$el.find(".remove").hide();
+                var count = this.$el.find("table tr td input:checked").length;
+                this.$el.find("table tr td input").each(function () {
+                    if ($(this).prop("checked")) {
+                        id = $(this).closest("tr").data("id");
+                        model = self.collection.get(id);
+                        model.destroy({
+                            wait: true,
+                            success: function () {
+                                count--;
+                                if (!count) {
+                                    self.fetchCollection();
+                                    self.getTotalLength(null, self.defaultItemsNumber);
+                                }
+                            },
+                            error: function (model, res) {
+                                alert(RESPONSES.SERVER_ERROR);
+                            }
+                        });
+                    }
+                });
+            }
+        },
+        deleteElement: function (model) {
+            /*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber);
+        },
+        updateElement: function (model) {
+
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber);
+        },
+        addElement: function (model) {
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber);
+        },
+        editUser: function (e) {
+            var id;
+            var model;
+            var targetClass = $(e.target).attr('class');
+
+            e.stopPropagation();
+
+            if (targetClass.indexOf('editButton') !== -1) {
+                id = $(e.target).closest("tr").data("id");
+            } else {
+                id = this.$el.find("table tr td input:checked").eq(0).closest("tr").data("id");
+            }
+            model = this.collection.get(id);
+            model.bind('change', this.updateElement, this);
+            new EditUserView({model: model});
+            return false;
+        },
+        createUser: function (e) {
+            new CreateUserView({collection: this.collection});
+            return false;
+        },
+        render: function (options) {
             this.$el.html(this.template());
-			if (this.sort){
-				this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
-			}
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber:  this.defaultItemsNumber*(this.page-1)}));
+            if (this.sort) {
+                this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
+            }
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
-        renderContent: function(options){
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber*(this.page-1)}));
+        renderContent: function (options) {
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 
