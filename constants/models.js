@@ -5,5 +5,6 @@ module.exports = {
     CITY: 'city',
     FEEDBACK: 'feedback',
     COMPLAINT: 'complaint',
-    IMAGE: 'image'
+    IMAGE: 'image',
+    STATIC_INFO: 'static_info'
 };

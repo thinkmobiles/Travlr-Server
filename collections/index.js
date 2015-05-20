@@ -5,5 +5,6 @@ var Collections = function (PostGre) {
 
     this[COLLECTIONS.USERS] = require('./users')(PostGre, Collection);
     this[COLLECTIONS.POSTS] = require('./posts')(PostGre, Collection);
+    this[COLLECTIONS.STATIC_INFO] = require('./staticInfo')(PostGre, Collection);
 };
 module.exports = Collections;

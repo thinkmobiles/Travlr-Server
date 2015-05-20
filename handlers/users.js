@@ -3,7 +3,6 @@ var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
 var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
-var usersValidation = require('../helpers/validation');
 var Session = require('../handlers/sessions');
 var crypPass = require('../helpers/cryptoPass');
 var cryptoPass = new crypPass();
