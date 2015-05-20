@@ -43,7 +43,7 @@ module.exports = function (knex, Promise) {
                             knex.raw('ALTER TABLE posts ADD COLUMN location GEOGRAPHY(POINT,4326)')
                                 .then(function () {
                                      knex.raw('CREATE INDEX posts_location_index ON posts USING GIST (location)')
-                                        .asCallback(cb);
+                                        .exec(cb);
                                 })
                                 .catch(function (err) {
                                     cb(err);
@@ -146,7 +146,7 @@ module.exports = function (knex, Promise) {
         knex.schema.hasTable(tableName).then(function (exists) {
             if (!exists) {
                  knex.schema.createTable(tableName, crateFieldsFunc)
-                    .asCallback(callback);
+                    .exec(callback);
             } else {
                 callback()
             }
@@ -167,6 +167,7 @@ module.exports = function (knex, Promise) {
             knex.schema.dropTableIfExists(TABLES.STATIC_INFO)
         ]);
     }
+
 
 
     return {

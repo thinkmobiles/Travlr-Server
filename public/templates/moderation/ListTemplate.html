@@ -1,0 +1,13 @@
+<% photosCollection.forEach(function(photo, index){ %>
+<tr data-index="<%= index %>" data-id="<%=photo.id%>">
+    <td class="notForm"><input type="checkbox" value="" class="checkbox" /></td>
+    <td class="numberImage"><%=startNumber + index + 1 %></td>
+    <td class="preview"><img class="previewImage" src="<%=photo.url%>"  width="150" height="150"></td>
+    <td class="likesCount"><%=_.escape(photo.fake_likes)%></td>
+    <td class="postDate"><%=new Date(photo.created_at).toLocaleString()%></td>
+    <td class="userName" data-id="<%=photo.author_id%>"><%=_.escape(photo.user_name)%></td>
+    <td class="userType"><%=_.escape(photo.social)%></td>
+    <td class="flag"><%=_.escape(photo.img_baned_count)%></td>
+    <td class=""><input type="button" class="changeBann <%=photo.bann?'unbann':'bann'%>" value="<%=photo.bann?'Unban user':'Ban user'%>"></td>
+</tr>
+<% }) %>

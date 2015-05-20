@@ -101,22 +101,48 @@ Users = function (PostGre) {
     };
 
     this.getUsers = function (req, res, next) {
-        var page = req.query.page || 1;
-        var limit = req.query.count || 25;
+        var page = parseInt(req.query.page) || 1;
+        var count = parseInt(req.query.count) || 25;
+        var sortObject = req.query.sort;
+        var sortObjectKeys;
+
+        var sortName;
+        var sortAliase;
+        var sortOrder;
 
         UserCollection
+            .forge()
             .query(function (qb) {
-                qb.where('role', '=', CONSTANTS.USERS_ROLES.USER)
-                    .offset(( page - 1 ) * limit)
-                    .limit(limit)
+                qb.where('role', '=', CONSTANTS.USERS_ROLES.USER);
+                qb.column(PostGre.knex.raw('to_char(birthday,' + "'DD/MM/YYYY'" + ') as birthday'));
+
+
+                if (typeof sortObject === 'object') {
+                    sortAliase = Object.keys(sortObject);
+                    sortAliase = sortAliase[0];
+                    if (sortAliase === 'email') {
+                        sortName = 'email';
+                    } else if (sortAliase === 'name') {
+                        sortName = 'first_name';
+                    } else if (sortAliase ==='birthday') {
+                        sortName = 'birthday';
+                    }
+
+                    if (sortName) {
+                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                        qb.orderBy(sortName, sortOrder);
+                    }
+                }
+
+                qb.offset(( page - 1 ) * count);
+                qb.limit(count);
             })
             .fetch({
                 columns: [
                     'id',
+                    'email',
                     'first_name',
-                    'last_name',
-                    'birthday',
-                    'role'
+                    'last_name'
                 ]
             })
             .then(function (users) {

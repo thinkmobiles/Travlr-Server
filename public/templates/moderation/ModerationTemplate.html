@@ -1,0 +1,106 @@
+<div>
+    <div id="top-bar">
+        <h3>Baned Images</h3>
+        <div id="template-switcher" class="right">
+            <ul class="btn-l">
+			  <li><div title="Unban" class="unbannPhoto" data-view-type="list" id="listBtn"></div></li>
+			  <li><div title="Ban" class="bannPhoto" data-view-type="thumbnails" id="thumbBtn"></div></li>
+            </ul>
+        </div>
+    </div>
+    <div class="photoListContainer">
+        <table id="photosList" class="bannPhotoList">
+            <thead>
+            <tr class="table-header">
+                <th><input type="checkbox" value="" class="checkAll" /></th>
+                <th>#</th>
+                <th>Preview</th>
+                <th class="oe-sortable" data-sort="fake_likes">Likes<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th class="oe-sortable sortDn" data-sort="created_at">Post Date<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th class="oe-sortable" data-sort="user_name">User<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th class="oe-sortable" data-sort="social">User Type<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th class="oe-sortable" data-sort="img_baned_count">Flag<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+    </div>
+    <div class="pagination">
+        <div class="countOnPage">
+            <div>
+		<span>
+          <span id="grid-start">1</span>
+          -
+          <span id="grid-end">1</span>
+          of
+          <span id="grid-count">1</span>
+          items
+		</span>
+            </div>
+            <div class="pageList">
+                <button id="itemsButton">
+                    <span id="itemsNumber">5</span>
+                </button>
+                <ul class="allNumberPerPage popUp" style="display: none;">
+                    <li>
+                        <a class="itemsNumber" href="javascript;">5</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">10</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">20</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">50</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">100</a>
+                    </li>
+                </ul>
+            </div>
+            <span>Per Page</span>
+        </div>
+        <div class="nextPrev">
+            <div>
+                <button id="firstShowPage" class="icon" type="button" disabled="">88</button>
+                <button id="previousPage" class="icon" type="button" disabled="">8</button>
+                <div>
+                    <span>Page</span>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <div class="currentShowPageContainer">
+                        <input id="currentShowPage" type="text">
+                    </div>
+                    <div class="allPage">
+                        <button class="currentPageList icon">v</button>
+                        <ul id="pageList" class="allNumberPerPage popUp" style="display: none;">
+                            <li class="showPage">1</li>
+                            <li class="showPage">2</li>
+                            <li class="showPage">3</li>
+                            <li class="showPage">4</li>
+                            <li class="showPage">5</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+		<span>
+          of
+          <span id="lastPage">1</span>
+		</span>
+            </div>
+            <button id="nextPage" type="button" class="icon">9</button>
+            <button id="lastShowPage" type="button" class="icon">99</button>
+        </div>
+
+    </div>
+    <div class="clear">
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<% photoCollection.forEach(function(photo, index){ %>
+<tr data-index="<%= index %>" data-id="<%=photo.id%>">
+  <td class = "notForm"><input type="checkbox" value="" class="checkbox" /></td>
+  <td class = "numberUser"><%=startNumber + index + 1 %></td>
+  <td class = ""><img src="<%=photo.url%>" width="150" height="150"></td>
+  <td class = ""><%=_.escape(photo.fake_likes)%></td>
+
+  <td class = ""><%=_.escape(photo.user_name)%></td>
+  <td class = ""><%=new Date(photo.created_at).toLocaleString()  %></td>
+</tr>
+<% }) %>
+

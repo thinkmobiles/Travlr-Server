@@ -16,8 +16,11 @@ if (process.env.NODE_ENV === 'production') {
 var Knex = require('knex');
 var pg = require('pg');
 var Promise = require('bluebird');
+var crypto = require("crypto");
+var CONSTANTS = require('../constants/constants');
 
 Knex.knex = Knex.initialize({
+    debug: true,
     client: 'pg',
     connection: {
         host: process.env.DB_HOST,
@@ -26,7 +29,6 @@ Knex.knex = Knex.initialize({
         port: process.env.DB_PORT,
         database: process.env.DB_NAME
     }
-
 });
 
 var knex = Knex.knex;
@@ -44,6 +46,7 @@ app.configure(function () {
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(__dirname, '/public'));
+    app.use(express.errorHandler());
 });
 
 app.configure('development', function () {
@@ -76,6 +79,7 @@ app.get('/', function (req, res) {
     html += '<a href="/databases/create">Create Tables</a><br/>';
     html += '<a href="/databases/drop">Drop Tables</a><br/>';
     html += '<a href="/databases/default">Set Defult Date</a><br/>';
+    html += '<a href="/add_admin">Add admin</a><br/>';
     //html+='<a href="/seed/default">Seed Default</a><br/>';
     //html+='<a href="/seed/fake">Seed Fake</a><br/>';
 
@@ -96,6 +100,33 @@ app.get('/databases/drop', function (req, res) {
 app.get('/databases/default', function (req, res) {
     schema.setDefaultData(req, res);
 });
+
+app.get('/add_admin', function (req, res) {
+    var admin = bookshelf.Model.extend({
+        tableName: 'users',
+        hasTimestamps: true
+    });
+    var shaSum = crypto.createHash('sha256');
+
+    shaSum.update("111111");
+    var pass = shaSum.digest('hex');
+    admin.forge({
+            password: pass,
+            email: "admin@admin.com",
+            first_name: "Admin",
+            last_name: "Admin",
+            role: CONSTANTS.USERS_ROLES.ADMIN
+        })
+        .save()
+        .then(function () {
+            res.status(201).send('<b>Admin was created successful</b>');
+        })
+        .catch(function (error) {
+            res.status(500).send(error);
+    });
+
+});
+
 
 server.listen(3000, function () {
     console.log("Express server listening on port " + 3000);

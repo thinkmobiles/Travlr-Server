@@ -18,7 +18,7 @@ module.exports = function (app, PostGre) {
         res.sendfile('index.html');
     });
 
-    app.get('/isAuth', session.isAuthorizedUser);
+    app.get('/isAuthenticated', session.isAuthenticated);
 
     app.use('/users', usersRouter);
 
