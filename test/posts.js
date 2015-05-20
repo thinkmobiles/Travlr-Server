@@ -1,21 +1,18 @@
 var request = require('supertest');
 var chai = require('chai');
 var expect = require('chai').expect;
-var url = 'http://localhost:8835';
-var app = require('../app.js');
-var agent = request.agent(app);
+var Config = require('./config');
 
 
 describe('Posts Test:', function () {
 
+    var config = new Config();
+    var app = config.app;
+    var agent = request.agent(app);
+
     var postId;
+    var postData = config.post;
 
-
-    function getRandomInt() {
-        var min = 1;
-        var max = 100;
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
 
     this.timeout(12500);
 
@@ -34,13 +31,6 @@ describe('Posts Test:', function () {
 
     it('Create posts', function (done) {
 
-        var postData = {
-            'title': 'Title ' + getRandomInt(),
-            'body' : 'Body is #' + getRandomInt(),
-            "lon": 41.850033,
-            "lat": -87.6500523,
-            "type": [1,2,4,5]
-        };
 
         agent
             .post('/posts')
@@ -56,7 +46,7 @@ describe('Posts Test:', function () {
             });
     });
 
-    it('Get post by ID', function(done){
+    it('Get post by ID', function (done) {
         agent
             .get('/posts/' + postId)
             .expect(200)
@@ -67,17 +57,27 @@ describe('Posts Test:', function () {
                     var post = res.body;
                     expect(post).to.have.property('body');
                     expect(post).to.have.property('title');
-                    //expect(post).to.have.property('country');
-                    //expect(post).to.have.property('city');
+                    expect(post).to.have.property('country');
+                    expect(post).to.have.property('city');
                     expect(post).to.have.property('author');
-                    expect(post).to.have.property('latitude');
-                    expect(post).to.have.property('longitude');
-
-
+                    expect(post).to.have.property('lat');
+                    expect(post).to.have.property('lon');
                     done(null, res);
                 }
             });
     });
 
+    it('Delete post by ID', function (done) {
+        agent
+            .delete('/posts/' + postId)
+            .expect(200)
+            .end(function (err, resp) {
+                if (err) {
+                    done(err);
+                } else {
+                    done();
+                }
+            });
 
+    });
 });

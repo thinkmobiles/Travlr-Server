@@ -5,31 +5,35 @@ var MODELS = require('../constants/models');
 
 var _ = require('../node_modules/underscore');
 var Validation = require('../helpers/validation');
-var Cities;
+var Countries;
 var gm = require('googlemaps');
 
 
-Cities = function (PostGre) {
+Countries = function (PostGre) {
     var self = this;
-    var CitiesModel = PostGre.Models[MODELS.CITY];
+    var CountryModel = PostGre.Models[MODELS.COUNTRY];
     
     this.checkCreatePostOptions = new Validation.Check({
-        name: ['required']
+        name: ['required'],
+        code: ['required']
     });
 
-    this.createCityByOptions = function(options, callback){
+    this.createCountryByOptions = function(options, callback){
         self.checkCreatePostOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
             } else {
-                CitiesModel
-                    .forge({name: validOptions.name})
+                CountryModel
+                    .forge({
+                        name: validOptions.name,
+                        code: validOptions.code
+                    })
                     .fetch()
-                    .then(function(cityModel){
-                        if(cityModel && cityModel.id){
-                            callback(null, cityModel);
+                    .then(function(countryModel){
+                        if(countryModel && countryModel.id){
+                            callback(null, countryModel);
                         }else{
-                            CitiesModel
+                            CountryModel
                                 .forge()
                                 .save(validOptions)
                                 .exec(callback);
@@ -44,4 +48,4 @@ Cities = function (PostGre) {
 
 };
 
-module.exports = Cities;
+module.exports = Countries;

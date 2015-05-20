@@ -10,7 +10,8 @@ module.exports = function (PostGre, app) {
         .post(postsHandler.createPost);
 
     router.route('/:id')
-        .get(postsHandler.getPostById);
+        .get(postsHandler.getPostById)
+        .delete(postsHandler.deletePost);
 
     return router;
 };
