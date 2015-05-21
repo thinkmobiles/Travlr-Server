@@ -5,6 +5,7 @@ var MODELS = require('../constants/models');
 var Posts;
 var async = require('async');
 var PostsHelper = require('../helpers/posts');
+var ImagesHelper = require('../helpers/images');
 var CityHelper = require('../helpers/cities');
 var CountryHelper = require('../helpers/countries');
 
@@ -12,6 +13,7 @@ Posts = function (PostGre) {
     var PostModel = PostGre.Models[MODELS.POST];
     var PostCollection = PostGre.Collections[COLLECTIONS.POSTS];
     var postsHelper = new PostsHelper(PostGre);
+    var imagesHelper = new ImagesHelper(PostGre);
     var cityHelper = new CityHelper(PostGre);
     var countryHelper = new CountryHelper(PostGre);
 
@@ -72,6 +74,10 @@ Posts = function (PostGre) {
         var options = req.body;
         var location;
         var saveData;
+        var imageData;
+        var cityData;
+        var countryData;
+        var postId;
 
         //ToDo remove || 1 when will have user login
         options.userId = req.session.userId || 1;
@@ -88,13 +94,13 @@ Posts = function (PostGre) {
                 if (!err) {
                     async.parallel([
                             function (callback) {
-                                var cityData = {
+                                cityData = {
                                     name: resp.city
                                 };
                                 cityHelper.createCityByOptions(cityData, callback);
                             },
                             function (callback) {
-                                var countryData = {
+                                countryData = {
                                     name: resp.country.name,
                                     code: resp.country.code
                                 };
@@ -109,7 +115,22 @@ Posts = function (PostGre) {
                                     if (err) {
                                         next(err);
                                     } else {
-                                        res.status(201).send({message: RESPONSES.WAS_CREATED, postId: resp.id});
+                                        if(resp && resp.id){
+                                            imageData = {
+                                                image: options.image,
+                                                imageable_type: TABLES.POSTS,
+                                                imageable_id: resp.id
+                                            };
+                                            postId = resp.id;
+                                            imagesHelper.createImageByOptions(imageData, function(err, imageModel){
+                                                if(err){
+                                                    next(err);
+                                                }else{
+                                                    res.status(201).send({message: RESPONSES.WAS_CREATED, postId: postId});
+                                                }
+                                            });
+                                        }
+
                                     }
                                 });
                             } else {
