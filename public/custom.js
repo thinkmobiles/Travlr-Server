@@ -1,4 +1,4 @@
-define([], function () {
+define(['constants/responses'], function (RESPONSES) {
 
     var runApplication = function (success) {
         if (!Backbone.history.fragment) {
@@ -518,6 +518,16 @@ define([], function () {
             custom.changeLocationHash.call(this, page, itemsNumber);
         }
     };
+
+    var errorHandler = function(model, err) {
+        if (err.status !== 500 && err.responseJSON && err.responseJSON.error) {
+            alert(err.responseJSON.error);
+        } else {
+            alert(RESPONSES.SERVER_ERROR);
+            console.log('=============ERROR=============');
+            console.log(err);
+        }
+    };
     return {
         runApplication: runApplication,
         checkLogin: checkLogin,
@@ -529,7 +539,8 @@ define([], function () {
         nextP: nextP,
         firstP: firstP,
         lastP: lastP,
-        showP: showP
+        showP: showP,
+        errorHandler: errorHandler
 
     };
 });

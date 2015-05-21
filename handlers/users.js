@@ -3,10 +3,8 @@ var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
 var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
-var usersValidation = require('../helpers/validation');
 var Session = require('../handlers/sessions');
-var crypPass = require('../helpers/cryptoPass');
-var cryptoPass = new crypPass();
+var CrypPass = require('../helpers/cryptoPass');
 var generator = require('../helpers/randomPass.js');
 var Mailer = require('../helpers/mailer.js');
 var Users;
@@ -20,11 +18,11 @@ Users = function (PostGre) {
     var usersHelper = new UsersHelper(PostGre);
     var session = new Session(PostGre);
     var mailer = new Mailer();
+    var cryptoPass = new CrypPass();
 
     this.signUp = function (req, res, next) {
         var options = req.body;
         options.role = CONSTANTS.USERS_ROLES.USER;
-        options.password = cryptoPass.getEncryptedPass(options.password);
 
         usersHelper.createUserByOptions(options, function (err, user) {
             if (err) {
@@ -33,9 +31,7 @@ Users = function (PostGre) {
                 req.session.userId = user.id;
                 res.status(201).send({success: RESPONSES.WAS_CREATED})
             }
-        }, {checkFunctions: ['checkUniqueEmail']})
-
-
+        }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
     };
 
     this.signIn = function (req, res, next) {
@@ -79,7 +75,9 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
+                    withRelated: ['image'],
                     columns: [
+                        'id',
                         'first_name',
                         'last_name',
                         'birthday'
@@ -103,7 +101,6 @@ Users = function (PostGre) {
         var page = parseInt(req.query.page) || 1;
         var count = parseInt(req.query.count) || 25;
         var sortObject = req.query.sort;
-        var sortObjectKeys;
 
         var sortName;
         var sortAliase;
@@ -164,10 +161,7 @@ Users = function (PostGre) {
 
     this.updateUser = function (req, res, next) {
         var options = req.body;
-        var userId = req.session.userId;
-
-            options.role = CONSTANTS.USERS_ROLES.USER;
-            options.id = userId;
+        options.id = parseInt(req.params.id);
 
         usersHelper.updateUserByOptions(options, function (err, user) {
             if (err) {
@@ -180,8 +174,6 @@ Users = function (PostGre) {
 
     this.deleteUser = function (req, res, next) {
         var userId = req.params.id;
-
-        if (req.session.userId === parseInt(userId)) {
             UserModel
                 .forge({
                     id: userId
@@ -191,9 +183,6 @@ Users = function (PostGre) {
                     res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                 })
                 .otherwise(next)
-        } else {
-            res.status(403).send({error: RESPONSES.FORBIDDEN})
-        }
     };
 
     this.forgotPassword = function (req, res, next) {

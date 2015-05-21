@@ -20,13 +20,15 @@ define([
 			var self = this;
             var createData = {
                 // imgSrc : that.imgSrc,
-                user_name: this.$el.find('#name').val(),
+                first_name: this.$el.find('#firstName').val(),
+                last_name: this.$el.find('#lastName').val(),
                 email: this.$el.find('#email').val(),
+                password: this.$el.find('#password').val(),
 				image_src: this.imageSrc
             };
             this.model.save(createData,{
                 success: function (model, response) {
-					model.set({id:model.toJSON().success.id})
+					model.set({id: model.toJSON().success.id})
 					self.collection.add(model);
 					$(".trill-dialog").remove();
                 },

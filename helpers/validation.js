@@ -42,27 +42,31 @@ function Check(validJSON, objectOfValidationFunctions) {
                 errors = 'Save object is empty, wrong name of fields';
             }
 
-            if (settings) {
-                if (settings.checkFunctions && settings.checkFunctions.length) {
-                    async.each(settings.checkFunctions,function(checkFunctionName, callback) {
-                        //TODO check if is a function objectOfValidationFunctions[checkFunctionName]
-                        if (objectOfValidationFunctions[checkFunctionName]) {
-                            objectOfValidationFunctions[checkFunctionName](options, saveModelOptions, callback);
-                        } else {
-                            callback();
-                        }
-                    }, function(errors, response) {
-                        if (errors) {
-                            callback(errors);
-                        } else {
-                            callback(null, saveModelOptions);
-                        }
-                    });
+            if (!errors) {
+                if (settings) {
+                    if (settings.checkFunctions && settings.checkFunctions.length) {
+                        async.each(settings.checkFunctions,function(checkFunctionName, callback) {
+                            //TODO check if is a function objectOfValidationFunctions[checkFunctionName]
+                            if (objectOfValidationFunctions[checkFunctionName]) {
+                                objectOfValidationFunctions[checkFunctionName](options, saveModelOptions, callback);
+                            } else {
+                                callback();
+                            }
+                        }, function(errors, response) {
+                            if (errors) {
+                                callback(errors);
+                            } else {
+                                callback(null, saveModelOptions);
+                            }
+                        });
+                    } else {
+                        callback();
+                    }
                 } else {
-                    callback();
+                    callback(null, saveModelOptions);
                 }
             } else {
-                callback(null, saveModelOptions);
+                callback(errors);
             }
         }
     };

@@ -10,6 +10,9 @@ module.exports = function (app, PostGre) {
     //Routers
     var usersRouter = require('./users')(PostGre, app);
     var postsRouter = require('./posts')(PostGre, app);
+    var infoRouter = require('./staticInfo')(PostGre, app);
+    var feedbacksRouter = require('./feedbacks')(PostGre, app);
+    var complaintsRouter = require('./complaints')(PostGre, app);
     var session = new Session(PostGre);
 
     app.get('/', function (req, res, next) {
@@ -21,6 +24,12 @@ module.exports = function (app, PostGre) {
     app.use('/users', usersRouter);
 
     app.use('/posts', postsRouter);
+
+    app.use('/info', infoRouter);
+
+    app.use('/feedbacks', feedbacksRouter);
+
+    app.use('/complaints', complaintsRouter);
 
     function notFound(req, res, next) {
         res.status(404);

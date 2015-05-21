@@ -11,17 +11,18 @@ module.exports = function (PostGre, app) {
         res.status(200).send('Test OK');
     });
 
-    router.post('/signUp',usersHandler.signUp);
-    router.post('/signIn',usersHandler.signIn);
-    router.post('/forgotPass',usersHandler.forgotPassword);
-    router.post('/signInViaFB',usersHandler.signInViaFB);
+    router.post('/signUp', usersHandler.signUp);
+    router.post('/signIn', usersHandler.signIn);
+    router.post('/forgotPass', usersHandler.forgotPassword);
+    router.post('/signInViaFB', usersHandler.signInViaFB);
 
     router.get('/signOut', usersHandler.signOut);
     router.get('/count', usersHandler.getUsersCount);
     router.get('/:id', usersHandler.getUserById);
     router.get('/', usersHandler.getUsers);
 
-    router.put('/', usersHandler.updateUser);
+    router.put('/:id', usersHandler.updateUser);
+    router.patch('/:id', usersHandler.updateUser);
 
     router.delete('/:id', usersHandler.deleteUser);
 

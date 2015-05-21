@@ -5,11 +5,14 @@ var MODELS = require('../constants/models');
 var _ = require('../node_modules/underscore');
 var async = require('../node_modules/async');
 var Validation = require('../helpers/validation');
+var CrypPass = require('../helpers/cryptoPass');
 var Users;
 
 Users = function (PostGre) {
     var self = this;
     var UserModel = PostGre.Models[MODELS.USER];
+    var cryptoPass = new CrypPass();
+
 
     this.checkFunctions = {
         checkUniqueEmail: function (options, validOptions, callback) {
@@ -43,6 +46,11 @@ Users = function (PostGre) {
 
                 callback(err)
             }
+        },
+
+        encryptPass: function (options, validOptions, callback) {
+            validOptions.password = cryptoPass.getEncryptedPass(validOptions.password);
+            callback();
         }
     };
 

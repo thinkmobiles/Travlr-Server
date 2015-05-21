@@ -40,5 +40,6 @@ var Models = function (PostGre) {
     this[MODELS.FEEDBACK] = require('./feedbacks')(PostGre, Model);
     this[MODELS.COMPLAINT] = require('./complaints')(PostGre, Model);
     this[MODELS.IMAGE] = require('./images')(PostGre, Model);
+    this[MODELS.STATIC_INFO] = require('./staticInfo')(PostGre, Model);
 };
 module.exports = Models;

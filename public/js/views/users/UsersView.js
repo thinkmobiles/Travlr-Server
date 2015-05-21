@@ -26,6 +26,7 @@ define([
             "click .edit": "editUser",
             "click .editButton": "editUser",
             "click .remove": "removeUsers",
+            "click .deleteButton": "removeUsers",
             "click .create": "createUser",
             "click .checkAll": "checkAll",
             "click table.fakeUserList tr": "check",
@@ -218,6 +219,9 @@ define([
             var model;
             var self = this;
             var targetClass = $(e.target).attr('class');
+
+            e.stopPropagation();
+
             if (targetClass.indexOf('deleteButton') !== -1) {
                 id = $(e.target).closest("tr").data("id");
                 model = self.collection.get(id);
@@ -227,9 +231,7 @@ define([
                             self.fetchCollection();
                             self.getTotalLength(null, self.defaultItemsNumber);
                     },
-                    error: function (err) {
-                        alert(RESPONSES.SERVER_ERROR);
-                    }
+                    error: custom.errorHandler
                 });
             } else {
                 this.$el.find("table tr th input").prop("checked", false);
@@ -248,9 +250,7 @@ define([
                                     self.getTotalLength(null, self.defaultItemsNumber);
                                 }
                             },
-                            error: function (model, res) {
-                                alert(RESPONSES.SERVER_ERROR);
-                            }
+                            error: custom.errorHandler
                         });
                     }
                 });

@@ -17,7 +17,7 @@ define([],function () {
             email: ""
         },
         urlRoot: function () {
-            return "/users";
+            return "/users/signUp";
         }
     });
     return UserModel;
