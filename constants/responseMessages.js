@@ -17,6 +17,8 @@ module.exports = {
     MARSHALING_PREFERENCE_FOR_JUNIOR: 'Member have less then 18, he can not have MarshalingPreference Event',
     MARSHALING_PREFERENCE_FOR_SENIOR: 'Member have more then 18, he must have MarshalingPreference Event',
 
+
+    IMAGE_DESTROY: ' -> image physical destroying ->  imageUpload.removeImage',
     CHANGE_PASSWORD: 'Password change successfully',
     WAS_CREATED: 'was created successfully',
     SAVING_ERROR: 'saving error',

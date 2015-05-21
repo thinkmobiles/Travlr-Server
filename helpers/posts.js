@@ -14,12 +14,11 @@ Posts = function (PostGre) {
     this.checkCreatePostOptions = new Validation.Check({
         body: ['required'],
         author_id: ['required'],
-        email: ['required', 'isEmail'],
         title: ['required'],
         lon: ['required'],
         lat: ['required'],
-        city_id: ['isInt'],
-        country_id: ['isInt']
+        city_id: ['required'],
+        country_id: ['required']
     });
 
     this.getCountryCity = function (location, callback) {

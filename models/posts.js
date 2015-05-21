@@ -1,7 +1,14 @@
 var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
+var ImageHelper = require('../helpers/images');
+
+var LogWriter = require('../helpers/logWriter');
+var RESPONSES = require('../constants/responseMessages');
 
 module.exports = function (PostGre, ParentModel) {
+
+    var imageHelper = new ImageHelper(PostGre);
+    var logWriter = new LogWriter();
 
     return ParentModel.extend({
         tableName: TABLES.POSTS,
@@ -14,6 +21,27 @@ module.exports = function (PostGre, ParentModel) {
         },
         city: function(){
             return this.belongsTo(PostGre.Models[MODELS.CITY], 'city_id');
+        },
+        initialize: function () {
+            this.on('destroying', this.removeDependencies);
+        },
+        removeDependencies: function(post) {
+            var postId = post.get('id');
+            var imageOptions = {
+                imageable_id: postId,
+                imageable_type: TABLES.POSTS
+            };
+
+            if (postId) {
+                imageHelper.deleteImage(imageOptions,function(err, resp){
+                   if(err){
+                       logWriter.log(RESPONSES.IMAGE_DESTROY + " -> " + err);
+                   }
+                });
+            } else {
+                logWriter.log(RESPONSES.INTERNAL_ERROR + "-> " + RESPONSES.IMAGE_DESTROY);
+            }
+
         }
     });
 };

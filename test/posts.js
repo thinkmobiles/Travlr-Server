@@ -31,7 +31,6 @@ describe('Posts Test:', function () {
 
     it('Create posts', function (done) {
 
-
         agent
             .post('/posts')
             .send(postData)

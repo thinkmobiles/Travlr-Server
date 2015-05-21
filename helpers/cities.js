@@ -1,12 +1,6 @@
-var RESPONSES = require('../constants/responseMessages');
-
-var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
-
-var _ = require('../node_modules/underscore');
 var Validation = require('../helpers/validation');
 var Cities;
-var gm = require('googlemaps');
 
 
 Cities = function (PostGre) {
@@ -17,7 +11,7 @@ Cities = function (PostGre) {
         name: ['required']
     });
 
-    this.createCityByOptions = function(options, callback){
+    this.createCityByOptions = function (options, callback) {
         self.checkCreatePostOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
@@ -25,10 +19,10 @@ Cities = function (PostGre) {
                 CitiesModel
                     .forge({name: validOptions.name})
                     .fetch()
-                    .then(function(cityModel){
-                        if(cityModel && cityModel.id){
+                    .then(function (cityModel) {
+                        if (cityModel && cityModel.id) {
                             callback(null, cityModel);
-                        }else{
+                        } else {
                             CitiesModel
                                 .forge()
                                 .save(validOptions)
@@ -39,7 +33,6 @@ Cities = function (PostGre) {
             }
         });
     };
-
 
 
 };
