@@ -1,13 +1,6 @@
-var RESPONSES = require('../constants/responseMessages');
-
-var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
-
-var _ = require('../node_modules/underscore');
 var Validation = require('../helpers/validation');
 var Countries;
-var gm = require('googlemaps');
-
 
 Countries = function (PostGre) {
     var self = this;
@@ -18,7 +11,7 @@ Countries = function (PostGre) {
         code: ['required']
     });
 
-    this.createCountryByOptions = function(options, callback){
+    this.createCountryByOptions = function (options, callback) {
         self.checkCreatePostOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
@@ -29,10 +22,10 @@ Countries = function (PostGre) {
                         code: validOptions.code
                     })
                     .fetch()
-                    .then(function(countryModel){
-                        if(countryModel && countryModel.id){
+                    .then(function (countryModel) {
+                        if (countryModel && countryModel.id) {
                             callback(null, countryModel);
-                        }else{
+                        } else {
                             CountryModel
                                 .forge()
                                 .save(validOptions)
@@ -43,7 +36,6 @@ Countries = function (PostGre) {
             }
         });
     };
-
 
 
 };

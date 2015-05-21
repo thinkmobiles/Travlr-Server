@@ -64,19 +64,21 @@ PostGre = require('bookshelf')(knex);
 Models = require('./models/index');
 Collections = require('./collections/index');
 
-
-PostGre.Models = new Models(PostGre);
-PostGre.Collections = new Collections(PostGre);
-
 var uploaderConfig = {
     type: process.env.UPLOADING_TYPE,
-    directory: 'public'
-    /*awsConfig: {
+    directory: 'public'//,
+   /* awsConfig: {
         accessKeyId: process.env.AMAZON_ACCESS_KEY_ID,
         secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY,
         imageUrlDurationSec: 60 * 60 * 24 * 365 * 10
     }*/
 };
+var imagesUploader = require('./helpers/imageUploader/imageUploader')(uploaderConfig);
+
+PostGre.imagesUploader = imagesUploader;
+
+PostGre.Models = new Models(PostGre);
+PostGre.Collections = new Collections(PostGre);
 
 require('./routes/index')(app, PostGre);
 

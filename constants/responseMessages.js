@@ -14,6 +14,8 @@ module.exports = {
     // Validation errors
     NOT_UNIQUE_EMAIL: 'Email not unique',
 
+
+    IMAGE_DESTROY: ' -> image physical destroying ->  imageUpload.removeImage',
     CHANGE_PASSWORD: 'Password change successfully',
     WAS_CREATED: 'was created successfully',
     SAVING_ERROR: 'saving error',

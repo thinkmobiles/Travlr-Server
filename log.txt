@@ -1,0 +1,16 @@
+------------------------------ -> image physical destroying ->  imageUpload.removeImage -> TypeError: Cannot read property 'removeImage' of undefined-------------------------------------------------------
+Thu May 21 2015 14:46:12 GMT+0300 (EEST)
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImage -> Invalid incoming parameters-------------------------------------------------------
+Thu May 21 2015 14:51:25 GMT+0300 (EEST)
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImage -> TypeError: Cannot read property 'removeImage' of undefined-------------------------------------------------------
+Thu May 21 2015 14:54:24 GMT+0300 (EEST)
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImage -> TypeError: Cannot read property 'removeImage' of undefined-------------------------------------------------------
+Thu May 21 2015 14:57:17 GMT+0300 (EEST)
+undefined
+---------------------------------------------------------------------------------------------------------

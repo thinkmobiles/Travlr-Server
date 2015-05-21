@@ -1,7 +1,7 @@
 // JavaScript source code
-var randomPass = (function randomPass() {
+var randomPass = function (PostGre){
     //var uuid = require('node-uuid')();
-    function generate(passLength) {
+    this.generate = function(passLength) {
         var useTime = false;
         if (!passLength) {
             useTime = true;
@@ -32,20 +32,16 @@ var randomPass = (function randomPass() {
         }
     };
 
-    function generateUuid() {
+    this.generateUuid = function() {
         //var uuidLocal = uuid;
         //return uuidLocal;
     };
 
-    function getTicksKey() {
+    this.getTicksKey = function() {
         return new Date().getTime();
-    };
+    }
 
-    return {
-        generate: generate,
-        getTicksKey: getTicksKey
-        // generateUuid: generateUuid
-    };
-})();
+
+};
 
 module.exports = randomPass;

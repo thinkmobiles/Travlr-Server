@@ -43,7 +43,8 @@ module.exports = function () {
         'body': 'Body is #' + helper.getRandomInt(),
         "lon": 41.850033,
         "lat": -87.6500523,
-        "type": [1, 2, 4, 5]
+        "type": [1, 2, 4, 5],
+        "image": image1
     };
 
 };
