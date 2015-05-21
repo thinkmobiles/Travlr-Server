@@ -1,9 +1,10 @@
 define([
     'text!templates/users/EditTemplate.html',
     'js/models/UserModel',
-    'custom'
+    'custom',
+    'constants/responses'
 
-], function (EditFakeUserTemplate, UserModel, custom) {
+], function (EditFakeUserTemplate, UserModel, custom, RESPONSES) {
 
     var LoginView = Backbone.View.extend({
         el: '#content-holder',
@@ -16,30 +17,23 @@ define([
             'click #edit': 'editClick'
         },
         editClick: function (e) {
-            var editData = {};
+            var editData = {
+                first_name: this.$el.find('#firstName').val(),
+                last_name: this.$el.find('#lastName').val(),
+                email: this.$el.find('#email').val()
+            };
             if (this.imageSrc) {
-                editData = {
-                    user_name: this.$el.find('#name').val(),
-                    email: this.$el.find('#email').val(),
-                    image_src: this.imageSrc
-                };
-            } else {
-                editData = {
-                    user_name: this.$el.find('#name').val(),
-                    email: this.$el.find('#email').val()
-                };
+                editData['image_src'] = this.imageSrc;
             }
+
             this.model.urlRoot = '/users/';
             this.model.save(editData, {
                 patch: true,
                 success: function (model, response) {
-
+                    $(e).remove();
                 },
-                error: function (model, xhr) {
-                    alert('User created ERROR ');
-                }
+                error: custom.errorHandler
             })
-
         },
         render: function (options) {
             var self = this;
@@ -55,8 +49,7 @@ define([
                         text: "Save",
                         class: "btn",
                         click: function () {
-                            self.editClick();
-                            $(this).remove();
+                            self.editClick(this);
                         }
                     },
                     cancel: {
