@@ -89,9 +89,9 @@ Feedbacks = function (PostGre) {
     };
 
     this.getFeedbacks = function (req, res, next) {
+        var userId = req.query.userId;
         var page = req.query.page || 1;
         var limit = req.query.limit || 25;
-        var userId = req.query.userId;
         var orderBy = req.query.orderBy;
         var order = req.query.order || 'ASC';
 
@@ -121,7 +121,8 @@ Feedbacks = function (PostGre) {
                 columns: [
                     'id',
                     'author_id',
-                    'body'
+                    'body',
+                    'updated_at'
                     ]
             })
             .then(function (feedbacks) {

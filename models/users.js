@@ -1,5 +1,6 @@
 var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
+var logWriter = require('../helpers/logWriter');
 var async = require('async');
 
 module.exports = function (PostGre, ParentModel) {
@@ -67,7 +68,7 @@ module.exports = function (PostGre, ParentModel) {
 
             ], function (err) {
                 if (err) {
-                    console.log(err);
+                    logWriter.log(err);
                 }
             });
         }
