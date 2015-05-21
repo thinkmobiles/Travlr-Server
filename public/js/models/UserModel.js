@@ -12,7 +12,8 @@ define([],function () {
         },
         defaults: {
           //  imageSrc: "",
-            user_name:"",
+            first_name:"",
+            last_name:"",
             email: ""
         },
         urlRoot: function () {

@@ -88,7 +88,7 @@ define([
 			this.$el = $(formString).dialog({
                 closeOnEscape: false,
                 dialogClass: "trill-dialog",
-                width: "380",
+                width: "520",
                 title: "Create User",
 				appendTo: "#content-holder" ,
                 buttons: {
