@@ -21,6 +21,16 @@ Posts = function (PostGre) {
         country_id: ['required']
     });
 
+    this.checkUpdatePostOptions = new Validation.Check({
+        body: ['required'],
+        author_id: ['required'],
+        title: ['required'],
+        lon: ['required'],
+        lat: ['required'],
+        city_id: ['required'],
+        country_id: ['required']
+    });
+
     this.getCountryCity = function (location, callback) {
 
         if (location.lat && location.lon) {
@@ -85,7 +95,7 @@ Posts = function (PostGre) {
     };
 
 
-    this.createPostByOptions = function (options, callback, settings) {
+    this.createPostByOptions = function (options, callback) {
         self.checkCreatePostOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
@@ -95,9 +105,25 @@ Posts = function (PostGre) {
                     .save(validOptions)
                     .exec(callback);
             }
-        }, settings);
+        });
     };
 
+    this.updatePostByOptions = function (options, callback) {
+        self.checkUpdatePostOptions.run(options, function (err, validOptions) {
+            if (err) {
+                callback(err);
+            } else {
+                PostsModel
+                    .forge({
+                        id: options.postId
+                    })
+                    .save(validOptions, {
+                        patch: true
+                    })
+                    .exec(callback);
+            }
+        });
+    }
 
 };
 

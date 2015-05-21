@@ -14,6 +14,12 @@ Images = function (PostGre) {
         image: ['required']
     });
 
+    this.checkUpdateImageOptions = new Validation.Check({
+        imageable_id: ['required'],
+        imageable_type: ['required'],
+        image: ['required']
+    });
+
     this.createImageByOptions = function (options, callback) {
         self.checkCreateImageOptions.run(options, function (err, validOptions) {
             var ImageModel = PostGre.Models[MODELS.IMAGE];

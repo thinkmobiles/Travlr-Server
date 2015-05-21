@@ -17,7 +17,7 @@ module.exports = function (knex, Promise) {
                     row.string('gender', 10);
                     row.string('confirm_token',75);
                     row.timestamp('birthday');
-                    row.integer('facebook_id');
+                    row.integer('facebook_id').index();
                     row.integer('role');
 
                     row.timestamp('updated_at', true);
@@ -28,11 +28,13 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.POSTS, function (row) {
                         row.increments('id').primary();
-                        row.integer('author_id').notNullable();
+                        row.integer('author_id').index().notNullable();
                         row.string('title',100).notNullable();
                         row.string('body').notNullable();
-                        row.string('city_id');
-                        row.string('country_id');
+                        row.string('lat').notNullable();
+                        row.string('lon').notNullable();
+                        row.string('city_id').index();
+                        row.string('country_id').index();
                         row.specificType('type', 'int[]');
 
                         row.timestamp('updated_at', true);
@@ -57,7 +59,7 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.FEEDBACKS, function (row) {
                         row.increments('id').primary();
-                        row.integer('author_id').notNullable();
+                        row.integer('author_id').index().notNullable();
                         row.string('body', 150).notNullable();
 
                         row.timestamp('updated_at', true);
@@ -68,8 +70,8 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.COMPLAINTS, function (row) {
                         row.increments('id').primary();
-                        row.integer('author_id').notNullable();
-                        row.integer('post_id').notNullable();
+                        row.integer('author_id').index().notNullable();
+                        row.integer('post_id').index().notNullable();
 
                         row.timestamp('updated_at', true);
                         row.timestamp('created_at', true);
@@ -79,7 +81,7 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.IMAGES, function (row) {
                         row.increments('id').primary();
-                        row.integer('imageable_id').notNullable();
+                        row.integer('imageable_id').index().notNullable();
                         row.string('imageable_type', 50).notNullable();
                         row.string('name', 50).notNullable();
 
@@ -167,8 +169,6 @@ module.exports = function (knex, Promise) {
             knex.schema.dropTableIfExists(TABLES.STATIC_INFO)
         ]);
     }
-
-
 
     return {
         create: create,

@@ -12,9 +12,49 @@ describe('Posts Test:', function () {
 
     var postId;
     var postData = config.post;
+    var postData1 = config.post1;
+    var loginData;
+    var userData = config.superAdmin;
+    var needCreateAdmin = false;
 
 
     this.timeout(12500);
+
+    it('Login Admin', function (done) {
+        loginData = config.loginAdmin;
+
+        agent
+            .post('/users/signIn')
+            .send(loginData)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    needCreateAdmin = true;
+                    done();
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
+
+    it('Create user', function (done) {
+        if (needCreateAdmin) {
+            agent
+                .post('/users/signUp')
+                .send(userData)
+                .expect(201)
+                .end(function (err, res) {
+                    if (err) {
+                        return done(err)
+                    } else {
+                        done();
+                    }
+                });
+        }else{
+            done()
+        }
+    });
 
     it('Get posts', function (done) {
         agent
@@ -30,10 +70,24 @@ describe('Posts Test:', function () {
     });
 
     it('Create posts', function (done) {
-
         agent
             .post('/posts')
             .send(postData)
+            .expect(201)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    postId = res.body.postId;
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Update posts', function (done) {
+        agent
+            .put('/posts/' + postId)
+            .send(postData1)
             .expect(201)
             .end(function (err, res) {
                 if (err) {
@@ -79,4 +133,5 @@ describe('Posts Test:', function () {
             });
 
     });
-});
+})
+;

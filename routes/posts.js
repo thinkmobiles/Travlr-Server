@@ -11,7 +11,8 @@ module.exports = function (PostGre, app) {
 
     router.route('/:id')
         .get(postsHandler.getPostById)
-        .delete(postsHandler.deletePost);
+        .delete(postsHandler.deletePost)
+        .put(postsHandler.updatePost);
 
     return router;
 };

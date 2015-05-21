@@ -1,11 +1,13 @@
 var request = require('supertest');
 var chai = require('chai');
 var expect = require('chai').expect;
-var url = 'http://localhost:3035';
-var agent = request.agent(url);
+var Config = require('./config');
 
 describe('users', function () {
     var userId;
+    var config = new Config();
+    var app = config.app;
+    var agent = request.agent(app);
 
     function getRandomInt() {
         var min = 1;
@@ -33,7 +35,6 @@ describe('users', function () {
                     } else {
                             done();
                     }
-
                 });
 
     });
@@ -99,21 +100,7 @@ describe('users', function () {
 
     });
 
-    it('Delete user', function (done) {
 
-        agent
-            .delete('/users/' + userId)
-            .expect(200)
-            .end(function (err, res) {
-                if (err) {
-                    return done(err);
-                } else {
-                    done();
-
-                }
-            });
-
-    });
 
     it('Get users', function (done) {
 
@@ -144,6 +131,22 @@ describe('users', function () {
                     return done(err);
                 } else {
                     expect(res.body).to.be.instanceOf(Object);
+                    done();
+
+                }
+            });
+
+    });
+
+    it('Delete user', function (done) {
+
+        agent
+            .delete('/users/' + userId)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                } else {
                     done();
 
                 }

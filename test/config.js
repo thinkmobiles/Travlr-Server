@@ -15,10 +15,7 @@ module.exports = function () {
     this.app = app;
     this.host = 'http://localhost:3035';
 
-    this.admin = {
-        email: 'admin@admin.com',
-        password: '1q2w3e4r'
-    };
+
 
     this.testUser1 = {
         email: 'oltest1@foo.com',
@@ -45,6 +42,38 @@ module.exports = function () {
         "lat": -87.6500523,
         "type": [1, 2, 4, 5],
         "image": image1
+    };
+
+    this.post1 = {
+        'title': 'Title ' + helper.getRandomInt(),
+        'body': 'Body is #' + helper.getRandomInt(),
+        "lon": 41.850033,
+        "lat": -87.6500523,
+        "type": [1, 2, 4, 5],
+        "image": image1
+    };
+
+    this.user = {
+        first_name: 'admin',
+        last_name: 'admin',
+        email: helper.getRandomInt() + 'admin@admin.com',
+        password: 'admin',
+        gender: 1,
+        image: image1
+    };
+
+    this.superAdmin = {
+        first_name: 'admin',
+        last_name: 'admin',
+        email: 'admin@admin.com',
+        password: 'admin',
+        gender: 1,
+        image: image1
+    };
+
+    this.loginAdmin = {
+        email: 'admin@admin.com',
+        password: 'admin'
     };
 
 };

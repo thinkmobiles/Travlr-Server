@@ -72,15 +72,13 @@ Posts = function (PostGre) {
 
     this.createPost = function (req, res, next) {
         var options = req.body;
-        var location;
         var saveData;
         var imageData;
         var cityData;
         var countryData;
         var postId;
 
-        //ToDo remove || 1 when will have user login
-        options.userId = req.session.userId || 1;
+        options.userId = req.session.userId;
 
         saveData = postsHelper.getSaveData(options);
 
@@ -115,22 +113,110 @@ Posts = function (PostGre) {
                                     if (err) {
                                         next(err);
                                     } else {
-                                        if(resp && resp.id){
+                                        if (resp && resp.id) {
                                             imageData = {
                                                 image: options.image,
                                                 imageable_type: TABLES.POSTS,
                                                 imageable_id: resp.id
                                             };
                                             postId = resp.id;
-                                            imagesHelper.createImageByOptions(imageData, function(err, imageModel){
-                                                if(err){
+                                            imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                                if (err) {
                                                     next(err);
-                                                }else{
-                                                    res.status(201).send({message: RESPONSES.WAS_CREATED, postId: postId});
+                                                } else {
+                                                    res.status(201).send({
+                                                        message: RESPONSES.WAS_CREATED,
+                                                        postId: postId
+                                                    });
                                                 }
                                             });
                                         }
+                                    }
+                                });
+                            } else {
+                                next(err);
+                            }
+                        });
+                } else {
+                    next(err);
+                }
+            });
+        }
+    };
 
+    this.updatePost = function (req, res, next) {
+        var options = req.body;
+        var postId = req.params.id;
+        var saveData;
+        var imageData;
+        var cityData;
+        var countryData;
+
+        options.userId = req.session.userId;
+        saveData = postsHelper.getSaveData(options);
+
+        if (options && options.lat && options.lon) {
+            saveData.lat = options.lat;
+            saveData.lon = options.lon;
+        }
+            saveData.postId = postId;
+
+        if (saveData.lat && saveData.lon) {
+            postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
+                if (!err) {
+                    async.parallel([
+                            function (callback) {
+                                cityData = {
+                                    name: resp.city
+                                };
+                                cityHelper.createCityByOptions(cityData, callback);
+                            },
+                            function (callback) {
+                                countryData = {
+                                    name: resp.country.name,
+                                    code: resp.country.code
+                                };
+                                countryHelper.createCountryByOptions(countryData, callback);
+                            }
+                        ],
+                        function (err, results) {
+                            if (!err) {
+                                saveData.city_id = results[0].id;
+                                saveData.country_id = results[1].id;
+                                postsHelper.updatePostByOptions(saveData, function (err, resp) {
+                                    if (err) {
+                                        next(err);
+                                    } else {
+                                        if (resp) {
+                                            imageData = {
+                                                image: options.image,
+                                                imageable_type: TABLES.POSTS,
+                                                imageable_id: postId
+                                            };
+                                            async.parallel([
+                                                    function (callback) {
+                                                        if (postId) {
+                                                            imagesHelper.deleteImage(imageData, callback);
+                                                        } else {
+                                                            callback(RESPONSES.INTERNAL_ERROR + "-> " + RESPONSES.IMAGE_DESTROY);
+                                                        }
+                                                    },
+                                                    function (callback) {
+                                                        imagesHelper.createImageByOptions(imageData, callback);
+                                                    }],
+                                                function (err, results) {
+                                                    if (err) {
+                                                        next(err);
+                                                    } else {
+                                                        res.status(201).send({
+                                                            message: RESPONSES.UPDATED_SUCCESS,
+                                                            postId: postId
+                                                        });
+                                                    }
+                                                });
+                                        } else {
+                                            next(RESPONSES.INTERNAL_ERROR);
+                                        }
                                     }
                                 });
                             } else {
@@ -154,17 +240,19 @@ Posts = function (PostGre) {
                     id: postId
                 })
                 .fetch()
-                .then(function(postModel){
-                    if(postModel && postModel.id){
-                        if(postModel.author_id == authorId){
+                .then(function (postModel) {
+                    if (postModel && postModel.id) {
+                        if (postModel.get('author_id') == authorId) {
                             postModel
                                 .destroy()
                                 .then(function () {
                                     res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                                 })
                                 .otherwise(next);
+                        } else {
+                            next(RESPONSES.INVALID_PARAMETERS);
                         }
-                    }else{
+                    } else {
                         next(RESPONSES.INVALID_PARAMETERS);
                     }
                 })
