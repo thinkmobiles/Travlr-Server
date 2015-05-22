@@ -3,5 +3,6 @@ module.exports = {
     POSTS: 'posts',
     STATIC_INFO: 'static_info',
     FEEDBACKS: 'feedbacks',
-    COMPLAINTS: 'complaints'
+    COMPLAINTS: 'complaints',
+    IMAGES: 'images'
 };

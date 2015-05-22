@@ -26,6 +26,7 @@ module.exports = function (PostGre, app) {
     router.patch('/:id', usersHandler.updateUser);
 
     router.delete('/:id', usersHandler.deleteUser);
+    router.delete('/image/:id', usersHandler.deleteUsersImage);
 
     return router;
 };

@@ -79,8 +79,14 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
-                    //TODO select fields for image
-                    withRelated: ['image'],
+                    withRelated: [{
+                        image: function () {
+                            this.columns([
+                                'id',
+                                'name'
+                            ])
+                        }
+                        }],
                     columns: [
                         'id',
                         'first_name',
@@ -182,6 +188,7 @@ Users = function (PostGre) {
 
     this.deleteUser = function (req, res, next) {
         var userId = parseInt(req.params.id);
+
             UserModel
                 .forge({
                     id: userId
@@ -243,7 +250,19 @@ Users = function (PostGre) {
     };
 
     this.deleteUsersImage = function (req, res, next) {
-        
+        var imageId = req.params.id;
+        var imageType = TABLES.USERS;
+        var imageData = {
+            imageable_id: imageId,
+            imageable_type: imageType
+        };
+        imagesHelper.deleteImageByOptions(imageData, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY});
+            }
+        });
     };
 
 };

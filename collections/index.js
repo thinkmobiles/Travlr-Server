@@ -8,5 +8,6 @@ var Collections = function (PostGre) {
     this[COLLECTIONS.STATIC_INFO] = require('./staticInfo')(PostGre, Collection);
     this[COLLECTIONS.FEEDBACKS] = require('./feedbacks')(PostGre, Collection);
     this[COLLECTIONS.COMPLAINTS] = require('./complaints')(PostGre, Collection);
+    this[COLLECTIONS.IMAGES] = require('./images')(PostGre, Collection);
 };
 module.exports = Collections;
