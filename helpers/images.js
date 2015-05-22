@@ -2,6 +2,7 @@ var RESPONSES = require('../constants/responseMessages');
 var MODELS = require('../constants/models');
 var Validation = require('./validation');
 var RandomPass = require('./randomPass');
+var async = require('async');
 var Images;
 
 Images = function (PostGre) {
@@ -11,14 +12,15 @@ Images = function (PostGre) {
     this.checkCreateImageOptions = new Validation.Check({
         imageable_id: ['required'],
         imageable_type: ['required'],
-        image: ['required']
+        image: ['required'] //base64
     });
 
     this.checkUpdateImageOptions = new Validation.Check({
         imageable_id: ['required'],
         imageable_type: ['required'],
-        image: ['required']
+        image: ['required'] //base64
     });
+
 
     this.createImageByOptions = function (options, callback) {
         self.checkCreateImageOptions.run(options, function (err, validOptions) {
@@ -52,7 +54,7 @@ Images = function (PostGre) {
         });
     };
 
-    this.deleteImage = function (options, callback) {
+    this.deleteImageByOptions = function (options, callback) {
         var imageable_id = options.imageable_id;
         var imageable_type = options.imageable_type;
         var ImageModel = PostGre.Models[MODELS.IMAGE];
@@ -77,6 +79,30 @@ Images = function (PostGre) {
                 })
                 .otherwise(callback)
         }
+
+    };
+
+    this.updateImageByOptions = function (options, callback) {
+        self.checkCreateImageOptions.run(options, function (err, validOptions) {
+            if (!err) {
+                async.parallel([
+                        function (cb) {
+                            self.deleteImageByOptions(validOptions, cb);
+                        },
+                        function (cb) {
+                            self.createImageByOptions(validOptions, cb);
+                        }],
+                    function (err, results) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            callback(null, {
+                                message: RESPONSES.UPDATED_SUCCESS
+                            });
+                        }
+                    });
+            }
+        });
 
     }
 

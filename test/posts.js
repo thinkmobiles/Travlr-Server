@@ -51,7 +51,7 @@ describe('Posts Test:', function () {
                         done();
                     }
                 });
-        }else{
+        } else {
             done()
         }
     });
@@ -88,12 +88,11 @@ describe('Posts Test:', function () {
         agent
             .put('/posts/' + postId)
             .send(postData1)
-            .expect(201)
+            .expect(200)
             .end(function (err, res) {
                 if (err) {
                     done(err);
                 } else {
-                    postId = res.body.postId;
                     done(null, res);
                 }
             });
@@ -133,5 +132,4 @@ describe('Posts Test:', function () {
             });
 
     });
-})
-;
+});

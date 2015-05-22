@@ -165,18 +165,18 @@ Posts = function (PostGre) {
             postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
                 if (!err) {
                     async.parallel([
-                            function (callback) {
+                            function (cb) {
                                 cityData = {
                                     name: resp.city
                                 };
-                                cityHelper.createCityByOptions(cityData, callback);
+                                cityHelper.createCityByOptions(cityData, cb);
                             },
-                            function (callback) {
+                            function (cb) {
                                 countryData = {
                                     name: resp.country.name,
                                     code: resp.country.code
                                 };
-                                countryHelper.createCountryByOptions(countryData, callback);
+                                countryHelper.createCountryByOptions(countryData, cb);
                             }
                         ],
                         function (err, results) {
@@ -187,36 +187,16 @@ Posts = function (PostGre) {
                                     if (err) {
                                         next(err);
                                     } else {
-                                        if (resp) {
-                                            imageData = {
-                                                image: options.image,
-                                                imageable_type: TABLES.POSTS,
-                                                imageable_id: postId
-                                            };
-                                            async.parallel([
-                                                    function (callback) {
-                                                        if (postId) {
-                                                            imagesHelper.deleteImage(imageData, callback);
-                                                        } else {
-                                                            callback(RESPONSES.INTERNAL_ERROR + "-> " + RESPONSES.IMAGE_DESTROY);
-                                                        }
-                                                    },
-                                                    function (callback) {
-                                                        imagesHelper.createImageByOptions(imageData, callback);
-                                                    }],
-                                                function (err, results) {
-                                                    if (err) {
-                                                        next(err);
-                                                    } else {
-                                                        res.status(201).send({
-                                                            message: RESPONSES.UPDATED_SUCCESS,
-                                                            postId: postId
-                                                        });
-                                                    }
-                                                });
-                                        } else {
-                                            next(RESPONSES.INTERNAL_ERROR);
-                                        }
+                                        imageData = {
+                                            image: options.image,
+                                            imageable_type: TABLES.POSTS,
+                                            imageable_id: postId
+                                        };
+                                        imagesHelper.updateImageByOptions(imageData, function(err, resp){
+                                            if(!err){
+                                                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                                            }
+                                        });
                                     }
                                 });
                             } else {

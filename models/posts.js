@@ -33,13 +33,13 @@ module.exports = function (PostGre, ParentModel) {
             };
 
             if (postId) {
-                imageHelper.deleteImage(imageOptions,function(err, resp){
+                imageHelper.deleteImageByOptions(imageOptions,function(err, resp){
                    if(err){
                        logWriter.log(RESPONSES.IMAGE_DESTROY + " -> " + err);
                    }
                 });
             } else {
-                logWriter.log(RESPONSES.INTERNAL_ERROR + "-> " + RESPONSES.IMAGE_DESTROY);
+                logWriter.log(RESPONSES.INTERNAL_ERROR);
             }
 
         }
