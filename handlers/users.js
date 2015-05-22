@@ -11,11 +11,13 @@ var Users;
 var async = require('async');
 var crypto = require("crypto");
 var UsersHelper = require('../helpers/users');
+var ImagesHelper = require('../helpers/images');
 
 Users = function (PostGre) {
     var UserModel = PostGre.Models[MODELS.USER];
     var UserCollection = PostGre.Collections[COLLECTIONS.USERS];
     var usersHelper = new UsersHelper(PostGre);
+    var imagesHelper = new ImagesHelper(PostGre);
     var session = new Session(PostGre);
     var mailer = new Mailer();
     var cryptoPass = new CrypPass();
@@ -214,6 +216,28 @@ Users = function (PostGre) {
                     .otherwise(next)
             })
             .otherwise(next)
+    };
+
+    this.createUsersImage = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var imageData = {
+            image: options.image,
+            imageable_type: TABLES.USERS,
+            imageable_id: userId
+        };
+
+        imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(201).send({success: RESPONSES.WAS_CREATED});
+            }
+        });
+    };
+
+    this.deleteUsersImage = function (req, res, next) {
+        
     };
 
 };
