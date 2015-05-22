@@ -16,14 +16,15 @@ module.exports = function (PostGre, ParentModel) {
         },
 
         removeDependencies: function (user) {
+            //TODO fix remove dependencies
             var userId = user.id;
 
             async.parallel([
                 function (cb) {
                     PostGre.knex
                         .raw(
-                        'DELETE FROM "' + TABLES.IMAGES + '" i USING "' + TABLES.POSTS + '" p '
-                        + 'where  p."id" = i."imageable_id" AND i."imageable_type" = \'' + TABLES.POSTS + '\' AND p."author_id" =' + userId
+                            'DELETE FROM "' + TABLES.IMAGES + '" i USING "' + TABLES.POSTS + '" p ' +
+                              'where  p."id" = i."imageable_id" AND i."imageable_type" = \'' + TABLES.POSTS + '\' AND p."author_id" =' + userId
                         )
                         .then(function () {
                             PostGre.knex(TABLES.POSTS)
@@ -63,6 +64,28 @@ module.exports = function (PostGre, ParentModel) {
                             })
                         .delete()
                         .exec(cb)
+
+                },
+                function (cb) {
+                    //TODO  fetch images
+                    PostGre.Collections[COLLECTION.IMAGES]
+                        .forge()
+                        .query(function(qb) {
+                            qb.leftJoin(TABLES.POSTS, function() {
+                                this.on('imageable_id', TABLES.POSTS + '.id');
+                                this.andOn('imageable_type', PostGre.knex.raw('?', [TABLES.POSTS]));
+                            });
+                            qb.where('author_id', userId)
+                        })
+                        .fetch()
+                        .then(function(images) {
+                            images.invokeThen('destroy', options).then(function() {
+                                // ... all models in the collection have been destroyed
+                            });
+                        })
+                        .otherwise(function(err){
+
+                        });
 
                 }
 

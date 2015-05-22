@@ -18,11 +18,11 @@ Users = function (PostGre) {
         checkUniqueEmail: function (options, validOptions, callback) {
             var err;
 
-            if (options.email) {
+            if (validOptions.email) {
                 UserModel
                     .forge()
                     .query(function (qb) {
-                        qb.where('email', options.email);
+                        qb.where('email', validOptions.email);
 
                         if (options.id) {
                             qb.where('id', '!=', options.id)

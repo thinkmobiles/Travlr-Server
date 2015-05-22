@@ -58,6 +58,7 @@ Feedbacks = function (PostGre) {
                         })
                         .otherwise(next)
                 } else {
+                    // TODO use new error
                     res.status(403).send({error: RESPONSES.FORBIDDEN})
                 }
             })
@@ -65,6 +66,7 @@ Feedbacks = function (PostGre) {
     };
 
     this.deleteFeedback = function (req, res, next) {
+        // TODO fix delete. use knex.
         var feedbackId = req.params.id;
         var userId = req.session.userId;
 
@@ -82,6 +84,7 @@ Feedbacks = function (PostGre) {
                         })
                         .otherwise(next)
                 } else {
+                    // TODO use new error
                     res.status(403).send({error: RESPONSES.FORBIDDEN})
                 }
             })
@@ -123,7 +126,7 @@ Feedbacks = function (PostGre) {
                     'author_id',
                     'body',
                     'updated_at'
-                    ]
+                ]
             })
             .then(function (feedbacks) {
                 res.status(200).send(feedbacks)

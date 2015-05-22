@@ -20,7 +20,8 @@ Posts = function (PostGre) {
     this.getPosts = function (req, res, next) {
         var page = req.query.page || 1;
         var limit = req.query.count || 25;
-        //TODO change order by logic
+        //TODO change order by logic. Use Object. The same like in users
+
         var orderBy = req.query.orderBy;
         var order = req.query.order || 'ASC';
         var searchTerm = req.query.searchTerm;
@@ -51,7 +52,7 @@ Posts = function (PostGre) {
 
     this.getPostById = function (req, res, next) {
         var postId = req.params.id;
-
+        // TODO return not all field for author
         if (postId) {
             PostModel
                 .forge({id: postId})
@@ -62,12 +63,14 @@ Posts = function (PostGre) {
                     if (postModel.id) {
                         res.status(200).send(postModel);
                     } else {
+                        // TODO use new Error
                         next(RESPONSES.INTERNAL_ERROR);
                     }
                 })
                 .otherwise(next);
+        } else {
+            // TODO fix
         }
-
     };
 
     this.createPost = function (req, res, next) {
@@ -145,6 +148,7 @@ Posts = function (PostGre) {
     };
 
     this.updatePost = function (req, res, next) {
+        // TODO need check user/admin access
         var options = req.body;
         var postId = req.params.id;
         var saveData;
@@ -213,6 +217,8 @@ Posts = function (PostGre) {
     this.deletePost = function (req, res, next) {
         var postId = req.params.id;
         var authorId = req.session.userId;
+
+        // TODO need check user/admin access
 
         if (postId) {
             PostModel

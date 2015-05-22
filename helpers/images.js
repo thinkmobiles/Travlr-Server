@@ -94,7 +94,7 @@ Images = function (PostGre) {
                         }],
                     function (err, results) {
                         if (err) {
-                            next(err);
+                            callback(err);
                         } else {
                             callback(null, {
                                 message: RESPONSES.UPDATED_SUCCESS

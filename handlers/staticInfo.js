@@ -37,9 +37,7 @@ Static_Info = function (PostGre) {
             .forge({
                 id: infoId
             })
-            .save(
-            options,
-            {
+            .save(options, {
                 patch: true
             })
             .then(function () {

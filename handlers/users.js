@@ -49,11 +49,13 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         session.register(req, res, user)
                     } else {
+                        //TODO use next
                         res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
                     }
                 })
                 .otherwise(next)
         } else {
+            //TODO use next
             res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
         }
     };
@@ -67,14 +69,15 @@ Users = function (PostGre) {
     };
 
     this.getUserById = function (req, res, next) {
-        var userId = req.params.id;
+        var userId = parseInt(req.params.id);
 
-        if (parseInt(userId)) {
+        if (userId) {
             UserModel
                 .forge({
                     id: userId
                 })
                 .fetch({
+                    //TODO select fields for image
                     withRelated: ['image'],
                     columns: [
                         'id',
@@ -88,11 +91,13 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         res.status(200).send(user)
                     } else {
+                        //TODO use next
                         res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
                     }
                 })
                 .otherwise(next)
         } else {
+            //TODO use next
             res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
         }
     };
@@ -160,6 +165,7 @@ Users = function (PostGre) {
     };
 
     this.updateUser = function (req, res, next) {
+        // TODO need check user/admin access
         var options = req.body;
         options.id = parseInt(req.params.id);
 
@@ -173,7 +179,7 @@ Users = function (PostGre) {
     };
 
     this.deleteUser = function (req, res, next) {
-        var userId = req.params.id;
+        var userId = parseInt(req.params.id);
             UserModel
                 .forge({
                     id: userId
