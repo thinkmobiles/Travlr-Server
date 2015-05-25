@@ -249,11 +249,55 @@ Users = function (PostGre) {
         });
     };
 
+    this.updateUsersImage = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var imageType = TABLES.USERS;
+        var imageData;
+
+        async.series([
+            function (cb) {
+                imageData = {
+                    imageable_id: userId,
+                    imageable_type: imageType
+                };
+                imagesHelper.deleteImageByOptions(imageData, function (err) {
+                    if (err) {
+                        cb(err);
+                    } else {
+                       cb()
+                    }
+                });
+            },
+            function (cb) {
+                imageData = {
+                    image: options.image,
+                    imageable_id: userId,
+                    imageable_type: imageType
+                };
+                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                    if (err) {
+                        cb(err);
+                    } else {
+                        cb()
+                    }
+                });
+            }
+        ], function (err) {
+            if (err) {
+                next(err)
+            } else {
+                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS});
+            }
+        })
+
+    };
+
     this.deleteUsersImage = function (req, res, next) {
-        var imageId = req.params.id;
+        var userId = req.session.userId;
         var imageType = TABLES.USERS;
         var imageData = {
-            imageable_id: imageId,
+            imageable_id: userId,
             imageable_type: imageType
         };
         imagesHelper.deleteImageByOptions(imageData, function (err) {

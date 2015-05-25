@@ -22,6 +22,7 @@ module.exports = function (PostGre, app) {
     router.get('/:id', usersHandler.getUserById);
     router.get('/', usersHandler.getUsers);
 
+    router.put('/image', usersHandler.updateUsersImage);
     router.put('/:id', usersHandler.updateUser);
     router.patch('/:id', usersHandler.updateUser);
 
