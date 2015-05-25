@@ -1,6 +1,7 @@
 
 var TABLES = require('../constants/tables');
 var LogWriter = require('../helpers/logWriter');
+var MODELS = require('../constants/models');
 var RESPONSES = require('../constants/responseMessages');
 
 module.exports = function (PostGre, ParentModel) {
@@ -13,6 +14,9 @@ module.exports = function (PostGre, ParentModel) {
         hasTimestamps: true,
         initialize: function() {
             this.on('destroying', this.removeDependencies);
+        },
+        imageable: function() {
+            return this.morphTo('imageable', PostGre.Models[MODELS.POST], PostGre.Models[MODELS.USER]);
         },
         removeDependencies: function(image) {
             var type = image.get('imageable_type');

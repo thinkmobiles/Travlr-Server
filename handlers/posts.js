@@ -18,50 +18,126 @@ Posts = function (PostGre) {
     var countryHelper = new CountryHelper(PostGre);
 
     this.getPosts = function (req, res, next) {
-        var page = req.query.page || 1;
-        var limit = req.query.count || 25;
-        //TODO change order by logic. Use Object. The same like in users
 
-        var orderBy = req.query.orderBy;
-        var order = req.query.order || 'ASC';
-        var searchTerm = req.query.searchTerm;
+        var options = req.query;
 
-        PostCollection
-            .forge()
-            .query(function (qb) {
-                if (searchTerm) {
-                    searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw(
-                        "LOWER(body) LIKE '%" + searchTerm + "%' "
-                    )
+        if (options.lat && options.lon) {
+            getPostsByRadius(options, function (err, resp) {
+                if (err) {
+                    next(err);
+                } else {
+                    res.status(200).send(resp);
                 }
-                qb.offset(( page - 1 ) * limit)
-                    .limit(limit);
+            });
+        } else {
 
-                if (orderBy) {
-                    qb.orderBy(orderBy, order);
-                }
-            })
-            .fetch()
-            .then(function (postCollection) {
-                var posts = ( postCollection ) ? postCollection : [];
-                res.status(200).send(posts);
-            })
-            .otherwise(next);
+            var page = options.page || 1;
+            var limit = options.count || 25;
+            //TODO change order by logic. Use Object. The same like in users
+
+            var orderBy = options.orderBy;
+            var order = options.order || 'ASC';
+            var searchTerm = options.searchTerm;
+
+            PostCollection
+                .forge()
+                .query(function (qb) {
+                    if (searchTerm) {
+                        searchTerm = searchTerm.toLowerCase();
+                        qb.whereRaw(
+                            "LOWER(body) LIKE '%" + searchTerm + "%' "
+                        )
+                    }
+                    qb.offset(( page - 1 ) * limit)
+                        .limit(limit);
+
+                    if (orderBy) {
+                        qb.orderBy(orderBy, order);
+                    }
+                })
+                .fetch({
+                    columns: [
+                        'id',
+                        'title',
+                        'body',
+                        'lat',
+                        'lon',
+                        'author_id',
+                        'city_id',
+                        'country_id'
+                    ],
+                    withRelated: [
+                        {
+                            'author': function () {
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                            }
+                        },
+                        {
+                            'city': function () {
+                                this.columns(['id', 'name'])
+                            }
+                        },
+                        {
+                            'country': function () {
+                                this.columns(['id', 'name', 'code'])
+                            }
+                        }
+                    ]
+                }).
+                then(function (postCollection) {
+                    var posts = ( postCollection ) ? postCollection : [];
+                    res.status(200).send(posts);
+                })
+                .otherwise(next);
+        }
     };
 
     this.getPostById = function (req, res, next) {
         var postId = req.params.id;
+        var postJSON;
         // TODO return not all field for author
         if (postId) {
             PostModel
                 .forge({id: postId})
                 .fetch({
-                    withRelated: ['author', 'city', 'country']
+                    columns: [
+                        'id',
+                        'title',
+                        'body',
+                        'lat',
+                        'lon',
+                        'author_id',
+                        'city_id',
+                        'country_id'
+                    ],
+                    withRelated: [
+                        {
+                            'author': function () {
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                            }
+                        },
+                        {
+                            'city': function () {
+                                this.columns(['id', 'name'])
+                            }
+                        },
+                        {
+                            'country': function () {
+                                this.columns(['id', 'name', 'code'])
+                            }
+                        },
+                        'image'
+                    ]
                 })
                 .then(function (postModel) {
-                    if (postModel.id) {
-                        res.status(200).send(postModel);
+                    if (postModel && postModel.id) {
+                        postJSON = postModel.toJSON();
+                        if (postJSON && postJSON.image && postJSON.image.id) {
+                            postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                        }
+                        res.status(200).send(postJSON);
+
+
                     } else {
                         // TODO use new Error
                         next(RESPONSES.INTERNAL_ERROR);
@@ -72,6 +148,95 @@ Posts = function (PostGre) {
             next(RESPONSES.INTERNAL_ERROR);
         }
     };
+
+    this.getPostByCountry = function (req, res, next) {
+        var countryId = req.params.countryId;
+        var postJSON;
+
+        var page = req.query.page || 1;
+        var limit = req.query.count || 25;
+
+        var orderBy = req.query.orderBy;
+        var order = req.query.order || 'ASC';
+        var searchTerm = req.query.searchTerm;
+
+        if (countryId) {
+            PostCollection
+                .forge({'country_id': countryId})
+                .query(function (qb) {
+                    if (searchTerm) {
+                        searchTerm = searchTerm.toLowerCase();
+                        qb.whereRaw(
+                            "LOWER(body) LIKE '%" + searchTerm + "%' "
+                        )
+                    }
+                    qb.offset(( page - 1 ) * limit)
+                        .limit(limit);
+
+                    if (orderBy) {
+                        qb.orderBy(orderBy, order);
+                    }
+                })
+                .fetch({
+                    columns: [
+                        'id',
+                        'title',
+                        'body',
+                        'lat',
+                        'lon',
+                        'author_id',
+                        'city_id',
+                        'country_id'
+                    ],
+                    withRelated: [
+                        {
+                            'author': function () {
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                            }
+                        },
+                        {
+                            'city': function () {
+                                this.columns(['id', 'name'])
+                            }
+                        },
+                        {
+                            'country': function () {
+                                this.columns(['id', 'name', 'code'])
+                            }
+                        }
+                    ]
+                }).
+                then(function (postCollection) {
+                    var posts = ( postCollection ) ? postCollection : [];
+                    res.status(200).send(posts);
+                })
+                .otherwise(next);
+        } else {
+            next(RESPONSES.INTERNAL_ERROR);
+        }
+    };
+
+    function getPostsByRadius(options, callback) {
+        var lat = options.lat;
+        var lon = options.lon;
+        var distance = 10000;
+        if (lat && lon) {
+            PostGre.knex
+                .raw(
+                    "SELECT * FROM posts, " +
+                        "ST_Distance_Sphere( " +
+                            "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                            "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                        " ) AS distance " +
+                    "Where distance < " + distance
+                )
+                .then(function (queryResult) {
+                    var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
+                    callback(null, models);
+                })
+                .otherwise(callback);
+        }
+    }
 
     this.createPost = function (req, res, next) {
         var options = req.body;
@@ -163,7 +328,7 @@ Posts = function (PostGre) {
             saveData.lat = options.lat;
             saveData.lon = options.lon;
         }
-            saveData.postId = postId;
+        saveData.postId = postId;
 
         if (saveData.lat && saveData.lon) {
             postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
@@ -196,8 +361,8 @@ Posts = function (PostGre) {
                                             imageable_type: TABLES.POSTS,
                                             imageable_id: postId
                                         };
-                                        imagesHelper.updateImageByOptions(imageData, function(err, resp){
-                                            if(!err){
+                                        imagesHelper.updateImageByOptions(imageData, function (err, resp) {
+                                            if (!err) {
                                                 res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
                                             }
                                         });
@@ -247,6 +412,7 @@ Posts = function (PostGre) {
             next(RESPONSES.INVALID_PARAMETERS);
         }
     }
-};
+}
+;
 
 module.exports = Posts;
