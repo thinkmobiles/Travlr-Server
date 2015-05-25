@@ -82,7 +82,7 @@ Users = function (PostGre) {
                     withRelated: [{
                         image: function () {
                             this.columns([
-                                'id',
+                                'imageable_id',
                                 'name'
                             ])
                         }
