@@ -115,6 +115,7 @@ Users = function (PostGre) {
         var page = parseInt(req.query.page) || 1;
         var count = parseInt(req.query.count) || 25;
         var sortObject = req.query.sort;
+        var searchTerm = req.query.searchTerm;
 
         var sortName;
         var sortAliase;
@@ -125,6 +126,12 @@ Users = function (PostGre) {
             .query(function (qb) {
                 qb.where('role', '=', CONSTANTS.USERS_ROLES.USER);
                 qb.column(PostGre.knex.raw('to_char(birthday,' + "'DD/MM/YYYY'" + ') as birthday'));
+
+                if (searchTerm) {
+                    searchTerm = searchTerm.toLowerCase();
+                    qb.whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' "
+                    );
+                }
 
 
                 if (typeof sortObject === 'object') {
