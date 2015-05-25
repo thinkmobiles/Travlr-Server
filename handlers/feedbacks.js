@@ -54,7 +54,7 @@ Feedbacks = function (PostGre) {
                             patch:true
                         })
                         .then(function () {
-                            res.status(200).send({error: RESPONSES.UPDATED_SUCCESS})
+                            res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
                         })
                         .otherwise(next)
                 } else {
@@ -80,7 +80,7 @@ Feedbacks = function (PostGre) {
                     feedback
                         .destroy()
                         .then(function () {
-                            res.status(200).send({error: RESPONSES.REMOVE_SUCCESSFULY})
+                            res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                         })
                         .otherwise(next)
                 } else {

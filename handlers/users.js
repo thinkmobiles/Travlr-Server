@@ -177,6 +177,7 @@ Users = function (PostGre) {
         // TODO need check user/admin access
         var options = req.body;
         options.id = parseInt(req.params.id);
+        options.imageType = TABLES.USERS;
 
         usersHelper.updateUserByOptions(options, function (err, user) {
             if (err) {
@@ -232,7 +233,7 @@ Users = function (PostGre) {
             .otherwise(next)
     };
 
-    this.createUsersImage = function (req, res, next) {
+    /*this.createUsersImage = function (req, res, next) {
         var options = req.body;
         var userId = req.session.userId;
         var imageData = {
@@ -248,9 +249,9 @@ Users = function (PostGre) {
                 res.status(201).send({success: RESPONSES.WAS_CREATED});
             }
         });
-    };
+    };*/
 
-    this.updateUsersImage = function (req, res, next) {
+    /*this.updateUsersImage = function (req, res, next) {
         var options = req.body;
         var userId = req.session.userId;
         var imageType = TABLES.USERS;
@@ -292,7 +293,7 @@ Users = function (PostGre) {
             }
         })
 
-    };
+    };*/
 
     this.deleteUsersImage = function (req, res, next) {
         var userId = req.session.userId;
