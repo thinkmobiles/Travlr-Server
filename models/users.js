@@ -18,16 +18,13 @@ module.exports = function (PostGre, ParentModel) {
         },
 
         removeDependencies: function (user) {
-            //TODO fix remove dependencies
             var userId = user.id;
 
-            async.parallel([
+            async.series([
                 function (cb) {
-                    //TODO  fetch images
                     PostGre.Collections[COLLECTIONS.IMAGES]
                         .forge()
                         .query(function(qb) {
-                            //qb.where('imageable_type',TABLES.POSTS)
                             qb.leftJoin(TABLES.POSTS, function() {
                                 this.on('imageable_id', TABLES.POSTS + '.id');
                                 this.andOn('imageable_type', PostGre.knex.raw('?', [TABLES.POSTS]));
@@ -36,13 +33,21 @@ module.exports = function (PostGre, ParentModel) {
                         })
                         .fetch()
                         .then(function(images) {
-                            images
-                                .invokeThen('destroy')
-                                .then(cb)
+                            async.each(images, function (image, callback) {
+                                image
+                                    .destroy()
+                                    .exec(callback)
+                            }, function (err) {
+                                if (err) {
+                                    cb(err)
+                                } else {
+                                    cb()
+                                }
+                            })
                         })
                         .otherwise(cb);
 
-                }/*,
+                },
                 function (cb) {
                     PostGre.knex(TABLES.POSTS)
                         .where({
@@ -79,7 +84,7 @@ module.exports = function (PostGre, ParentModel) {
                         .delete()
                         .exec(cb)
 
-                }*/
+                }
 
             ], function (err) {
                 if (err) {
