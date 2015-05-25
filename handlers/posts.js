@@ -69,7 +69,7 @@ Posts = function (PostGre) {
                 })
                 .otherwise(next);
         } else {
-            // TODO fix
+            next(RESPONSES.INTERNAL_ERROR);
         }
     };
 

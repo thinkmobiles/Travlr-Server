@@ -10,6 +10,7 @@ module.exports = function (app, PostGre) {
     //Routers
     var usersRouter = require('./users')(PostGre, app);
     var postsRouter = require('./posts')(PostGre, app);
+    var countryRouter = require('./countries')(PostGre, app);
     var infoRouter = require('./staticInfo')(PostGre, app);
     var feedbacksRouter = require('./feedbacks')(PostGre, app);
     var complaintsRouter = require('./complaints')(PostGre, app);
@@ -24,6 +25,8 @@ module.exports = function (app, PostGre) {
     app.use('/users', usersRouter);
 
     app.use('/posts', postsRouter);
+
+    app.use('/countries', countryRouter);
 
     app.use('/info', infoRouter);
 
