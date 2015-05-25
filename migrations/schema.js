@@ -10,10 +10,10 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.USERS, function (row) {
                     row.increments('id').primary();
-                    row.string('first_name', 50).notNullable();
-                    row.string('last_name', 50).notNullable();
+                    row.string('first_name', 50);
+                    row.string('last_name', 50);
                     row.string('email', 50).notNullable().unique();
-                    row.string('password');
+                    row.string('password').notNullable();
                     row.string('gender', 10);
                     row.string('confirm_token',75);
                     row.timestamp('birthday');
