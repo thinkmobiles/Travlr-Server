@@ -39,6 +39,7 @@ Users = function (PostGre) {
 
     this.signIn = function (req, res, next) {
         var options = req.body;
+        var error;
 
         if (options && options.email && options.password) {
             UserModel
@@ -52,8 +53,9 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         session.register(req, res, user)
                     } else {
-                        //TODO use next
-                        res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                        error = new Error( RESPONSES.INVALID_PARAMETERS);
+                        error.status = 400;
+                        next(error);
                     }
                 })
                 .otherwise(next)
@@ -73,6 +75,7 @@ Users = function (PostGre) {
 
     this.getUserById = function (req, res, next) {
         var userId = parseInt(req.params.id);
+        var error;
 
         if (userId) {
             UserModel
@@ -100,14 +103,16 @@ Users = function (PostGre) {
                         user = user.toJSON();
                         res.status(200).send(user)
                     } else {
-                        //TODO use next
-                        res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                        error = new Error( RESPONSES.INVALID_PARAMETERS);
+                        error.status = 400;
+                        next(error);
                     }
                 })
                 .otherwise(next)
         } else {
-            //TODO use next
-            res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+            error = new Error( RESPONSES.INVALID_PARAMETERS);
+            error.status = 400;
+            next(error);
         }
     };
 
@@ -116,6 +121,7 @@ Users = function (PostGre) {
         var count = parseInt(req.query.count) || 25;
         var sortObject = req.query.sort;
         var searchTerm = req.query.searchTerm;
+        var error;
 
         var sortName;
         var sortAliase;
@@ -163,7 +169,13 @@ Users = function (PostGre) {
                 ]
             })
             .then(function (users) {
-                res.status(200).send(users)
+                if (users && users.length) {
+                    res.status(200).send(users)
+                } else {
+                    error = new Error( RESPONSES.INVALID_PARAMETERS);
+                    error.status = 400;
+                    next(error);
+                }
             })
             .otherwise(next)
     };

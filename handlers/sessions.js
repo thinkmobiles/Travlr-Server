@@ -5,7 +5,7 @@ var Session = function (PostGre) {
 
     this.register = function (req, res, options) {
         //TODO use userId insted of id
-        if (req.session && options && req.session.id === options.id) {
+        if (req.session && options && req.session.userId === options.id) {
             return res.status(200).send({success: RESPONSES.SUCCESSFUL_LOGIN, id: options.id});
         }
         req.session.userId = options.id;

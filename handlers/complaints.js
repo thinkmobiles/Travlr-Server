@@ -20,6 +20,7 @@ Complaints = function (PostGre) {
     this.createComplaint = function (req, res, next) {
         var options = req.body;
         var authorId = req.session.userId;
+        var error;
 
         ComplaintModel
             .forge({
@@ -29,7 +30,9 @@ Complaints = function (PostGre) {
             .fetch()
             .then(function (complaint) {
                 if (complaint && complaint.id) {
-                    res.status(400).send({error: RESPONSES.COMPLAINT_ERROR})
+                    error = new Error(RESPONSES.COMPLAINT_ERROR);
+                    error.status = 400;
+                    next(error);
                 } else {
                     ComplaintModel
                         .forge({
@@ -62,6 +65,7 @@ Complaints = function (PostGre) {
 
     this.getComplaint = function (req, res, next) {
         var complaintId = req.params.id;
+        var error;
 
         ComplaintModel
             .forge({
@@ -79,7 +83,9 @@ Complaints = function (PostGre) {
                 if (complaint && complaint.id) {
                     res.status(200).send(complaint)
                 } else {
-                    res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                    error = new Error(RESPONSES.INVALID_PARAMETERS);
+                    error.status = 400;
+                    next(error);
                 }
             })
             .otherwise(next)
@@ -117,7 +123,7 @@ Complaints = function (PostGre) {
                     'author_id',
                     'post_id',
                     'created_at'
-                    ]
+                ]
             })
             .then(function (complaints) {
                 res.status(200).send(complaints)
