@@ -32,7 +32,7 @@ Users = function (PostGre) {
                 next(err)
             } else {
                 req.session.userId = user.id;
-                res.status(201).send({success: RESPONSES.WAS_CREATED})
+                res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
             }
         }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
     };
