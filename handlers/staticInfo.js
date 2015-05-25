@@ -84,6 +84,7 @@ Static_Info = function (PostGre) {
 
     this.getInfoById = function (req, res, next) {
         var infoId = req.params.id;
+        var error;
 
         StaticModel
             .forge({
@@ -100,7 +101,9 @@ Static_Info = function (PostGre) {
                 if (info && info.id) {
                     res.status(200).send(info)
                 } else {
-                    res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                    error = new Error(RESPONSES.INVALID_PARAMETERS);
+                    error.status = 400;
+                    next(error);
                 }
             })
             .otherwise(next)

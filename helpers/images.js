@@ -74,7 +74,7 @@ Images = function (PostGre) {
                             })
                             .otherwise(callback);
                     } else {
-                        callback(RESPONSES.INVALID_PARAMETERS);
+                        callback(null, {success: RESPONSES.REMOVE_SUCCESSFULY});
                     }
                 })
                 .otherwise(callback)

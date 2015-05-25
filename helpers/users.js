@@ -6,11 +6,13 @@ var _ = require('../node_modules/underscore');
 var async = require('../node_modules/async');
 var Validation = require('../helpers/validation');
 var CrypPass = require('../helpers/cryptoPass');
+var ImagesHelper = require('../helpers/images');
 var Users;
 
 Users = function (PostGre) {
     var self = this;
     var UserModel = PostGre.Models[MODELS.USER];
+    var imagesHelper = new ImagesHelper(PostGre);
     var cryptoPass = new CrypPass();
 
 
@@ -88,6 +90,7 @@ Users = function (PostGre) {
     };
 
     this.updateUserByOptions = function (options, callback, settings) {
+        var imageData;
         self.checkUpdateUserOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err)
@@ -100,7 +103,44 @@ Users = function (PostGre) {
                     .save(validOptions, {
                         patch: true
                     })
-                    .exec(callback)
+                    .then(function(){
+                        async.series([
+                            function (cb) {
+                                imageData = {
+                                    imageable_id: options.id,
+                                    imageable_type: options.imageType
+                                };
+                                imagesHelper.deleteImageByOptions(imageData, function (err) {
+                                    if (err) {
+                                        cb(err);
+                                    } else {
+                                        cb()
+                                    }
+                                });
+                            },
+                            function (cb) {
+                                imageData = {
+                                    image: options.image,
+                                    imageable_id: options.id,
+                                    imageable_type: options.imageType
+                                };
+                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                    if (err) {
+                                        cb(err);
+                                    } else {
+                                        cb()
+                                    }
+                                });
+                            }
+                        ], function (err) {
+                            if (err) {
+                                callback(err)
+                            } else {
+                                callback()
+                            }
+                        })
+                    })
+                    .otherwise(callback)
             }
         }, settings)
     }

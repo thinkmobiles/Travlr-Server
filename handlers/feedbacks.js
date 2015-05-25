@@ -38,6 +38,7 @@ Feedbacks = function (PostGre) {
         var feedbackId = req.params.id;
         var userId = req.session.userId;
         var options = req.body;
+        var error;
 
         FeedbackModel
             .forge({
@@ -54,12 +55,13 @@ Feedbacks = function (PostGre) {
                             patch:true
                         })
                         .then(function () {
-                            res.status(200).send({error: RESPONSES.UPDATED_SUCCESS})
+                            res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
                         })
                         .otherwise(next)
                 } else {
-                    // TODO use new error
-                    res.status(403).send({error: RESPONSES.FORBIDDEN})
+                    error = new Error(RESPONSES.FORBIDDEN);
+                    error.status = 403;
+                    next(error);
                 }
             })
             .otherwise(next)
@@ -69,6 +71,7 @@ Feedbacks = function (PostGre) {
         // TODO fix delete. use knex.
         var feedbackId = req.params.id;
         var userId = req.session.userId;
+        var error;
 
         FeedbackModel
             .forge({
@@ -80,12 +83,13 @@ Feedbacks = function (PostGre) {
                     feedback
                         .destroy()
                         .then(function () {
-                            res.status(200).send({error: RESPONSES.REMOVE_SUCCESSFULY})
+                            res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                         })
                         .otherwise(next)
                 } else {
-                    // TODO use new error
-                    res.status(403).send({error: RESPONSES.FORBIDDEN})
+                    error = new Error(RESPONSES.FORBIDDEN);
+                    error.status = 403;
+                    next(error);
                 }
             })
             .otherwise(next)
@@ -136,6 +140,7 @@ Feedbacks = function (PostGre) {
 
     this.getFeedbackById = function (req, res, next) {
         var feedbackId = req.params.id;
+        var error;
 
         FeedbackModel
             .forge({
@@ -161,7 +166,9 @@ Feedbacks = function (PostGre) {
                 if (feedback && feedback.id) {
                     res.status(200).send(feedback)
                 } else {
-                    res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+                    error = new Error(RESPONSES.INVALID_PARAMETERS);
+                    error.status = 400;
+                    next(error);
                 }
             })
             .otherwise(next)
