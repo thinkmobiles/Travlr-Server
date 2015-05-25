@@ -55,8 +55,8 @@ Users = function (PostGre) {
     };
 
     this.checkCreateUserOptions = new Validation.Check({
-        first_name: ['required'],
-        last_name: ['required'],
+        first_name: ['isString'],
+        last_name: ['isString'],
         password: ['required'],
         email: ['required', 'isEmail'],
         gender: ['isInt'],
@@ -65,8 +65,8 @@ Users = function (PostGre) {
     }, self.checkFunctions);
 
     this.checkUpdateUserOptions = new Validation.Check({
-        first_name: ['required'],
-        last_name: ['required'],
+        first_name: ['isString'],
+        last_name: ['isString'],
         email: ['required', 'isEmail'],
         gender: ['isInt'],
         birthday: ['isDate'],
