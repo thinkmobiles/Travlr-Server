@@ -5,7 +5,7 @@ var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
 var Session = require('../handlers/sessions');
 var CrypPass = require('../helpers/cryptoPass');
-var generator = require('../helpers/randomPass.js');
+var Generator = require('../helpers/randomPass.js');
 var Mailer = require('../helpers/mailer.js');
 var Users;
 var async = require('async');
@@ -21,6 +21,7 @@ Users = function (PostGre) {
     var session = new Session(PostGre);
     var mailer = new Mailer();
     var cryptoPass = new CrypPass();
+    var generator = new Generator();
 
     this.signUp = function (req, res, next) {
         var options = req.body;
