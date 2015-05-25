@@ -5,20 +5,23 @@ var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
 var Session = require('../handlers/sessions');
 var CrypPass = require('../helpers/cryptoPass');
-var generator = require('../helpers/randomPass.js');
+var Generator = require('../helpers/randomPass.js');
 var Mailer = require('../helpers/mailer.js');
 var Users;
 var async = require('async');
 var crypto = require("crypto");
 var UsersHelper = require('../helpers/users');
+var ImagesHelper = require('../helpers/images');
 
 Users = function (PostGre) {
     var UserModel = PostGre.Models[MODELS.USER];
     var UserCollection = PostGre.Collections[COLLECTIONS.USERS];
     var usersHelper = new UsersHelper(PostGre);
+    var imagesHelper = new ImagesHelper(PostGre);
     var session = new Session(PostGre);
     var mailer = new Mailer();
     var cryptoPass = new CrypPass();
+    var generator = new Generator();
 
     this.signUp = function (req, res, next) {
         var options = req.body;
@@ -29,7 +32,7 @@ Users = function (PostGre) {
                 next(err)
             } else {
                 req.session.userId = user.id;
-                res.status(201).send({success: RESPONSES.WAS_CREATED})
+                res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
             }
         }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
     };
@@ -77,8 +80,14 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
-                    //TODO select fields for image
-                    withRelated: ['image'],
+                    withRelated: [{
+                        image: function () {
+                            this.columns([
+                                'imageable_id',
+                                'name'
+                            ])
+                        }
+                        }],
                     columns: [
                         'id',
                         'first_name',
@@ -180,6 +189,7 @@ Users = function (PostGre) {
 
     this.deleteUser = function (req, res, next) {
         var userId = parseInt(req.params.id);
+
             UserModel
                 .forge({
                     id: userId
@@ -220,6 +230,84 @@ Users = function (PostGre) {
                     .otherwise(next)
             })
             .otherwise(next)
+    };
+
+    this.createUsersImage = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var imageData = {
+            image: options.image,
+            imageable_type: TABLES.USERS,
+            imageable_id: userId
+        };
+
+        imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(201).send({success: RESPONSES.WAS_CREATED});
+            }
+        });
+    };
+
+    this.updateUsersImage = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var imageType = TABLES.USERS;
+        var imageData;
+
+        async.series([
+            function (cb) {
+                imageData = {
+                    imageable_id: userId,
+                    imageable_type: imageType
+                };
+                imagesHelper.deleteImageByOptions(imageData, function (err) {
+                    if (err) {
+                        cb(err);
+                    } else {
+                       cb()
+                    }
+                });
+            },
+            function (cb) {
+                imageData = {
+                    image: options.image,
+                    imageable_id: userId,
+                    imageable_type: imageType
+                };
+                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                    if (err) {
+                        cb(err);
+                    } else {
+                        cb()
+                    }
+                });
+            }
+        ], function (err) {
+            if (err) {
+                next(err)
+            } else {
+                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS});
+            }
+        })
+
+    };
+
+    this.deleteUsersImage = function (req, res, next) {
+        var userId = req.session.userId;
+        var imageType = TABLES.USERS;
+        var imageData = {
+            imageable_id: userId,
+            imageable_type: imageType
+        };
+        imagesHelper.deleteImageByOptions(imageData, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY});
+            }
+        });
     };
 
 };

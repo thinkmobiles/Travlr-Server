@@ -4,5 +4,6 @@ module.exports = {
     STATIC_INFO: 'static_info',
     FEEDBACKS: 'feedbacks',
     COUNTRIES: 'countries',
-    COMPLAINTS: 'complaints'
+    COMPLAINTS: 'complaints',
+    IMAGES: 'images'
 };

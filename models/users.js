@@ -1,9 +1,11 @@
 var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
-var logWriter = require('../helpers/logWriter');
+var COLLECTIONS = require('../constants/collections');
+var LogWriter = require('../helpers/logWriter');
 var async = require('async');
 
 module.exports = function (PostGre, ParentModel) {
+    var logWriter = new LogWriter();
 
     return ParentModel.extend({
         tableName: TABLES.USERS,
@@ -16,27 +18,44 @@ module.exports = function (PostGre, ParentModel) {
         },
 
         removeDependencies: function (user) {
-            //TODO fix remove dependencies
             var userId = user.id;
 
-            async.parallel([
+            async.series([
                 function (cb) {
-                    PostGre.knex
-                        .raw(
-                            'DELETE FROM "' + TABLES.IMAGES + '" i USING "' + TABLES.POSTS + '" p ' +
-                              'where  p."id" = i."imageable_id" AND i."imageable_type" = \'' + TABLES.POSTS + '\' AND p."author_id" =' + userId
-                        )
-                        .then(function () {
-                            PostGre.knex(TABLES.POSTS)
-                                .where({
-                                    author_id: userId
-                                })
-                                .delete()
-                                .exec(cb)
+                    PostGre.Collections[COLLECTIONS.IMAGES]
+                        .forge()
+                        .query(function(qb) {
+                            qb.leftJoin(TABLES.POSTS, function() {
+                                this.on('imageable_id', TABLES.POSTS + '.id');
+                                this.andOn('imageable_type', PostGre.knex.raw('?', [TABLES.POSTS]));
+                            });
+                            qb.where('author_id', userId)
                         })
-                        .otherwise(function (err) {
-                            cb(err);
-                        });
+                        .fetch()
+                        .then(function(images) {
+                            async.each(images, function (image, callback) {
+                                image
+                                    .destroy()
+                                    .exec(callback)
+                            }, function (err) {
+                                if (err) {
+                                    cb(err)
+                                } else {
+                                    cb()
+                                }
+                            })
+                        })
+                        .otherwise(cb);
+
+                },
+                function (cb) {
+                    PostGre.knex(TABLES.POSTS)
+                        .where({
+                            author_id: userId
+                        })
+                        .delete()
+                        .exec(cb)
+
                 },
                 function (cb) {
                     PostGre.knex(TABLES.FEEDBACKS)
@@ -64,28 +83,6 @@ module.exports = function (PostGre, ParentModel) {
                             })
                         .delete()
                         .exec(cb)
-
-                },
-                function (cb) {
-                    //TODO  fetch images
-                    PostGre.Collections[COLLECTION.IMAGES]
-                        .forge()
-                        .query(function(qb) {
-                            qb.leftJoin(TABLES.POSTS, function() {
-                                this.on('imageable_id', TABLES.POSTS + '.id');
-                                this.andOn('imageable_type', PostGre.knex.raw('?', [TABLES.POSTS]));
-                            });
-                            qb.where('author_id', userId)
-                        })
-                        .fetch()
-                        .then(function(images) {
-                            images.invokeThen('destroy', options).then(function() {
-                                // ... all models in the collection have been destroyed
-                            });
-                        })
-                        .otherwise(function(err){
-
-                        });
 
                 }
 
