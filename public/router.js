@@ -16,6 +16,7 @@ define([
             "login": "login",
             "users": "users",
             "users/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "users",
+            "feedbacks": "feedbacks",
 			"*any": "any"
         },
 
@@ -64,6 +65,34 @@ define([
                     }
 	        });
 		},
+
+        feedbacks: function (page, countPerPage, sort){
+            var self = this;
+            this.main();
+            var navigatePage = (page) ? parseInt(page) || 1 : 1;
+            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+            sort = (sort) ? JSON.parse(decodeURIComponent(sort)) : "";
+
+            require([
+                "js/views/feedbacks/feedbacksView",
+                "js/collections/feedbacks/feedbacksCollection"
+            ],  function (FeedbacksView, FeedbacksCollection) {
+                if (this.current) {
+                    this.current.undelegateEvents();
+                }
+                var feedbacksCollection = new FeedbacksCollection({
+                    page: navigatePage,
+                    count: count,
+                    sort: sort
+                });
+
+                feedbacksCollection.bind('reset', _.bind(createViews, self));
+                function createViews() {
+                    feedbacksCollection.unbind('reset');
+                    self.changeView(FeedbacksView, {feedbacksCollection: feedbacksCollection});
+                }
+            });
+        },
 
 	    changeView: function (view, options) {
 	        if (this.current) {

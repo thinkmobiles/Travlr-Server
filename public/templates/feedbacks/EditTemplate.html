@@ -1,0 +1,32 @@
+<div class="edit_feedback">
+    <div id="uploadInfo">
+        <table>
+            <tr>
+                <td>
+                    <label>First name</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="First name" id="firstName" value="<%=_.escape(model.first_name)%>" maxlength="30"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Last name</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="Last name" id="lastName" value="<%=_.escape(model.last_name)%>" maxlength="30"/>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="cropImages form" style="display:none;">
+
+        <div class="image_input" style="float: left;margin-right: 20px;"></div>
+        <img class="image_output"/>
+
+        <div class="clear"></div>
+    </div>
+    <hr/>
+</div>

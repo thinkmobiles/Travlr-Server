@@ -102,6 +102,7 @@ Users = function (PostGre) {
                 .then(function (user) {
                     if (user && user.id) {
                         user = user.toJSON();
+                        user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
                         res.status(200).send(user)
                     } else {
                         error = new Error( RESPONSES.INVALID_PARAMETERS);
