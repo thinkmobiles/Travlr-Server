@@ -69,6 +69,19 @@ describe('Posts Test:', function () {
             });
     });
 
+    it('Get posts by point', function (done) {
+        agent
+            .get('/posts?lat=' + -87.6500523 + '&lon=' + 41.850033)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
     it('Create posts', function (done) {
         agent
             .post('/posts')
@@ -79,6 +92,19 @@ describe('Posts Test:', function () {
                     done(err);
                 } else {
                     postId = res.body.postId;
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Get posts by country', function (done) {
+        agent
+            .get('/posts/country/1')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
                     done(null, res);
                 }
             });

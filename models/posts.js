@@ -22,6 +22,9 @@ module.exports = function (PostGre, ParentModel) {
         city: function(){
             return this.belongsTo(PostGre.Models[MODELS.CITY], 'city_id');
         },
+        image: function() {
+            return this.morphOne(PostGre.Models[MODELS.IMAGE], 'imageable');
+        },
         initialize: function () {
             this.on('destroying', this.removeDependencies);
         },
