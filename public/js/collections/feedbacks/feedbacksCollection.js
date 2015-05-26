@@ -1,5 +1,5 @@
 define([
-        "js/models/UserModel"
+        "js/models/FeedbackModel"
     ],
     function (FeedbackModel) {
         var FeedbacksCollection = Backbone.Collection.extend({
