@@ -77,6 +77,7 @@ Users = function (PostGre) {
 
 
     this.createUserByOptions = function (options, callback, settings) {
+        var imageData;
         self.checkCreateUserOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
@@ -84,7 +85,25 @@ Users = function (PostGre) {
                 UserModel
                     .forge()
                     .save(validOptions)
-                    .exec(callback);
+                    .then(function (user) {
+                        if (options.image) {
+                            imageData = {
+                                image: options.image,
+                                imageable_id: user.id,
+                                imageable_type: options.imageType
+                            };
+                            imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    callback(null, user)
+                                }
+                            });
+                        } else {
+                            callback(null, user)
+                        }
+                    })
+                    .otherwise(callback)
             }
         }, settings);
     };
@@ -104,41 +123,45 @@ Users = function (PostGre) {
                         patch: true
                     })
                     .then(function(){
-                        async.series([
-                            function (cb) {
-                                imageData = {
-                                    imageable_id: options.id,
-                                    imageable_type: options.imageType
-                                };
-                                imagesHelper.deleteImageByOptions(imageData, function (err) {
-                                    if (err) {
-                                        cb(err);
-                                    } else {
-                                        cb()
-                                    }
-                                });
-                            },
-                            function (cb) {
-                                imageData = {
-                                    image: options.image,
-                                    imageable_id: options.id,
-                                    imageable_type: options.imageType
-                                };
-                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                    if (err) {
-                                        cb(err);
-                                    } else {
-                                        cb()
-                                    }
-                                });
-                            }
-                        ], function (err) {
-                            if (err) {
-                                callback(err)
-                            } else {
-                                callback()
-                            }
-                        })
+                        if (options.image) {
+                            async.series([
+                                function (cb) {
+                                    imageData = {
+                                        imageable_id: options.id,
+                                        imageable_type: options.imageType
+                                    };
+                                    imagesHelper.deleteImageByOptions(imageData, function (err) {
+                                        if (err) {
+                                            cb(err);
+                                        } else {
+                                            cb()
+                                        }
+                                    });
+                                },
+                                function (cb) {
+                                    imageData = {
+                                        image: options.image,
+                                        imageable_id: options.id,
+                                        imageable_type: options.imageType
+                                    };
+                                    imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                        if (err) {
+                                            cb(err);
+                                        } else {
+                                            cb()
+                                        }
+                                    });
+                                }
+                            ], function (err) {
+                                if (err) {
+                                    callback(err)
+                                } else {
+                                    callback()
+                                }
+                            })
+                        } else {
+                            callback()
+                        }
                     })
                     .otherwise(callback)
             }

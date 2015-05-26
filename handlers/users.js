@@ -26,6 +26,7 @@ Users = function (PostGre) {
     this.signUp = function (req, res, next) {
         var options = req.body;
         options.role = CONSTANTS.USERS_ROLES.USER;
+        options.imageType = TABLES.USERS;
 
         usersHelper.createUserByOptions(options, function (err, user) {
             if (err) {
