@@ -96,7 +96,8 @@ Users = function (PostGre) {
                         'id',
                         'first_name',
                         'last_name',
-                        'birthday'
+                        'birthday',
+                        'gender'
                     ]
                 })
                 .then(function (user) {

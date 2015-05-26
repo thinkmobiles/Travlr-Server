@@ -18,6 +18,7 @@ module.exports = function (PostGre, app) {
     router.delete('/:id',feedbacksHandler.deleteFeedback);
 
     router.get('/',feedbacksHandler.getFeedbacks);
+    router.get('/count',feedbacksHandler.getFeedbacksCount);
     router.get('/:id',feedbacksHandler.getFeedbackById);
 
 

@@ -1,4 +1,5 @@
 define([
+    'js/views/feedbacks/EditFeedbackView',
     "js/collections/feedbacks/feedbacksCollection",
     'text!templates/feedbacks/feedbacksTemplate.html',
     'text!templates/feedbacks/ListTemplate.html',
@@ -22,7 +23,7 @@ define([
         },
 
         events: {
-            "click .edit": "editFeedback",
+//            "click .edit": "editFeedback",
             "click .editButton": "editFeedback"
 //            "click .remove": "removeUsers",
 //            "click .deleteButton": "removeUsers",
@@ -167,7 +168,24 @@ define([
             sortObject[sortBy] = sortConst;
             this.sort = sortObject;
             this.fetchCollection();
-            custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
+            custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "feedbacks");
+        },
+
+        getTotalLength: function (currentNumber, itemsNumber) {
+            var self = this;
+            custom.getData('/feedbacks/count', {
+            }, function (response) {
+                var page = self.page || 1;
+                var length = self.listLength = response.count || 0;
+                if (itemsNumber * (page - 1) > length) {
+                    self.page = page = Math.ceil(length / self.defaultItemsNumber);
+                    self.fetchCollection();
+                    custom.changeLocationHash.call(this, page, self.defaultItemsNumber, "feedbacks");
+                }
+                custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+            }, this);
+
+
         },
 
         check: function (e) {

@@ -175,6 +175,17 @@ Feedbacks = function (PostGre) {
 
     };
 
+    this.getFeedbacksCount = function (req, res, next) {
+        var query = PostGre.knex(TABLES.FEEDBACKS);
+
+        query
+            .count()
+            .then(function (feedbacksCount) {
+                res.status(200).send(feedbacksCount[0])
+            })
+            .otherwise(next)
+    };
+
 };
 
 module.exports = Feedbacks;
