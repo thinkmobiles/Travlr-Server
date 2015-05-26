@@ -1,20 +1,16 @@
-<div class="edit_feedback">
+<div class="create_feedback">
     <div id="uploadInfo">
         <table>
             <tr>
+
                 <td>
-                    <label>Feedback</label>
-                </td>
-                <td>
-                    <textarea  id="Feedback" autofocus maxlength="300"><%=_.escape(model.body)%></textarea>
+                    <textarea type="text" placeholder="Feedback" id="Feedback" cols="70" maxlength="300"></textarea>
                 </td>
             </tr>
-
 
         </table>
     </div>
     <div class="cropImages form" style="display:none;">
-
         <div class="image_input" style="float: left;margin-right: 20px;"></div>
         <img class="image_output"/>
 

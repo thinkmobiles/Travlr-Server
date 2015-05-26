@@ -1,11 +1,12 @@
 define([
     'js/views/feedbacks/EditFeedbackView',
+    'js/views/feedbacks/CreateFeedbackView',
     "js/collections/feedbacks/feedbacksCollection",
     'text!templates/feedbacks/feedbacksTemplate.html',
     'text!templates/feedbacks/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditFeedbackView, feedbacksCollection, feedbacksTemplate, ListTemplate, custom, RESPONSES) {
+], function (EditFeedbackView, CreateFeedbackView,  feedbacksCollection, feedbacksTemplate, ListTemplate, custom, RESPONSES) {
 
     var FeedbacksView = Backbone.View.extend({
         el: '#content-holder',
@@ -23,11 +24,11 @@ define([
         },
 
         events: {
-//            "click .edit": "editFeedback",
-            "click .editButton": "editFeedback"
-//            "click .remove": "removeUsers",
-//            "click .deleteButton": "removeUsers",
-//            "click .create": "createUser",
+            "click .edit": "editFeedback",
+            "click .editButton": "editFeedback",
+//            "click .remove": "removeFeedback",
+            "click .deleteButton": "removeFeedback",
+            "click .create": "createFeedback"
 //            "click .checkAll": "checkAll",
 //            "click table.fakeUserList tr": "check",
 //            "click .oe-sortable": "goSort",
@@ -41,7 +42,7 @@ define([
 //            "click #nextPage": "nextPage"
         },
 
-        editFeedback: function (event) {
+        editFeedback: function (e) {
             var id;
             var model;
             var targetClass = $(e.target).attr('class');
@@ -56,6 +57,54 @@ define([
             model = this.collection.get(id);
             model.bind('change', this.updateElement, this);
             new EditFeedbackView({model: model});
+            return false;
+        },
+
+        removeFeedback: function (e) {
+            var id;
+            var model;
+            var self = this;
+            var targetClass = $(e.target).attr('class');
+
+            e.stopPropagation();
+
+            if (targetClass.indexOf('deleteButton') !== -1) {
+                id = $(e.target).closest("tr").data("id");
+                model = self.collection.get(id);
+                model.destroy({
+                    wait: true,
+                    success: function () {
+                        self.fetchCollection();
+                        self.getTotalLength(null, self.defaultItemsNumber);
+                    },
+                    error: custom.errorHandler
+                });
+            } else {
+                this.$el.find("table tr th input").prop("checked", false);
+                this.$el.find(".remove").hide();
+                var count = this.$el.find("table tr td input:checked").length;
+                this.$el.find("table tr td input").each(function () {
+                    if ($(this).prop("checked")) {
+                        id = $(this).closest("tr").data("id");
+                        model = self.collection.get(id);
+                        model.destroy({
+                            wait: true,
+                            success: function () {
+                                count--;
+                                if (!count) {
+                                    self.fetchCollection();
+                                    self.getTotalLength(null, self.defaultItemsNumber);
+                                }
+                            },
+                            error: custom.errorHandler
+                        });
+                    }
+                });
+            }
+        },
+
+        createFeedback: function (e) {
+            new CreateFeedbackView({collection: this.collection});
             return false;
         },
 

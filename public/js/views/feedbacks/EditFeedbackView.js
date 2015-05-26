@@ -18,13 +18,8 @@ define([
         },
         editClick: function (e) {
             var editData = {
-                first_name: this.$el.find('#firstName').val(),
-                last_name: this.$el.find('#lastName').val(),
-                email: this.$el.find('#email').val()
+                body: this.$el.find('#Feedback').val()
             };
-            if (this.imageSrc) {
-                editData['image_src'] = this.imageSrc;
-            }
 
             this.model.urlRoot = '/feedbacks/';
             this.model.save(editData, {

@@ -256,6 +256,7 @@ define([
                 });
             }
         },
+
         deleteElement: function (model) {
             /*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
             this.fetchCollection();
