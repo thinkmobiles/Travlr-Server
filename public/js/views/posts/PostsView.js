@@ -1,20 +1,23 @@
+/**
+ * Created by Ivan on 22.05.2015.
+ */
 define([
     'js/views/users/EditUserView',
     'js/views/users/CreateUserView',
-    "js/collections/users/usersCollections",
-    'text!templates/users/UsersTemplate.html',
-    'text!templates/users/ListTemplate.html',
+    "js/collections/posts/postsCollections",
+    'text!templates/posts/PostsTemplate.html',
+    'text!templates/posts/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditUserView, CreateUserView, userCollection, UsersTemplate, ListTemplate, custom, RESPONSES) {
+], function (EditUserView, CreateUserView, postsCollection, PostsTemplate, ListTemplate, custom, RESPONSES) {
 
     var UsersView = Backbone.View.extend({
         el: '#content-holder',
-        template: _.template(UsersTemplate),
+        template: _.template(PostsTemplate),
         initialize: function (options) {
-            this.collection = options.usersCollection;
+            this.collection = options.postsCollection;
             this.checkItemCount = 0;
-            this.contentType = "users";
+            this.contentType = "posts";
             this.sort = this.collection.sort;
             this.page = this.collection.page;
             this.defaultItemsNumber = this.collection.count || 50;
@@ -156,7 +159,7 @@ define([
 
         getTotalLength: function (currentNumber, itemsNumber) {
             var self = this;
-            custom.getData('/users/count', {
+            custom.getData('/posts/count', {
             }, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
@@ -228,8 +231,8 @@ define([
                 model.destroy({
                     wait: true,
                     success: function () {
-                            self.fetchCollection();
-                            self.getTotalLength(null, self.defaultItemsNumber);
+                        self.fetchCollection();
+                        self.getTotalLength(null, self.defaultItemsNumber);
                     },
                     error: custom.errorHandler
                 });
@@ -256,7 +259,6 @@ define([
                 });
             }
         },
-
         deleteElement: function (model) {
             /*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
             this.fetchCollection();
@@ -297,11 +299,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#postList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#postList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

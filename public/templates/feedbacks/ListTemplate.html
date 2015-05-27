@@ -1,0 +1,15 @@
+<% feedbacksCollection.forEach(function(feedback, index){ %>
+<tr data-index="<%= index %>" data-id="<%=feedback.id%>">
+    <td class="notForm"><input type="checkbox" value="" class="checkbox" /></td>
+    <td class="numberFeedbacks"><%=startNumber + index + 1 %></td>
+    <td class="author"><%=_.escape(feedback.author_id)%></td>
+    <td class="body"><%=_.escape(feedback.body)%></td>
+
+    <td>
+        <button class="editButton">Edit</button>
+    </td>
+    <td>
+        <button class="deleteButton">Delete</button>
+    </td>
+</tr>
+<% }) %>

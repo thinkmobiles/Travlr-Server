@@ -14,10 +14,12 @@ module.exports = function (PostGre, app) {
     router.post('/',feedbacksHandler.createFeedback);
 
     router.put('/:id',feedbacksHandler.updateFeedback);
+    router.patch('/:id',feedbacksHandler.updateFeedback);
 
     router.delete('/:id',feedbacksHandler.deleteFeedback);
 
     router.get('/',feedbacksHandler.getFeedbacks);
+    router.get('/count',feedbacksHandler.getFeedbacksCount);
     router.get('/:id',feedbacksHandler.getFeedbackById);
 
 

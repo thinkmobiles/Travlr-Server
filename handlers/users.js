@@ -26,6 +26,8 @@ Users = function (PostGre) {
     this.signUp = function (req, res, next) {
         var options = req.body;
         options.role = CONSTANTS.USERS_ROLES.USER;
+        options.imageType = TABLES.USERS;
+        //options.imageType = TABLES.USERS;
 
         usersHelper.createUserByOptions(options, function (err, user) {
             if (err) {
@@ -95,12 +97,14 @@ Users = function (PostGre) {
                         'id',
                         'first_name',
                         'last_name',
-                        'birthday'
+                        'birthday',
+                        'gender'
                     ]
                 })
                 .then(function (user) {
                     if (user && user.id) {
                         user = user.toJSON();
+                        user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
                         res.status(200).send(user)
                     } else {
                         error = new Error( RESPONSES.INVALID_PARAMETERS);
