@@ -69,7 +69,7 @@ Users = function (PostGre) {
     this.checkUpdateUserOptions = new Validation.Check({
         first_name: ['isString'],
         last_name: ['isString'],
-        email: ['required', 'isEmail'],
+        email: ['isEmail'],
         gender: ['isInt'],
         birthday: ['isDate'],
         role: ['isInt']
