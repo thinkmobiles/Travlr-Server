@@ -26,20 +26,20 @@ define([
         events: {
             "click .edit": "editFeedback",
             "click .editButton": "editFeedback",
-//            "click .remove": "removeFeedback",
+            "click .remove": "removeFeedback",
             "click .deleteButton": "removeFeedback",
-            "click .create": "createFeedback"
-//            "click .checkAll": "checkAll",
-//            "click table.fakeUserList tr": "check",
-//            "click .oe-sortable": "goSort",
-//            "click .itemsNumber": "switchPageCounter",
-//            "click #itemsButton": "itemsNumber",
-//            "click .currentPageList": "itemsNumber",
-//            "click .showPage": "showPage",
-//            "click #firstShowPage": "firstPage",
-//            "click #lastShowPage": "lastPage",
-//            "click #previousPage": "previousPage",
-//            "click #nextPage": "nextPage"
+            "click .create": "createFeedback",
+            "click .checkAll": "checkAll",
+            "click table.fakeUserList tr": "check",
+            "click .oe-sortable": "goSort",
+            "click .itemsNumber": "switchPageCounter",
+            "click #itemsButton": "itemsNumber",
+            "click .currentPageList": "itemsNumber",
+            "click .showPage": "showPage",
+            "click #firstShowPage": "firstPage",
+            "click #lastShowPage": "lastPage",
+            "click #previousPage": "previousPage",
+            "click #nextPage": "nextPage"
         },
 
         editFeedback: function (e) {

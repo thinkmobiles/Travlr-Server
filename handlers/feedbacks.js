@@ -98,9 +98,14 @@ Feedbacks = function (PostGre) {
     this.getFeedbacks = function (req, res, next) {
         var userId = req.query.userId;
         var page = req.query.page || 1;
-        var limit = req.query.limit || 25;
-        var orderBy = req.query.orderBy;
-        var order = req.query.order || 'ASC';
+        var limit = req.query.count || 25;
+        var sortObject = req.query.sort;
+
+        var sortName;
+        var sortAliase;
+        var sortOrder;
+
+
 
         FeedbackCollection
             .query(function (qb) {
@@ -109,8 +114,17 @@ Feedbacks = function (PostGre) {
                         author_id: userId
                     })
                 }
-                if (orderBy) {
-                    qb.orderBy(orderBy, order)
+                if (typeof sortObject === 'object') {
+                    sortAliase = Object.keys(sortObject);
+                    sortAliase = sortAliase[0];
+                    if (sortAliase === 'author_id') {
+                        sortName = 'author_id';
+                    }
+
+                    if (sortName) {
+                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                        qb.orderBy(sortName, sortOrder);
+                    }
                 }
                 qb.offset(( page - 1 ) * limit)
                     .limit(limit)
