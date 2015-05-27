@@ -81,12 +81,28 @@ Posts = function (PostGre) {
                             'country': function () {
                                 this.columns(['id', 'name', 'code'])
                             }
-                        }
+                        },
+                        'image'
                     ]
                 }).
                 then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection : [];
-                    res.status(200).send(posts);
+                    var postsJSON = [];
+                    var postJSON;
+
+                    async.each(posts, function (postModel) {
+                        postJSON = postModel.toJSON();
+                        if (postJSON && postJSON.image && postJSON.image.id) {
+                            postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                            postsJSON.push(postJSON);
+                        }
+                    }, function (err) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            res.status(200).send(postsJSON);
+                        }
+                    });
                 })
                 .otherwise(next);
         }
@@ -203,12 +219,28 @@ Posts = function (PostGre) {
                             'country': function () {
                                 this.columns(['id', 'name', 'code'])
                             }
-                        }
+                        },
+                        'image'
                     ]
-                }).
-                then(function (postCollection) {
+                })
+                .then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection : [];
-                    res.status(200).send(posts);
+                    var postsJSON = [];
+                    var postJSON;
+
+                    async.each(posts, function (postModel) {
+                        postJSON = postModel.toJSON();
+                        if (postJSON && postJSON.image && postJSON.image.id) {
+                            postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                            postsJSON.push(postJSON);
+                        }
+                    }, function (err) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            res.status(200).send(postsJSON);
+                        }
+                    });
                 })
                 .otherwise(next);
         } else {
@@ -223,13 +255,13 @@ Posts = function (PostGre) {
         if (lat && lon) {
             PostGre.knex
                 .raw(
-                    "SELECT * FROM posts, " +
-                        "ST_Distance_Sphere( " +
-                            "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
-                            "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
-                        " ) AS distance " +
-                    "Where distance < " + distance
-                )
+                "SELECT * FROM posts, " +
+                "ST_Distance_Sphere( " +
+                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                " ) AS distance " +
+                "Where distance < " + distance
+            )
                 .then(function (queryResult) {
                     var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
                     callback(null, models);
