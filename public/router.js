@@ -17,6 +17,8 @@ define([
             "users": "users",
             "users/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "users",
             "feedbacks": "feedbacks",
+            "posts/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "posts",
+            "posts": "posts",
 			"*any": "any"
         },
 
@@ -62,6 +64,34 @@ define([
                     function createViews() {
                         usersCollection.unbind('reset');
 						self.changeView(UsersView, {usersCollection: usersCollection});
+                    }
+	        });
+		},
+
+		posts: function (page, countPerPage, sort) {
+            var self = this;
+	        this.main();
+            var navigatePage = (page) ? parseInt(page) || 1 : 1;
+            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+			sort = (sort) ? JSON.parse(decodeURIComponent(sort)) : "";
+
+			require([
+                "js/views/posts/PostsView",
+                "js/collections/posts/postsCollections"
+            ], function (PostsView, PostsCollection) {
+                if (this.current) {
+                    this.current.undelegateEvents();
+                }
+                var postsCollection = new PostsCollection({
+                    page: navigatePage,
+                    count: count,
+                    sort: sort
+                });
+
+                postsCollection.bind('reset', _.bind(createViews, self));
+                    function createViews() {
+                        postsCollection.unbind('reset');
+						self.changeView(PostsView, {postsCollection: postsCollection});
                     }
 	        });
 		},
