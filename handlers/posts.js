@@ -97,10 +97,12 @@ Posts = function (PostGre) {
                     var postJSON;
                     if(posts.length){
                         async.each(posts, function (postModel, callback) {
-                            postJSON = postModel.toJSON();
-                            if (postJSON && postJSON.image && postJSON.image.id) {
-                                postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
-                                postsJSON.push(postJSON);
+                            if(postModel){
+                                postJSON = postModel.toJSON();
+                                if (postJSON && postJSON.image && postJSON.image.id) {
+                                    postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                                    postsJSON.push(postJSON);
+                                }
                             }
                             callback();
                         }, function (err) {
