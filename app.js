@@ -9,7 +9,7 @@ var http = require('http');
 var session = require('express-session');
 var MemoryStore = require('connect-redis')(session);
 
-var marked = require('marked');
+//var marked = require('marked');
 
 var markdownString = '```js\n console.log("hello"); \n```';
 

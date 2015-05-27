@@ -1,6 +1,3 @@
-/**
- * Created by Ivan on 22.05.2015.
- */
 define([], function () {
     var PostModel = Backbone.Model.extend({
         initialize: function () {
@@ -15,9 +12,13 @@ define([], function () {
         },
         defaults: {
             //  imageSrc: "",
-            first_name: "",
-            last_name: "",
-            email: ""
+            author_id: "",
+            title: "",
+            body: "",
+            lat: "",
+            lon: "",
+            city_id: "",
+            type: ""
         },
         urlRoot: function () {
             return "/posts";
