@@ -89,20 +89,23 @@ Posts = function (PostGre) {
                     var posts = ( postCollection ) ? postCollection : [];
                     var postsJSON = [];
                     var postJSON;
-
-                    async.each(posts, function (postModel) {
-                        postJSON = postModel.toJSON();
-                        if (postJSON && postJSON.image && postJSON.image.id) {
-                            postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
-                            postsJSON.push(postJSON);
-                        }
-                    }, function (err) {
-                        if (err) {
-                            next(err);
-                        } else {
-                            res.status(200).send(postsJSON);
-                        }
-                    });
+                    if(posts.length){
+                        async.each(posts, function (postModel) {
+                            postJSON = postModel.toJSON();
+                            if (postJSON && postJSON.image && postJSON.image.id) {
+                                postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                                postsJSON.push(postJSON);
+                            }
+                        }, function (err) {
+                            if (err) {
+                                next(err);
+                            } else {
+                                res.status(200).send(postsJSON);
+                            }
+                        });
+                    }else{
+                        res.status(200).send(posts);
+                    }
                 })
                 .otherwise(next);
         }
@@ -227,7 +230,7 @@ Posts = function (PostGre) {
                     var posts = ( postCollection ) ? postCollection : [];
                     var postsJSON = [];
                     var postJSON;
-                    if(postsJSON.length){
+                    if(posts.length){
                         async.each(posts, function (postModel) {
                             postJSON = postModel.toJSON();
                             if (postJSON && postJSON.image && postJSON.image.id) {
@@ -238,7 +241,7 @@ Posts = function (PostGre) {
                             if (err) {
                                 next(err);
                             } else {
-                                res.status(200).send(postsJSON);
+                                res.status(200).send(posts);
                             }
                         });
                     }else{
