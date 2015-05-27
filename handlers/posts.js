@@ -39,6 +39,7 @@ Posts = function (PostGre) {
             var order = options.order || 'ASC';
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
+            var userId = parseInt(options.uId);
 
             PostCollection
                 .forge()
@@ -52,6 +53,10 @@ Posts = function (PostGre) {
 
                     if (countryId) {
                         qb.where('country_id', countryId);
+                    }
+
+                    if (userId) {
+                        qb.where('author_id', userId);
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -94,21 +99,21 @@ Posts = function (PostGre) {
                 then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection.toJSON() : [];
                     var postsJSON = [];
-                    var postJSON;
+                    var postImage;
 
                     if (posts.length) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
-                                //postJSON = postModel.toJSON();
-                                if (postModel.image && postModel.image.id) {
-                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
+                                postImage = postModel.image;
+                                if (postImage && postImage.id) {
+                                    postImage.image_url = PostGre.imagesUploader.getImageUrl(postImage.name, 'posts');
+                                    postModel.image = postImage;
                                     postsJSON.push(postModel);
                                     callback();
                                 }
                             } else {
                                 callback();
                             }
-
                         }, function (err) {
                             if (err) {
                                 next(err);
