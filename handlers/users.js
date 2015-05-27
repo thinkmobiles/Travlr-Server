@@ -47,6 +47,7 @@ Users = function (PostGre) {
 
     this.confirmEmail = function (req, res, next) {
         var confirmToken = req.query.token;
+        var saveData;
         var error;
 
         if (confirmToken) {
@@ -56,12 +57,17 @@ Users = function (PostGre) {
                 })
                 .fetch()
                 .then(function (user) {
+                    saveData = {
+                        confirm_token: null,
+                        change_email: null,
+                        confirm_status: CONSTANTS.CONFIRM_STATUS.CONFIRMED
+                    };
                     if (user && user.id) {
+                        if (user.get('change_email')) {
+                            saveData.email = user.get('change_email');
+                        }
                         user
-                            .save({
-                                confirm_token: null,
-                                confirm_status: CONSTANTS.CONFIRM_STATUS.CONFIRMED
-                            }, {
+                            .save(saveData, {
                                 patch: true
                             })
                             .then(function () {
@@ -123,6 +129,17 @@ Users = function (PostGre) {
 
     this.signInViaFB = function (req, res, next) {
         var options = req.body;
+        options.role = CONSTANTS.USERS_ROLES.USER;
+        options.imageType = TABLES.USERS;
+        options.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+
+        usersHelper.createUserByOptionsviaFB(options, function (err, user) {
+            if (err) {
+                next(err)
+            } else {
+                res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
+            }
+        }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
     };
 
     this.getUserById = function (req, res, next) {
@@ -253,13 +270,26 @@ Users = function (PostGre) {
     this.updateUser = function (req, res, next) {
         // TODO need check user/admin access
         var options = req.body;
+        var mailOptions;
         options.id = parseInt(req.params.id);
         options.imageType = TABLES.USERS;
+        if (options.change_email) {
+            options.confirm_token = generator.generate(15);
+            options.confirm_status = CONSTANTS.CONFIRM_STATUS.CHANGE_EMAIL;
+        }
 
         usersHelper.updateUserByOptions(options, function (err, user) {
             if (err) {
                 next(err)
             } else {
+                if (user.get('change_email')) {
+                    mailOptions = {
+                        email: user.get('change_email'),
+                        confirm_token: user.get('confirm_token')
+                    };
+                    mailer.confirmEmail(mailOptions);
+                }
+
                 res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
             }
         }, {checkFunctions: ['checkUniqueEmail']})

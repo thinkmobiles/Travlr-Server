@@ -2,6 +2,7 @@ var RESPONSES = require('../constants/responseMessages');
 var Session = require('../handlers/sessions');
 var TABLES = require('../constants/tables');
 var MODELS = require('../constants/models');
+var CONSTANTS = require('../constants/constants');
 var _ = require('../node_modules/underscore');
 var async = require('../node_modules/async');
 var Validation = require('../helpers/validation');
@@ -20,14 +21,17 @@ Users = function (PostGre) {
         checkUniqueEmail: function (options, validOptions, callback) {
             var err;
 
-            if (validOptions.email) {
+            if (validOptions.email || validOptions.change_email) {
                 UserModel
                     .forge()
                     .query(function (qb) {
-                        qb.where('email', validOptions.email);
+                        if (validOptions.email) {
+                            qb.where('email', validOptions.email)
+                        }
 
-                        if (options.id) {
-                            qb.where('id', '!=', options.id)
+                        if (options.id && validOptions.change_email) {
+                            qb.where('email', validOptions.change_email)
+                            .andWhere('id', '!=', options.id)
                         }
                     })
                     .fetch()
@@ -68,12 +72,25 @@ Users = function (PostGre) {
         role: ['isInt']
     }, self.checkFunctions);
 
-    this.checkUpdateUserOptions = new Validation.Check({
+    this.checkCreateUserOptionsviaFB = new Validation.Check({
+        facebook_id: ['required', 'isString'],
         first_name: ['isString'],
         last_name: ['isString'],
         email: ['isEmail'],
         gender: ['isInt'],
+        confirm_status: ['isInt'],
         birthday: ['isDate'],
+        role: ['isInt']
+    }, self.checkFunctions);
+
+    this.checkUpdateUserOptions = new Validation.Check({
+        first_name: ['isString'],
+        last_name: ['isString'],
+        change_email: ['isEmail'],
+        gender: ['isInt'],
+        birthday: ['isDate'],
+        confirm_token: ['isString'],
+        confirm_status: ['isInt'],
         role: ['isInt']
     }, self.checkFunctions);
 
@@ -124,7 +141,7 @@ Users = function (PostGre) {
                     .save(validOptions, {
                         patch: true
                     })
-                    .then(function(){
+                    .then(function (user) {
                         if (options.image) {
                             async.series([
                                 function (cb) {
@@ -158,17 +175,49 @@ Users = function (PostGre) {
                                 if (err) {
                                     callback(err)
                                 } else {
-                                    callback()
+                                    callback(null, user)
                                 }
                             })
                         } else {
-                            callback()
+                            callback(null, user)
                         }
                     })
                     .otherwise(callback)
             }
         }, settings)
-    }
+    };
+
+    this.createUserByOptionsviaFB = function (options, callback, settings) {
+        var imageData;
+        self.checkCreateUserOptionsviaFB.run(options, function (err, validOptions) {
+            if (err) {
+                callback(err);
+            } else {
+                UserModel
+                    .forge()
+                    .save(validOptions)
+                    .then(function (user) {
+                        if (options.image) {
+                            imageData = {
+                                image: options.image,
+                                imageable_id: user.id,
+                                imageable_type: options.imageType
+                            };
+                            imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    callback(null, user)
+                                }
+                            });
+                        } else {
+                            callback(null, user)
+                        }
+                    })
+                    .otherwise(callback)
+            }
+        }, settings);
+    };
 
 };
 
