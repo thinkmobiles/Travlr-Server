@@ -25,18 +25,62 @@ Users = function (PostGre) {
 
     this.signUp = function (req, res, next) {
         var options = req.body;
+        var mailOptions;
         options.role = CONSTANTS.USERS_ROLES.USER;
         options.imageType = TABLES.USERS;
-        //options.imageType = TABLES.USERS;
+        options.confirm_status = CONSTANTS.CONFIRM_STATUS.UNCONFIRMED;
+        options.confirm_token = generator.generate(15);
 
         usersHelper.createUserByOptions(options, function (err, user) {
             if (err) {
                 next(err)
             } else {
-                req.session.userId = user.id;
+                mailOptions = {
+                    email: user.get('email'),
+                    confirm_token: user.get('confirm_token')
+                };
+                mailer.confirmEmail(mailOptions);
                 res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
             }
         }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
+    };
+
+    this.confirmEmail = function (req, res, next) {
+        var confirmToken = req.query.token;
+        var error;
+
+        if (confirmToken) {
+            UserModel
+                .forge({
+                    confirm_token: confirmToken
+                })
+                .fetch()
+                .then(function (user) {
+                    if (user && user.id) {
+                        user
+                            .save({
+                                confirm_token: null,
+                                confirm_status: CONSTANTS.CONFIRM_STATUS.CONFIRMED
+                            }, {
+                                patch: true
+                            })
+                            .then(function () {
+                                req.session.userId = user.id;
+                                res.redirect(process.env.APP_HOST + ':' + process.env.PORT + '/users/' + user.id);
+                            })
+                            .otherwise(next)
+                    } else {
+                        error = new Error(RESPONSES.INVALID_PARAMETERS);
+                        error.status = 400;
+                        next(error)
+                    }
+                })
+                .otherwise(next)
+        } else {
+            error = new Error(RESPONSES.NOT_ENOUGH_PARAMETERS);
+            error.status = 400;
+            next(error)
+        }
     };
 
     this.signIn = function (req, res, next) {
@@ -52,10 +96,16 @@ Users = function (PostGre) {
                 .fetch()
                 .then(function (user) {
                     if (user && user.id) {
-                        user = user.toJSON();
-                        session.register(req, res, user)
+                        if (user.get('confirm_status') === CONSTANTS.CONFIRM_STATUS.UNCONFIRMED) {
+                            error = new Error(RESPONSES.UNCOFIRMED_EMAIL);
+                            error.status = 400;
+                            next(error);
+                        } else {
+                            user = user.toJSON();
+                            session.register(req, res, user)
+                        }
                     } else {
-                        error = new Error( RESPONSES.INVALID_PARAMETERS);
+                        error = new Error(RESPONSES.INVALID_PARAMETERS);
                         error.status = 400;
                         next(error);
                     }
@@ -67,7 +117,7 @@ Users = function (PostGre) {
         }
     };
 
-    this.signOut = function (req, res, next){
+    this.signOut = function (req, res, next) {
         session.kill(req, res);
     };
 
@@ -85,14 +135,16 @@ Users = function (PostGre) {
                     id: userId
                 })
                 .fetch({
-                    withRelated: [{
-                        image: function () {
-                            this.columns([
-                                'imageable_id',
-                                'name'
-                            ])
+                    withRelated: [
+                        {
+                            image: function () {
+                                this.columns([
+                                    'imageable_id',
+                                    'name'
+                                ])
+                            }
                         }
-                        }],
+                    ],
                     columns: [
                         'id',
                         'first_name',
@@ -104,17 +156,19 @@ Users = function (PostGre) {
                 .then(function (user) {
                     if (user && user.id) {
                         user = user.toJSON();
-                        user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
+                        if (user.image.name) {
+                            user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
+                        }
                         res.status(200).send(user)
                     } else {
-                        error = new Error( RESPONSES.INVALID_PARAMETERS);
+                        error = new Error(RESPONSES.INVALID_PARAMETERS);
                         error.status = 400;
                         next(error);
                     }
                 })
                 .otherwise(next)
         } else {
-            error = new Error( RESPONSES.INVALID_PARAMETERS);
+            error = new Error(RESPONSES.INVALID_PARAMETERS);
             error.status = 400;
             next(error);
         }
@@ -151,7 +205,7 @@ Users = function (PostGre) {
                         sortName = 'email';
                     } else if (sortAliase === 'name') {
                         sortName = 'first_name';
-                    } else if (sortAliase ==='birthday') {
+                    } else if (sortAliase === 'birthday') {
                         sortName = 'birthday';
                     }
 
@@ -176,7 +230,7 @@ Users = function (PostGre) {
                 if (users && users.length) {
                     res.status(200).send(users)
                 } else {
-                    error = new Error( RESPONSES.INVALID_PARAMETERS);
+                    error = new Error(RESPONSES.INVALID_PARAMETERS);
                     error.status = 400;
                     next(error);
                 }
@@ -214,15 +268,15 @@ Users = function (PostGre) {
     this.deleteUser = function (req, res, next) {
         var userId = parseInt(req.params.id);
 
-            UserModel
-                .forge({
-                    id: userId
-                })
-                .destroy()
-                .then(function () {
-                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
-                })
-                .otherwise(next)
+        UserModel
+            .forge({
+                id: userId
+            })
+            .destroy()
+            .then(function () {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+            })
+            .otherwise(next)
     };
 
     this.forgotPassword = function (req, res, next) {
@@ -242,7 +296,7 @@ Users = function (PostGre) {
                     }, {
                         patch: true
                     })
-                    .then(function (){
+                    .then(function () {
                         mailOptions = {
                             password: newPass,
                             email: email
@@ -257,66 +311,66 @@ Users = function (PostGre) {
     };
 
     /*this.createUsersImage = function (req, res, next) {
-        var options = req.body;
-        var userId = req.session.userId;
-        var imageData = {
-            image: options.image,
-            imageable_type: TABLES.USERS,
-            imageable_id: userId
-        };
+     var options = req.body;
+     var userId = req.session.userId;
+     var imageData = {
+     image: options.image,
+     imageable_type: TABLES.USERS,
+     imageable_id: userId
+     };
 
-        imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-            if (err) {
-                next(err);
-            } else {
-                res.status(201).send({success: RESPONSES.WAS_CREATED});
-            }
-        });
-    };*/
+     imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+     if (err) {
+     next(err);
+     } else {
+     res.status(201).send({success: RESPONSES.WAS_CREATED});
+     }
+     });
+     };*/
 
     /*this.updateUsersImage = function (req, res, next) {
-        var options = req.body;
-        var userId = req.session.userId;
-        var imageType = TABLES.USERS;
-        var imageData;
+     var options = req.body;
+     var userId = req.session.userId;
+     var imageType = TABLES.USERS;
+     var imageData;
 
-        async.series([
-            function (cb) {
-                imageData = {
-                    imageable_id: userId,
-                    imageable_type: imageType
-                };
-                imagesHelper.deleteImageByOptions(imageData, function (err) {
-                    if (err) {
-                        cb(err);
-                    } else {
-                       cb()
-                    }
-                });
-            },
-            function (cb) {
-                imageData = {
-                    image: options.image,
-                    imageable_id: userId,
-                    imageable_type: imageType
-                };
-                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                    if (err) {
-                        cb(err);
-                    } else {
-                        cb()
-                    }
-                });
-            }
-        ], function (err) {
-            if (err) {
-                next(err)
-            } else {
-                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS});
-            }
-        })
+     async.series([
+     function (cb) {
+     imageData = {
+     imageable_id: userId,
+     imageable_type: imageType
+     };
+     imagesHelper.deleteImageByOptions(imageData, function (err) {
+     if (err) {
+     cb(err);
+     } else {
+     cb()
+     }
+     });
+     },
+     function (cb) {
+     imageData = {
+     image: options.image,
+     imageable_id: userId,
+     imageable_type: imageType
+     };
+     imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+     if (err) {
+     cb(err);
+     } else {
+     cb()
+     }
+     });
+     }
+     ], function (err) {
+     if (err) {
+     next(err)
+     } else {
+     res.status(200).send({success: RESPONSES.UPDATED_SUCCESS});
+     }
+     })
 
-    };*/
+     };*/
 
     this.deleteUsersImage = function (req, res, next) {
         var userId = req.session.userId;
