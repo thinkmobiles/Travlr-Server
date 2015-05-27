@@ -50,8 +50,8 @@ Posts = function (PostGre) {
                         )
                     }
 
-                    if(countryId){
-                        qb.where('country_id',countryId);
+                    if (countryId) {
+                        qb.where('country_id', countryId);
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -92,19 +92,23 @@ Posts = function (PostGre) {
                     ]
                 }).
                 then(function (postCollection) {
-                    var posts = ( postCollection ) ? postCollection : [];
+                    var posts = ( postCollection ) ? postCollection.toJSON() : [];
                     var postsJSON = [];
                     var postJSON;
-                    if(posts.length){
+
+                    if (posts.length) {
                         async.each(posts, function (postModel, callback) {
-                            if(postModel){
-                                postJSON = postModel.toJSON();
-                                if (postJSON && postJSON.image && postJSON.image.id) {
-                                    postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
-                                    postsJSON.push(postJSON);
+                            if (postModel) {
+                                //postJSON = postModel.toJSON();
+                                if (postModel.image && postModel.image.id) {
+                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
+                                    postsJSON.push(postModel);
+                                    callback();
                                 }
+                            } else {
+                                callback();
                             }
-                            callback();
+
                         }, function (err) {
                             if (err) {
                                 next(err);
@@ -112,7 +116,7 @@ Posts = function (PostGre) {
                                 res.status(200).send(postsJSON);
                             }
                         });
-                    }else{
+                    } else {
                         res.status(200).send(posts);
                     }
                 })
