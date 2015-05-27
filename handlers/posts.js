@@ -38,6 +38,7 @@ Posts = function (PostGre) {
             var orderBy = options.orderBy;
             var order = options.order || 'ASC';
             var searchTerm = options.searchTerm;
+            var countryId = parseInt(options.cId);
 
             PostCollection
                 .forge()
@@ -48,6 +49,11 @@ Posts = function (PostGre) {
                             "LOWER(body) LIKE '%" + searchTerm + "%' "
                         )
                     }
+
+                    if(countryId){
+                        qb.where('country_id',countryId);
+                    }
+
                     qb.offset(( page - 1 ) * limit)
                         .limit(limit);
 
@@ -81,12 +87,34 @@ Posts = function (PostGre) {
                             'country': function () {
                                 this.columns(['id', 'name', 'code'])
                             }
-                        }
+                        },
+                        'image'
                     ]
                 }).
                 then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection : [];
-                    res.status(200).send(posts);
+                    var postsJSON = [];
+                    var postJSON;
+                    if(posts.length){
+                        async.each(posts, function (postModel, callback) {
+                            if(postModel){
+                                postJSON = postModel.toJSON();
+                                if (postJSON && postJSON.image && postJSON.image.id) {
+                                    postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                                    postsJSON.push(postJSON);
+                                }
+                            }
+                            callback();
+                        }, function (err) {
+                            if (err) {
+                                next(err);
+                            } else {
+                                res.status(200).send(postsJSON);
+                            }
+                        });
+                    }else{
+                        res.status(200).send(posts);
+                    }
                 })
                 .otherwise(next);
         }
@@ -149,73 +177,6 @@ Posts = function (PostGre) {
         }
     };
 
-    this.getPostByCountry = function (req, res, next) {
-        var countryId = req.params.countryId;
-        var postJSON;
-
-        var page = req.query.page || 1;
-        var limit = req.query.count || 25;
-
-        var orderBy = req.query.orderBy;
-        var order = req.query.order || 'ASC';
-        var searchTerm = req.query.searchTerm;
-
-        if (countryId) {
-            PostCollection
-                .forge({'country_id': countryId})
-                .query(function (qb) {
-                    if (searchTerm) {
-                        searchTerm = searchTerm.toLowerCase();
-                        qb.whereRaw(
-                            "LOWER(body) LIKE '%" + searchTerm + "%' "
-                        )
-                    }
-                    qb.offset(( page - 1 ) * limit)
-                        .limit(limit);
-
-                    if (orderBy) {
-                        qb.orderBy(orderBy, order);
-                    }
-                })
-                .fetch({
-                    columns: [
-                        'id',
-                        'title',
-                        'body',
-                        'lat',
-                        'lon',
-                        'author_id',
-                        'city_id',
-                        'country_id'
-                    ],
-                    withRelated: [
-                        {
-                            'author': function () {
-                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
-                            }
-                        },
-                        {
-                            'city': function () {
-                                this.columns(['id', 'name'])
-                            }
-                        },
-                        {
-                            'country': function () {
-                                this.columns(['id', 'name', 'code'])
-                            }
-                        }
-                    ]
-                }).
-                then(function (postCollection) {
-                    var posts = ( postCollection ) ? postCollection : [];
-                    res.status(200).send(posts);
-                })
-                .otherwise(next);
-        } else {
-            next(RESPONSES.INTERNAL_ERROR);
-        }
-    };
-
     function getPostsByRadius(options, callback) {
         var lat = options.lat;
         var lon = options.lon;
@@ -223,13 +184,13 @@ Posts = function (PostGre) {
         if (lat && lon) {
             PostGre.knex
                 .raw(
-                    "SELECT * FROM posts, " +
-                        "ST_Distance_Sphere( " +
-                            "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
-                            "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
-                        " ) AS distance " +
-                    "Where distance < " + distance
-                )
+                "SELECT * FROM posts, " +
+                "ST_Distance_Sphere( " +
+                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                " ) AS distance " +
+                "Where distance < " + distance
+            )
                 .then(function (queryResult) {
                     var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
                     callback(null, models);

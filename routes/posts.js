@@ -10,8 +10,6 @@ module.exports = function (PostGre, app) {
         .post(postsHandler.createPost);
 
 
-    router.get('/country/:countryId', postsHandler.getPostByCountry);
-
     router.route('/:id')
         .get(postsHandler.getPostById)
         .delete(postsHandler.deletePost)
