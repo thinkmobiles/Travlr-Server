@@ -20,6 +20,22 @@ module.exports = function (app) {
         deliver(mailOptions);
     };
 
+    this.confirmEmail = function (options){
+        var templateOptions = {
+            email: options.email,
+            url: process.env.APP_HOST + ':' + process.env.PORT + '/users/confirm?token=' + options.confirm_token
+        };
+        var mailOptions = {
+            from: 'Test',
+            to: options.email,
+            subject: 'Confirm email',
+            generateTextFromHTML: true,
+            html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"), templateOptions)
+        };
+
+        deliver(mailOptions);
+    };
+
     function deliver(mailOptions, cb) {
         var transport = nodemailer.createTransport(smtpTransport({
             service: 'gmail',
