@@ -73,6 +73,7 @@ Posts = function (PostGre) {
                         'body',
                         'lat',
                         'lon',
+                        'type',
                         'author_id',
                         'city_id',
                         'country_id'
@@ -84,7 +85,8 @@ Posts = function (PostGre) {
                             }
                         },
                         {
-                            'author.image': function () {}
+                            'author.image': function () {
+                            }
                         },
                         {
                             'city': function () {
@@ -102,7 +104,6 @@ Posts = function (PostGre) {
                 then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection.toJSON() : [];
                     var postsJSON = [];
-                    var postImage;
 
                     if (posts.length) {
                         async.each(posts, function (postModel, callback) {
@@ -184,7 +185,8 @@ Posts = function (PostGre) {
                             }
                         },
                         {
-                            'author.image': function () {}
+                            'author.image': function () {
+                            }
                         },
                         {
                             'city': function () {

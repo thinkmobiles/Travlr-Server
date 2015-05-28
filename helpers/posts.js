@@ -17,6 +17,7 @@ Posts = function (PostGre) {
         title: ['required'],
         lon: ['required'],
         lat: ['required'],
+        type: ['isArray'],
         city_id: ['required'],
         country_id: ['required']
     });
@@ -27,6 +28,7 @@ Posts = function (PostGre) {
         title: ['required'],
         lon: ['required'],
         lat: ['required'],
+        type: ['isArray'],
         city_id: ['required'],
         country_id: ['required']
     });
