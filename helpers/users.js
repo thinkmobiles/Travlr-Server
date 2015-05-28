@@ -284,8 +284,8 @@ Users = function (PostGre) {
 
                         } else if (!!usersList.userByFBId) {
                             callback(null, usersList.userByFBId, CONSTANTS.FB_ACTIONS.SIGN_IN)
-                        } else if (!usersList.userByFBId && !!usersList.userByChangeEmail) {
-                            usersList.userByChangeEmail
+                        } else if (!usersList.userByFBId && !!usersList.userByEmail) {
+                            usersList.userByEmail
                                 .save(validOptions, {
                                     patch: true
                                 })
