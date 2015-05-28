@@ -39,6 +39,7 @@ Posts = function (PostGre) {
             var order = options.order || 'ASC';
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
+            var userId = parseInt(options.uId);
 
             PostCollection
                 .forge()
@@ -50,8 +51,12 @@ Posts = function (PostGre) {
                         )
                     }
 
-                    if(countryId){
-                        qb.where('country_id',countryId);
+                    if (countryId) {
+                        qb.where('country_id', countryId);
+                    }
+
+                    if (userId) {
+                        qb.where('author_id', userId);
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -92,19 +97,23 @@ Posts = function (PostGre) {
                     ]
                 }).
                 then(function (postCollection) {
-                    var posts = ( postCollection ) ? postCollection : [];
+                    var posts = ( postCollection ) ? postCollection.toJSON() : [];
                     var postsJSON = [];
-                    var postJSON;
-                    if(posts.length){
+                    var postImage;
+
+                    if (posts.length) {
                         async.each(posts, function (postModel, callback) {
-                            if(postModel){
-                                postJSON = postModel.toJSON();
-                                if (postJSON && postJSON.image && postJSON.image.id) {
-                                    postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
-                                    postsJSON.push(postJSON);
+                            if (postModel) {
+                                postImage = postModel.image;
+                                if (postImage && postImage.id) {
+                                    postImage.image_url = PostGre.imagesUploader.getImageUrl(postImage.name, 'posts');
+                                    postModel.image = postImage;
+                                    postsJSON.push(postModel);
+                                    callback();
                                 }
+                            } else {
+                                callback();
                             }
-                            callback();
                         }, function (err) {
                             if (err) {
                                 next(err);
@@ -112,12 +121,33 @@ Posts = function (PostGre) {
                                 res.status(200).send(postsJSON);
                             }
                         });
-                    }else{
+                    } else {
                         res.status(200).send(posts);
                     }
                 })
                 .otherwise(next);
         }
+    };
+
+    this.getPostsCount = function (req, res, next) {
+        var options = req.query;
+        var countryId = parseInt(options.cId);
+        var userId = parseInt(options.uId);
+        var query = PostGre.knex(TABLES.POSTS);
+
+        if (countryId) {
+            query.where('country_id', countryId);
+        }
+
+        if (userId) {
+            query.where('author_id', userId);
+        }
+
+        query.count()
+            .then(function (usersCount) {
+                res.status(200).send(usersCount[0])
+            })
+            .otherwise(next)
     };
 
     this.getPostById = function (req, res, next) {
@@ -374,6 +404,6 @@ Posts = function (PostGre) {
         }
     }
 }
-;
+
 
 module.exports = Posts;
