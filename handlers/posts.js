@@ -84,6 +84,9 @@ Posts = function (PostGre) {
                             }
                         },
                         {
+                            'author.image': function () {}
+                        },
+                        {
                             'city': function () {
                                 this.columns(['id', 'name'])
                             }
@@ -104,13 +107,19 @@ Posts = function (PostGre) {
                     if (posts.length) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
-                                postImage = postModel.image;
-                                if (postImage && postImage.id) {
-                                    postImage.image_url = PostGre.imagesUploader.getImageUrl(postImage.name, 'posts');
-                                    postModel.image = postImage;
+                                if (postModel.image && postModel.image.id) {
+                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
                                     postsJSON.push(postModel);
-                                    callback();
+
                                 }
+
+                                if (postModel.author && postModel.author.image && postModel.author.image.id) {
+                                    postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'posts');
+                                    postsJSON.push(postModel);
+                                }
+
+                                callback();
+
                             } else {
                                 callback();
                             }
@@ -175,6 +184,9 @@ Posts = function (PostGre) {
                             }
                         },
                         {
+                            'author.image': function () {}
+                        },
+                        {
                             'city': function () {
                                 this.columns(['id', 'name'])
                             }
@@ -192,6 +204,10 @@ Posts = function (PostGre) {
                         postJSON = postModel.toJSON();
                         if (postJSON && postJSON.image && postJSON.image.id) {
                             postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+                        }
+
+                        if (postJSON && postJSON.author.image && postJSON.author.image && postJSON.author.image.id) {
+                            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'posts');
                         }
                         res.status(200).send(postJSON);
 
@@ -403,7 +419,7 @@ Posts = function (PostGre) {
             next(RESPONSES.INVALID_PARAMETERS);
         }
     }
-}
+};
 
 
 module.exports = Posts;
