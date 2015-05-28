@@ -19,7 +19,7 @@ Users = function (PostGre) {
 
     this.checkFunctions = {
         checkUniqueEmail: function (options, validOptions, callback) {
-            var err;
+            var error;
 
             if (validOptions.email || validOptions.change_email) {
                 UserModel
@@ -31,26 +31,26 @@ Users = function (PostGre) {
 
                         if (options.id && validOptions.change_email) {
                             qb.where('email', validOptions.change_email)
-                            .andWhere('id', '!=', options.id)
+                                .andWhere('id', '!=', options.id)
                         }
                     })
                     .fetch()
                     .then(function (user) {
                         if (user && user.id) {
-                            err = new Error(RESPONSES.NOT_UNIQUE_EMAIL);
-                            err.status = 400;
+                            error = new Error(RESPONSES.NOT_UNIQUE_EMAIL);
+                            error.status = 400;
 
-                            callback(err);
+                            callback(error);
                         } else {
                             callback();
                         }
                     })
                     .otherwise(callback);
             } else {
-                err = new Error(RESPONSES.INVALID_PARAMETERS);
-                err.status = 400;
+                error = new Error(RESPONSES.INVALID_PARAMETERS);
+                error.status = 400;
 
-                callback(err)
+                callback(error)
             }
         },
 
@@ -78,7 +78,6 @@ Users = function (PostGre) {
         last_name: ['isString'],
         email: ['isEmail'],
         gender: ['isInt'],
-        confirm_status: ['isInt'],
         birthday: ['isDate'],
         role: ['isInt']
     }, self.checkFunctions);
@@ -94,6 +93,61 @@ Users = function (PostGre) {
         role: ['isInt']
     }, self.checkFunctions);
 
+    this.checkFBIdOrEmail = function (options, callback) {
+        async.parallel([
+            function (cb) {
+                UserModel
+                    .forge({
+                        facebook_id: options.facebook_id
+                    })
+                    .fetch()
+                    .then(function (user) {
+                        if (user && user.id) {
+                            cb(null, user)
+                        } else {
+                            cb()
+                        }
+                    })
+                    .otherwise(cb)
+            },
+            function (cb) {
+                UserModel
+                    .forge({
+                        email: options.email
+                    })
+                    .fetch()
+                    .then(function (user) {
+                        if (user && user.id) {
+                            cb(null, user)
+                        } else {
+                            cb()
+                        }
+                    })
+                    .otherwise(cb)
+            },
+            function (cb) {
+                UserModel
+                    .forge({
+                        change_email: options.email
+                    })
+                    .fetch()
+                    .then(function (user) {
+                        if (user && user.id) {
+                            cb(null, user)
+                        } else {
+                            cb()
+                        }
+                    })
+                    .otherwise(cb)
+            }
+        ], function (err, result) {
+            if (err) {
+                callback(err)
+            } else {
+                callback(null, options, result)
+            }
+        })
+    };
 
     this.createUserByOptions = function (options, callback, settings) {
         var imageData;
@@ -188,33 +242,99 @@ Users = function (PostGre) {
     };
 
     this.createUserByOptionsviaFB = function (options, callback, settings) {
-        var imageData;
+        var error;
+        var imageData = {
+            image: options.image,
+            imageable_type: options.imageType
+        };
         self.checkCreateUserOptionsviaFB.run(options, function (err, validOptions) {
             if (err) {
                 callback(err);
             } else {
-                UserModel
-                    .forge()
-                    .save(validOptions)
-                    .then(function (user) {
-                        if (options.image) {
-                            imageData = {
-                                image: options.image,
-                                imageable_id: user.id,
-                                imageable_type: options.imageType
-                            };
-                            imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                if (err) {
-                                    callback(err);
-                                } else {
-                                    callback(null, user)
+                self.checkFBIdOrEmail(validOptions, function (err, validOptions, users) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if (!users[0] && !users[1] && !users[2]) {
+                            validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+                            UserModel
+                                .forge()
+                                .save(validOptions)
+                                .then(function (user) {
+                                    if (imageData.image) {
+                                        imageData.imageable_id =  user.id;
+                                        imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                            if (err) {
+                                                callback(err);
+                                            } else {
+                                                callback(null, user, CONSTANTS.FB_ACTIONS.CREATE)
+                                            }
+                                        });
+                                    } else {
+                                        callback(null, user, CONSTANTS.FB_ACTIONS.CREATE)
+                                    }
+                                })
+                                .otherwise(callback)
+
+                        } else if (!!users[0]) {
+                            callback(null, users[0], CONSTANTS.FB_ACTIONS.SIGN_IN)
+                        } else if (!users[0] && !!users[1]) {
+                            users[1]
+                                .save(validOptions, {
+                                    patch: true
+                                })
+                                .then(function (user) {
+                                    callback(null, user, CONSTANTS.FB_ACTIONS.SIGN_IN)
+                                })
+                                .otherwise(callback)
+
+                        } else if (!users[0] && !users[1] && !!users[2]) {
+                            async.parallel([
+                                function (cb) {
+                                    users[2]
+                                        .save({
+                                            change_email: null,
+                                            confirm_status: CONSTANTS.CONFIRM_STATUS.CONFIRMED
+                                        }, {
+                                            patch: true
+                                        })
+                                        .exec(cb)
+                                },
+                                function (cb) {
+                                    validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+                                    UserModel
+                                        .forge()
+                                        .save(validOptions)
+                                        .then(function (user) {
+                                            if (imageData.image) {
+                                                imageData.imageable_id =  user.id;
+                                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                                    if (err) {
+                                                        cb(err);
+                                                    } else {
+                                                        cb(null, user)
+                                                    }
+                                                });
+                                            } else {
+                                                cb(null, user)
+                                            }
+                                        })
+                                        .otherwise(cb)
                                 }
-                            });
+                            ], function (err, user) {
+                                if (err) {
+                                    callback(err)
+                                } else {
+                                    callback(null, user, CONSTANTS.FB_ACTIONS.CREATE)
+                                }
+                            })
                         } else {
-                            callback(null, user)
+                            error = new Error(RESPONSES.INVALID_PARAMETERS);
+                            error.status = 400;
+                            callback(error)
                         }
-                    })
-                    .otherwise(callback)
+                    }
+                })
             }
         }, settings);
     };

@@ -12,6 +12,10 @@ module.exports = {
         UNCONFIRMED: 1,
         CONFIRMED: 2,
         CHANGE_EMAIL: 3
+    },
+    FB_ACTIONS: {
+        SIGN_IN: 'signIn',
+        CREATE: 'create'
     }
 
 

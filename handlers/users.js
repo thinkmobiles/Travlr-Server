@@ -118,8 +118,9 @@ Users = function (PostGre) {
                 })
                 .otherwise(next)
         } else {
-            //TODO use next
-            res.status(400).send({error: RESPONSES.INVALID_PARAMETERS})
+            error = new Error(RESPONSES.INVALID_PARAMETERS);
+            error.status = 400;
+            next(error);
         }
     };
 
@@ -131,15 +132,19 @@ Users = function (PostGre) {
         var options = req.body;
         options.role = CONSTANTS.USERS_ROLES.USER;
         options.imageType = TABLES.USERS;
-        options.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
 
-        usersHelper.createUserByOptionsviaFB(options, function (err, user) {
+        usersHelper.createUserByOptionsviaFB(options, function (err, user, action) {
             if (err) {
                 next(err)
             } else {
-                res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
+                if (action === CONSTANTS.FB_ACTIONS.CREATE) {
+                    res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
+                } else {
+                    user = user.toJSON();
+                    session.register(req, res, user)
+                }
             }
-        }, {checkFunctions: ['checkUniqueEmail', 'encryptPass']})
+        })
     };
 
     this.getUserById = function (req, res, next) {
