@@ -94,6 +94,7 @@ Users = function (PostGre) {
     }, self.checkFunctions);
 
     this.checkFBIdOrEmail = function (options, callback) {
+        var resultUsersList;
         async.parallel([
             function (cb) {
                 UserModel
@@ -144,7 +145,12 @@ Users = function (PostGre) {
             if (err) {
                 callback(err)
             } else {
-                callback(null, options, result)
+                resultUsersList = {
+                  userByFBId: result[0],
+                    userByEmail: result[1],
+                    userByChangeEmail: result[2]
+                };
+                callback(null, options, resultUsersList)
             }
         })
     };
@@ -251,11 +257,11 @@ Users = function (PostGre) {
             if (err) {
                 callback(err);
             } else {
-                self.checkFBIdOrEmail(validOptions, function (err, validOptions, users) {
+                self.checkFBIdOrEmail(validOptions, function (err, validOptions, usersList) {
                     if (err) {
                         callback(err);
                     } else {
-                        if (!users[0] && !users[1] && !users[2]) {
+                        if (!usersList.userByFBId && !usersList.userByEmail && !usersList.userByChangeEmail) {
                             validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
                             UserModel
                                 .forge()
@@ -276,10 +282,10 @@ Users = function (PostGre) {
                                 })
                                 .otherwise(callback)
 
-                        } else if (!!users[0]) {
-                            callback(null, users[0], CONSTANTS.FB_ACTIONS.SIGN_IN)
-                        } else if (!users[0] && !!users[1]) {
-                            users[1]
+                        } else if (!!usersList.userByFBId) {
+                            callback(null, usersList.userByFBId, CONSTANTS.FB_ACTIONS.SIGN_IN)
+                        } else if (!usersList.userByFBId && !!usersList.userByChangeEmail) {
+                            usersList.userByChangeEmail
                                 .save(validOptions, {
                                     patch: true
                                 })
@@ -288,10 +294,10 @@ Users = function (PostGre) {
                                 })
                                 .otherwise(callback)
 
-                        } else if (!users[0] && !users[1] && !!users[2]) {
+                        } else if (!usersList.userByFBId && !usersList.userByEmail && !!usersList.userByChangeEmail) {
                             async.parallel([
                                 function (cb) {
-                                    users[2]
+                                    usersList.userByChangeEmail
                                         .save({
                                             change_email: null,
                                             confirm_status: CONSTANTS.CONFIRM_STATUS.CONFIRMED
