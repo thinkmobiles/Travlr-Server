@@ -129,6 +129,27 @@ Posts = function (PostGre) {
         }
     };
 
+    this.getPostsCount = function (req, res, next) {
+        var options = req.query;
+        var countryId = parseInt(options.cId);
+        var userId = parseInt(options.uId);
+        var query = PostGre.knex(TABLES.POSTS);
+
+        if (countryId) {
+            query.where('country_id', countryId);
+        }
+
+        if (userId) {
+            query.where('author_id', userId);
+        }
+
+        query.count()
+            .then(function (usersCount) {
+                res.status(200).send(usersCount[0])
+            })
+            .otherwise(next)
+    };
+
     this.getPostById = function (req, res, next) {
         var postId = req.params.id;
         var postJSON;
@@ -383,6 +404,6 @@ Posts = function (PostGre) {
         }
     }
 }
-;
+
 
 module.exports = Posts;
