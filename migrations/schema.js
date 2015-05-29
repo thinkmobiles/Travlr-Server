@@ -19,7 +19,7 @@ module.exports = function (knex, Promise) {
                     row.string('confirm_token',75);
                     row.integer('confirm_status');
                     row.timestamp('birthday');
-                    row.integer('facebook_id').index();
+                    row.string('facebook_id').index();
                     row.integer('role');
 
                     row.timestamp('updated_at', true);
