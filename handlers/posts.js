@@ -86,7 +86,8 @@ Posts = function (PostGre) {
                         'type',
                         'author_id',
                         'city_id',
-                        'country_id'
+                        'country_id',
+                        'created_at'
                     ],
                     withRelated: [
                         {
