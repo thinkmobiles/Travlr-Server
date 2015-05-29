@@ -90,12 +90,13 @@ Posts = function (PostGre) {
                     var postsJSON = [];
                     var postJSON;
 
-                    async.each(posts, function (postModel) {
+                    async.each(posts, function (postModel, callback) {
                         postJSON = postModel.toJSON();
                         if (postJSON && postJSON.image && postJSON.image.id) {
                             postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
                             postsJSON.push(postJSON);
                         }
+                        callback();
                     }, function (err) {
                         if (err) {
                             next(err);
@@ -444,6 +445,17 @@ Posts = function (PostGre) {
             next(RESPONSES.INVALID_PARAMETERS);
         }
     }
+
+    this.getPostsCount = function (req, res, next) {
+        var query = PostGre.knex(TABLES.POSTS);
+
+        query
+            .count()
+            .then(function (postsCount) {
+                res.status(200).send(postsCount[0])
+            })
+            .otherwise(next)
+    };
 }
 ;
 

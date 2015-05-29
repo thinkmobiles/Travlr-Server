@@ -10,16 +10,6 @@ define([], function () {
                 }
             });
         },
-        defaults: {
-            //  imageSrc: "",
-            author_id: "",
-            title: "",
-            body: "",
-            lat: "",
-            lon: "",
-            city_id: "",
-            type: ""
-        },
         urlRoot: function () {
             return "/posts";
         }

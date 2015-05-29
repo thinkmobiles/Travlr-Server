@@ -2,7 +2,7 @@
  * Created by Ivan on 22.05.2015.
  */
 define([
-        "js/models/UserModel"
+        "js/models/PostModel"
     ],
     function (UserModel) {
         var UsersCollection = Backbone.Collection.extend({
@@ -11,7 +11,7 @@ define([
             count: null,
             sort: null,
             url: function () {
-                return "/users";
+                return "/posts";
             },
             initialize: function (options) {
                 if (options && options.count) {
