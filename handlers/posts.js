@@ -118,16 +118,16 @@ Posts = function (PostGre) {
                     if (posts.length) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
-                                if (postModel.image && postModel.image.id) {
-                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
-                                    postsJSON.push(postModel);
-
-                                }
 
                                 if (postModel.author && postModel.author.image && postModel.author.image.id) {
                                     postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'posts');
-                                    postsJSON.push(postModel);
                                 }
+
+                                if (postModel.image && postModel.image.id) {
+                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
+                                }
+
+                                postsJSON.push(postModel);
 
                                 callback();
 
