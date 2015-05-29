@@ -12,14 +12,14 @@ module.exports = function (knex, Promise) {
                     row.increments('id').primary();
                     row.string('first_name', 50);
                     row.string('last_name', 50);
-                    row.string('email', 50).notNullable().unique();
+                    row.string('email', 50).unique();
                     row.string('change_email', 50);
-                    row.string('password').notNullable();
+                    row.string('password');
                     row.string('gender', 10);
                     row.string('confirm_token',75);
                     row.integer('confirm_status');
                     row.timestamp('birthday');
-                    row.integer('facebook_id').index();
+                    row.string('facebook_id').index();
                     row.integer('role');
 
                     row.timestamp('updated_at', true);

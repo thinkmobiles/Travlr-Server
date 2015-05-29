@@ -69,6 +69,19 @@ describe('Posts Test:', function () {
             });
     });
 
+    it('Get posts count', function (done) {
+        agent
+            .get('/posts/count')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
     it('Get posts by point', function (done) {
         agent
             .get('/posts?lat=' + -87.6500523 + '&lon=' + 41.850033)
@@ -99,7 +112,7 @@ describe('Posts Test:', function () {
 
     it('Get posts by country', function (done) {
         agent
-            .get('/posts/country/1')
+            .get('/posts?cId=1')
             .expect(200)
             .end(function (err, res) {
                 if (err) {
@@ -144,7 +157,7 @@ describe('Posts Test:', function () {
                 }
             });
     });
-
+/*
     it('Delete post by ID', function (done) {
         agent
             .delete('/posts/' + postId)
@@ -157,5 +170,5 @@ describe('Posts Test:', function () {
                 }
             });
 
-    });
+    });*/
 });

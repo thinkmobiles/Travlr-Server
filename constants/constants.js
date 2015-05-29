@@ -9,9 +9,13 @@ module.exports = {
         MALE: '1'
     },
     CONFIRM_STATUS: {
-        UNCONFIRMED: 0,
-        CONFIRM: 1,
+        UNCONFIRMED: 1,
+        CONFIRMED: 2,
         CHANGE_EMAIL: 3
+    },
+    FB_ACTIONS: {
+        SIGN_IN: 'signIn',
+        CREATE: 'create'
     }
 
 

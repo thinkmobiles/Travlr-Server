@@ -13,6 +13,7 @@ module.exports = {
     FAMILY_CONTACT: 'Can\'t remove family contact member',
     // Validation errors
     NOT_UNIQUE_EMAIL: 'Email not unique',
+    UNCOFIRMED_EMAIL: 'Email is unconfirmed',
 
 
     IMAGE_DESTROY: ' -> image physical destroying ->  imageUpload.removeImage',

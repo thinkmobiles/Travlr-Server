@@ -9,8 +9,8 @@ module.exports = function (PostGre, app) {
         .get(postsHandler.getPosts)
         .post(postsHandler.createPost);
 
-
-    router.get('/country/:countryId', postsHandler.getPostByCountry);
+    router.route('/count')
+        .get(postsHandler.getPostsCount);
 
     router.get('/count', postsHandler.getPostsCount);
 

@@ -99,6 +99,11 @@ Check.prototype = {
             return parseFloat(val);
         };
     },
+    isArray: function (val) {
+        if (Array.isArray(val)) {
+            return val;
+        };
+    },
     isDate: function (val) {
         if (val instanceof Date) {
             if (!isNaN(val.valueOf())) {
