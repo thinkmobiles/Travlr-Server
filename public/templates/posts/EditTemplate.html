@@ -10,28 +10,37 @@
         <table>
             <tr>
                 <td>
-                    <label>First name</label>
+                    <label>Title</label>
                 </td>
                 <td>
-                    <input type="text" placeholder="First name" id="firstName" value="<%=_.escape(model.first_name)%>" maxlength="30"/>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <label>Last name</label>
-                </td>
-                <td>
-                    <input type="text" placeholder="Last name" id="lastName" value="<%=_.escape(model.last_name)%>" maxlength="30"/>
+                    <input type="text" placeholder="Post title" id="title" value="<%=_.escape(model.title)%>" maxlength="30"/>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <label>Email</label>
+                    <label>Body</label>
                 </td>
                 <td>
-                    <input type="text" placeholder="Email" id="email" value="<%=_.escape(model.email)%>" maxlength="30"/>
+                    <textarea  id="body" cols="21" maxlength="300"><%=_.escape(model.body)%></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>lon</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="longtitude" id="lon" value="<%=_.escape(model.lon)%>" maxlength="30"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>lat</label>
+                </td>
+                <td>
+                    <input type="text" placeholder="latitude" id="lat" value="<%=_.escape(model.lat)%>" maxlength="30"/>
                 </td>
             </tr>
         </table>

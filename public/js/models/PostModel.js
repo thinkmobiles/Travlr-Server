@@ -10,6 +10,11 @@ define([], function () {
                 }
             });
         },
+        defaults: {
+            author_id: "",
+            body: "",
+            title: ""
+        },
         urlRoot: function () {
             return "/posts";
         }
