@@ -73,8 +73,20 @@ Posts = function (PostGre) {
             saveData.body = options.body;
         }
 
+
+        if (options && options.country) {
+            saveData.countryCode = options.country.code;
+            saveData.countryName = options.country.name;
+            saveData.city = options.country.city;
+        }
+
         if (options && options.title) {
             saveData.title = options.title;
+        }
+
+        if (options && options.lat && options.lon) {
+            saveData.lat = options.lat;
+            saveData.lon = options.lon;
         }
 
         if (options && options.userId) {

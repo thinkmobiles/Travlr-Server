@@ -104,7 +104,7 @@ describe('Posts Test:', function () {
                 if (err) {
                     done(err);
                 } else {
-                    postId = res.body.postId;
+                    postId = res.body.id;
                     done(null, res);
                 }
             });

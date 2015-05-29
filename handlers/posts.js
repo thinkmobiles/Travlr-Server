@@ -40,6 +40,12 @@ Posts = function (PostGre) {
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
             var userId = parseInt(options.uId);
+            var newestDate;
+
+            if (options && options.create_at) {
+                newestDate = new Date(options.create_at);
+            }
+
 
             PostCollection
                 .forge()
@@ -57,6 +63,10 @@ Posts = function (PostGre) {
 
                     if (userId) {
                         qb.where('author_id', userId);
+                    }
+
+                    if (newestDate) {
+                        qb.where('created_at', "<" , newestDate)
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -259,66 +269,64 @@ Posts = function (PostGre) {
 
         saveData = postsHelper.getSaveData(options);
 
-        if (options && options.lat && options.lon) {
-            saveData.lat = options.lat;
-            saveData.lon = options.lon;
-        }
-
-        if (saveData.lat && saveData.lon) {
-            postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
+        async.parallel([
+                function (callback) {
+                    cityData = {
+                        name: saveData.city
+                    };
+                    cityHelper.createCityByOptions(cityData, callback);
+                },
+                function (callback) {
+                    countryData = {
+                        name: saveData.countryName,
+                        code: saveData.countryCode
+                    };
+                    countryHelper.createCountryByOptions(countryData, callback);
+                }
+            ],
+            function (err, results) {
                 if (!err) {
-                    async.parallel([
-                            function (callback) {
-                                cityData = {
-                                    name: resp.city
+                    saveData.city_id = results[0].id;
+                    saveData.country_id = results[1].id;
+                    postsHelper.createPostByOptions(saveData, function (err, resp) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            if (resp && resp.id) {
+                                imageData = {
+                                    image: options.image,
+                                    imageable_type: TABLES.POSTS,
+                                    imageable_id: resp.id
                                 };
-                                cityHelper.createCityByOptions(cityData, callback);
-                            },
-                            function (callback) {
-                                countryData = {
-                                    name: resp.country.name,
-                                    code: resp.country.code
-                                };
-                                countryHelper.createCountryByOptions(countryData, callback);
-                            }
-                        ],
-                        function (err, results) {
-                            if (!err) {
-                                saveData.city_id = results[0].id;
-                                saveData.country_id = results[1].id;
-                                postsHelper.createPostByOptions(saveData, function (err, resp) {
+                                postId = resp.id;
+                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
                                     if (err) {
                                         next(err);
                                     } else {
-                                        if (resp && resp.id) {
-                                            imageData = {
-                                                image: options.image,
-                                                imageable_type: TABLES.POSTS,
-                                                imageable_id: resp.id
-                                            };
-                                            postId = resp.id;
-                                            imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                                if (err) {
-                                                    next(err);
-                                                } else {
-                                                    res.status(201).send({
-                                                        message: RESPONSES.WAS_CREATED,
-                                                        postId: postId
-                                                    });
-                                                }
-                                            });
-                                        }
+                                        res.status(201).send({
+                                            message: RESPONSES.WAS_CREATED,
+                                            id: postId
+                                        });
                                     }
                                 });
-                            } else {
-                                next(err);
                             }
-                        });
+                        }
+                    });
                 } else {
                     next(err);
                 }
             });
-        }
+
+
+        /* if (saveData.lat && saveData.lon) {
+         postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
+         if (!err) {
+
+         } else {
+         next(err);
+         }
+         });
+         }*/
     };
 
     this.updatePost = function (req, res, next) {
@@ -333,59 +341,56 @@ Posts = function (PostGre) {
         options.userId = req.session.userId;
         saveData = postsHelper.getSaveData(options);
 
-        if (options && options.lat && options.lon) {
-            saveData.lat = options.lat;
-            saveData.lon = options.lon;
-        }
         saveData.postId = postId;
 
-        if (saveData.lat && saveData.lon) {
-            postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
+        async.parallel([
+                function (cb) {
+                    cityData = {
+                        name: saveData.city
+                    };
+                    cityHelper.createCityByOptions(cityData, cb);
+                },
+                function (cb) {
+                    countryData = {
+                        name: saveData.countryName,
+                        code: saveData.countryCode
+                    };
+                    countryHelper.createCountryByOptions(countryData, cb);
+                }
+            ],
+            function (err, results) {
                 if (!err) {
-                    async.parallel([
-                            function (cb) {
-                                cityData = {
-                                    name: resp.city
-                                };
-                                cityHelper.createCityByOptions(cityData, cb);
-                            },
-                            function (cb) {
-                                countryData = {
-                                    name: resp.country.name,
-                                    code: resp.country.code
-                                };
-                                countryHelper.createCountryByOptions(countryData, cb);
-                            }
-                        ],
-                        function (err, results) {
-                            if (!err) {
-                                saveData.city_id = results[0].id;
-                                saveData.country_id = results[1].id;
-                                postsHelper.updatePostByOptions(saveData, function (err, resp) {
-                                    if (err) {
-                                        next(err);
-                                    } else {
-                                        imageData = {
-                                            image: options.image,
-                                            imageable_type: TABLES.POSTS,
-                                            imageable_id: postId
-                                        };
-                                        imagesHelper.updateImageByOptions(imageData, function (err, resp) {
-                                            if (!err) {
-                                                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                next(err);
-                            }
-                        });
+                    saveData.city_id = results[0].id;
+                    saveData.country_id = results[1].id;
+                    postsHelper.updatePostByOptions(saveData, function (err, resp) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            imageData = {
+                                image: options.image,
+                                imageable_type: TABLES.POSTS,
+                                imageable_id: postId
+                            };
+                            imagesHelper.updateImageByOptions(imageData, function (err, resp) {
+                                if (!err) {
+                                    res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                                }
+                            });
+                        }
+                    });
                 } else {
                     next(err);
                 }
             });
-        }
+        /*if (saveData.lat && saveData.lon) {
+         /!*postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
+         if (!err) {*!/
+
+         } else {
+         next(err);
+         }
+         });
+         }*/
     };
 
     this.deletePost = function (req, res, next) {
