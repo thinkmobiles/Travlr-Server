@@ -43,6 +43,23 @@
                     <input type="text" placeholder="latitude" id="lat" value="<%=_.escape(model.lat)%>" maxlength="30"/>
                 </td>
             </tr>
+
+            <tr>
+                <td>
+                    <label>Country</label>
+                </td>
+                <td>
+                    <input type="text"  id="country" value="<%=_.escape(model.country.id)%>" maxlength="30"/>
+                </td>
+
+            <tr>
+                <td>
+                    <label>City</label>
+                </td>
+                <td>
+                    <input type="text"  id="city" value="<%=_.escape(model.city.id)%>" maxlength="30"/>
+                </td>
+            </tr>
         </table>
     </div>
     <div class="cropImages form" style="display:none;">
