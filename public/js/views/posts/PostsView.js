@@ -26,8 +26,8 @@ define([
             "click .edit": "editPost",
             "click .editButton": "editPost",
             "click .remove": "removePosts",
-            "click .deleteButton": "removePosts"/*,
-            "click .create": "createUser",
+            "click .deleteButton": "removePosts",
+            "click .create": "createPost",
             "click .checkAll": "checkAll",
             "click table.fakeUserList tr": "check",
             "click .oe-sortable": "goSort",
@@ -38,7 +38,7 @@ define([
             "click #firstShowPage": "firstPage",
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
-            "click #nextPage": "nextPage"*/
+            "click #nextPage": "nextPage"
         },
 
         previousPage: function (event) {
@@ -216,7 +216,7 @@ define([
             }
         },
 
-        removeUsers: function (e) {
+        removePosts: function (e) {
             var id;
             var model;
             var self = this;
@@ -258,6 +258,7 @@ define([
                 });
             }
         },
+
         deleteElement: function (model) {
             /*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
             this.fetchCollection();
@@ -289,7 +290,7 @@ define([
             new EditPostView({model: model});
             return false;
         },
-        createUser: function (e) {
+        createPost: function (e) {
             new CreatePostView({collection: this.collection});
             return false;
         },
