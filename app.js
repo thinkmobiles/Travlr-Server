@@ -47,6 +47,9 @@ app.use(session({
     secret: '1q2w3e4r5tdhgkdfhgejflkejgkdlgh8j0jge4547hh',
     resave: true,
     saveUninitialized: true,
+    cookie: {
+        maxAge: 1000  * 60 *  60 * 24 * 7 * 31
+    },
     store: new MemoryStore(config)
 }));
 

@@ -33,8 +33,6 @@ Cities = function (PostGre) {
             }
         });
     };
-
-
 };
 
 module.exports = Cities;

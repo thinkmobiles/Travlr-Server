@@ -38,8 +38,13 @@ module.exports = function () {
     this.post = {
         'title': 'Title ' + helper.getRandomInt(),
         'body': 'Body is #' + helper.getRandomInt(),
-        "lon": 41.850033,
-        "lat": -87.6500523,
+        "lon": 48.6154681,
+        "lat": 22.2905512,
+        "country" : {
+            "name": "Ukraine",
+            "code" : "UA"
+        },
+        "city": "Uzhhorod",
         "type": [1, 2, 4, 5],
         "image": image1
     };
@@ -49,7 +54,12 @@ module.exports = function () {
         'body': 'Body is #' + helper.getRandomInt(),
         "lon": 41.850033,
         "lat": -87.6500523,
-        "type": [1, 2, 4, 5],
+        "type": [1, 3, 4, 5],
+        "country" : {
+            "name": "Ukraine1",
+            "code" : "UA1"
+        },
+        "city": "Uzhhorod",
         "image": image1
     };
 
