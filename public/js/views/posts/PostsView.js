@@ -1,17 +1,14 @@
-/**
- * Created by Ivan on 22.05.2015.
- */
 define([
-    'js/views/users/EditUserView',
-    'js/views/users/CreateUserView',
+    'js/views/posts/EditPostView',
+    'js/views/posts/CreatePostView',
     "js/collections/posts/postsCollections",
     'text!templates/posts/PostsTemplate.html',
     'text!templates/posts/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditUserView, CreateUserView, postsCollection, PostsTemplate, ListTemplate, custom, RESPONSES) {
+], function (EditPostView, CreatePostView, postsCollection, PostsTemplate, ListTemplate, custom, RESPONSES) {
 
-    var UsersView = Backbone.View.extend({
+    var PostsView = Backbone.View.extend({
         el: '#content-holder',
         template: _.template(PostsTemplate),
         initialize: function (options) {
@@ -26,11 +23,11 @@ define([
             this.render();
         },
         events: {
-            "click .edit": "editUser",
-            "click .editButton": "editUser",
-            "click .remove": "removeUsers",
-            "click .deleteButton": "removeUsers",
-            "click .create": "createUser",
+            "click .edit": "editPost",
+            "click .editButton": "editPost",
+            "click .remove": "removePosts",
+            "click .deleteButton": "removePosts",
+            "click .create": "createPost",
             "click .checkAll": "checkAll",
             "click table.fakeUserList tr": "check",
             "click .oe-sortable": "goSort",
@@ -113,7 +110,7 @@ define([
             this.checkItemCount = 0;
             this.$el.find(".remove").hide();
             this.$el.find(".edit").hide();
-            this.collection = new userCollection({
+            this.collection = new postsCollection({
                 sort: this.sort,
                 page: this.page,
                 count: this.defaultItemsNumber
@@ -197,6 +194,7 @@ define([
                 this.$el.find(".edit").hide();
             }
         },
+
         checkAll: function (e) {
             if ($(e.target).prop("checked")) {
                 this.checkItemCount = this.$el.find("table tr td input").length;
@@ -217,7 +215,8 @@ define([
                 this.$el.find(".remove").hide();
             }
         },
-        removeUsers: function (e) {
+
+        removePosts: function (e) {
             var id;
             var model;
             var self = this;
@@ -259,6 +258,7 @@ define([
                 });
             }
         },
+
         deleteElement: function (model) {
             /*this.$el.find("table tr[data-id='"+model.toJSON().id+"']").remove();*/
             this.fetchCollection();
@@ -273,7 +273,7 @@ define([
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
         },
-        editUser: function (e) {
+        editPost: function (e) {
             var id;
             var model;
             var targetClass = $(e.target).attr('class');
@@ -287,11 +287,11 @@ define([
             }
             model = this.collection.get(id);
             model.bind('change', this.updateElement, this);
-            new EditUserView({model: model});
+            new EditPostView({model: model});
             return false;
         },
-        createUser: function (e) {
-            new CreateUserView({collection: this.collection});
+        createPost: function (e) {
+            new CreatePostView({collection: this.collection});
             return false;
         },
         render: function (options) {
@@ -299,16 +299,16 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#postList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#postList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 
     });
 
-    return UsersView;
+    return PostsView;
 
 });

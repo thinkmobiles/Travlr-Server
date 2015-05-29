@@ -425,8 +425,20 @@ Posts = function (PostGre) {
         } else {
             next(RESPONSES.INVALID_PARAMETERS);
         }
-    }
-};
+    };
 
+
+
+    this.getPostsCount = function (req, res, next) {
+        var query = PostGre.knex(TABLES.POSTS);
+
+        query
+            .count()
+            .then(function (postsCount) {
+                res.status(200).send(postsCount[0])
+            })
+            .otherwise(next)
+    };
+};
 
 module.exports = Posts;

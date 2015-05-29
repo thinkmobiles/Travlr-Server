@@ -19,7 +19,7 @@ module.exports = function (knex, Promise) {
                     row.string('confirm_token',75);
                     row.integer('confirm_status');
                     row.timestamp('birthday');
-                    row.integer('facebook_id').index();
+                    row.string('facebook_id').index();
                     row.integer('role');
 
                     row.timestamp('updated_at', true);
@@ -62,7 +62,7 @@ module.exports = function (knex, Promise) {
                 createTable(TABLES.FEEDBACKS, function (row) {
                         row.increments('id').primary();
                         row.integer('author_id').index().notNullable();
-                        row.string('body', 150).notNullable();
+                        row.string('body', 1000).notNullable();
 
                         row.timestamp('updated_at', true);
                         row.timestamp('created_at', true);

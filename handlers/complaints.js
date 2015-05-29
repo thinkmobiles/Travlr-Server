@@ -35,11 +35,11 @@ Complaints = function (PostGre) {
                     next(error);
                 } else {
                     ComplaintModel
-                        .forge({
+                        .forge()
+                        .save({
                             author_id: authorId,
                             post_id: options.post_id
                         })
-                        .save()
                         .then(function () {
                             res.status(201).send({success: RESPONSES.WAS_CREATED})
                         })
@@ -77,6 +77,9 @@ Complaints = function (PostGre) {
                     'author_id',
                     'post_id',
                     'created_at'
+                ],
+                withRelated: [
+                        'post'
                 ]
             })
             .then(function (complaint) {
@@ -123,7 +126,8 @@ Complaints = function (PostGre) {
                     'author_id',
                     'post_id',
                     'created_at'
-                ]
+                ]/*,
+                withRelated: ['post']*/
             })
             .then(function (complaints) {
                 res.status(200).send(complaints)
