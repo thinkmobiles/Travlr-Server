@@ -21,7 +21,10 @@ define([
                 title: this.$el.find('#title').val(),
                 body: this.$el.find('#body').val(),
                 lon: this.$el.find('#lon').val(),
-                lat: this.$el.find('#lat').val()
+                lat: this.$el.find('#lat').val(),
+                country_id: this.$el.find('#country').val(),
+                city_id: this.$el.find('#city').val(),
+                author_id: this.model.attributes.author.id
             };
             if (this.imageSrc) {
                 editData['image_src'] = this.imageSrc;

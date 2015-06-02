@@ -42,8 +42,8 @@ Posts = function (PostGre) {
             var userId = parseInt(options.uId);
             var newestDate;
 
-            if (options && options.create_at) {
-                newestDate = new Date(options.create_at);
+            if (options && options.created_at) {
+                newestDate = new Date(options.created_at);
             }
 
 
@@ -59,6 +59,8 @@ Posts = function (PostGre) {
 
                     if (countryId) {
                         qb.where('country_id', countryId);
+                        orderBy = 'created_at';
+                        order = 'DESC';
                     }
 
                     if (userId) {
@@ -66,7 +68,7 @@ Posts = function (PostGre) {
                     }
 
                     if (newestDate) {
-                        qb.where('created_at', "<" , newestDate)
+                        qb.where('created_at', ">" , newestDate)
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -86,7 +88,8 @@ Posts = function (PostGre) {
                         'type',
                         'author_id',
                         'city_id',
-                        'country_id'
+                        'country_id',
+                        'created_at'
                     ],
                     withRelated: [
                         {
@@ -118,16 +121,16 @@ Posts = function (PostGre) {
                     if (posts.length) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
-                                if (postModel.image && postModel.image.id) {
-                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
-                                    postsJSON.push(postModel);
-
-                                }
 
                                 if (postModel.author && postModel.author.image && postModel.author.image.id) {
                                     postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'posts');
-                                    postsJSON.push(postModel);
                                 }
+
+                                if (postModel.image && postModel.image.id) {
+                                    postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
+                                }
+
+                                postsJSON.push(postModel);
 
                                 callback();
 

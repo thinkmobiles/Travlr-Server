@@ -21,7 +21,7 @@ define([
             var createData = {
                 // imgSrc : that.imgSrc,
                 title: this.$el.find('#title').val(),
-                body: this.$el.find('#lastName').val(),
+                body: this.$el.find('#body').val(),
                 lon: this.$el.find('#lon').val(),
                 lat: this.$el.find('#lat').val(),
                 image_src: this.imageSrc
@@ -56,9 +56,9 @@ define([
                     processData: false,
                     contentType: false,
                     data: {
-                        file: files1,
+                        file: files1/*,
                         email: self.$el.find('#title').val(),
-                        user_name: self.$el.find('#name').val()
+                        user_name: self.$el.find('#name').val()*/
                     },
                     beforeSend: function (xhr) {
 //                        $progress.show();
@@ -91,7 +91,7 @@ define([
                 closeOnEscape: false,
                 dialogClass: "trill-dialog",
                 width: "520",
-                title: "Create User",
+                title: "Create Post",
                 appendTo: "#content-holder" ,
                 buttons: {
                     save: {
