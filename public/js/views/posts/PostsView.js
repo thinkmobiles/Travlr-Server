@@ -17,6 +17,7 @@ define([
             this.contentType = "posts";
             this.sort = this.collection.sort;
             this.page = this.collection.page;
+            this.searchTerm = this.collection.searchTerm;
             this.defaultItemsNumber = this.collection.count || 50;
             this.collection.bind('add', this.addElement, this);
             this.getTotalLength(null, this.defaultItemsNumber);
@@ -38,7 +39,8 @@ define([
             "click #firstShowPage": "firstPage",
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
-            "click #nextPage": "nextPage"
+            "click #nextPage": "nextPage",
+            "click #searchButton": "searchPost"
         },
 
         previousPage: function (event) {
@@ -105,6 +107,10 @@ define([
             custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
+        searchPost: function (e) {
+            console.log(5)
+            this.fetchCollection()
+        },
 
         fetchCollection: function () {
             this.checkItemCount = 0;
@@ -113,6 +119,7 @@ define([
             this.collection = new postsCollection({
                 sort: this.sort,
                 page: this.page,
+                searchTerm: document.getElementById('searchTerm').value,
                 count: this.defaultItemsNumber
             });
             this.collection.bind('reset', this.renderContent, this);
@@ -264,15 +271,18 @@ define([
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
         },
+
         updateElement: function (model) {
 
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
         },
+
         addElement: function (model) {
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
         },
+
         editPost: function (e) {
             var id;
             var model;
@@ -290,10 +300,12 @@ define([
             new EditPostView({model: model});
             return false;
         },
+
         createPost: function (e) {
             new CreatePostView({collection: this.collection});
             return false;
         },
+
         render: function (options) {
             this.$el.html(this.template());
             if (this.sort) {

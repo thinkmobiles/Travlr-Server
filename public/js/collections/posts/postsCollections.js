@@ -1,15 +1,13 @@
-/**
- * Created by Ivan on 22.05.2015.
- */
 define([
         "js/models/PostModel"
     ],
-    function (UserModel) {
-        var UsersCollection = Backbone.Collection.extend({
-            model: UserModel,
+    function (PostModel) {
+        var PostsCollection = Backbone.Collection.extend({
+            model: PostModel,
             page: null,
             count: null,
             sort: null,
+            searchTerm: null,
             url: function () {
                 return "/posts";
             },
@@ -17,6 +15,7 @@ define([
                 if (options && options.count) {
                     this.count = options.count;
                     this.sort = options.sort;
+                    this.searchTerm = options.searchTerm;
                     this.page = options.page || 1;
                 }
                 var that = this;
@@ -32,5 +31,5 @@ define([
                 });
             }
         });
-        return UsersCollection;
+        return PostsCollection;
     });
