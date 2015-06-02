@@ -408,16 +408,16 @@ Posts = function (PostGre) {
                 .fetch()
                 .then(function (postModel) {
                     if (postModel && postModel.id) {
-                        if (postModel.get('author_id') == authorId) {
+                        //if (postModel.get('author_id') == authorId) {
                             postModel
                                 .destroy()
                                 .then(function () {
                                     res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                                 })
                                 .otherwise(next);
-                        } else {
+                       /* } else {
                             next(RESPONSES.INVALID_PARAMETERS);
-                        }
+                        }*/
                     } else {
                         next(RESPONSES.INVALID_PARAMETERS);
                     }

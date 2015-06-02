@@ -5,9 +5,11 @@
 
   <td class="userName"><%=_.escape(post.author.first_name + ' ' + post.author.last_name)%></td>
   <td class="userEmail"><%=_.escape(post.author.email)%></td>
+  <td class="title"><%=_.escape(post.title)%></td>
+  <td class="postsBody"><%=_.escape(post.body)%></td>
   <td class="countryName"><%=_.escape(post.country.name)%></td>
   <td class="cityName"><%=_.escape(post.city.name)%></td>
-  <td class="cityName"><%=_.escape(post.created_at)%></td>
+  <td class="createdDate"><%=_.escape(post.created_at)%></td>
 <!--  <td class="banButton">
       <button >Ban</button>
   </td>-->

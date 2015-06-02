@@ -20,14 +20,17 @@ define([
             var editData = {
                 title: this.$el.find('#title').val(),
                 body: this.$el.find('#body').val(),
-                lon: this.$el.find('#lon').val(),
-                lat: this.$el.find('#lat').val(),
-                country_id: this.$el.find('#country').val(),
-                city_id: this.$el.find('#city').val(),
+                lon: this.model.attributes.lon,
+                lat: this.model.attributes.lat,
+                country: {
+                    name: this.model.attributes.country.name,
+                    city: this.model.attributes.city.name,
+                    code:  this.model.attributes.country.code
+                },
                 author_id: this.model.attributes.author.id
             };
             if (this.imageSrc) {
-                editData['image_src'] = this.imageSrc;
+                editData['image'] = this.imageSrc;
             }
 
             this.model.urlRoot = '/posts/';

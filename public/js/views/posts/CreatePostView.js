@@ -24,7 +24,12 @@ define([
                 body: this.$el.find('#body').val(),
                 lon: this.$el.find('#lon').val(),
                 lat: this.$el.find('#lat').val(),
-                image_src: this.imageSrc
+                country: {
+                    name: this.$el.find('#country_name').val(),
+                    city: this.$el.find('#city_name').val(),
+                    code: this.$el.find('#country_code').val()
+                },
+                image: this.imageSrc
             };
             this.model.save(createData,{
                 success: function (model, response) {
