@@ -42,8 +42,8 @@ Posts = function (PostGre) {
             var userId = parseInt(options.uId);
             var newestDate;
 
-            if (options && options.create_at) {
-                newestDate = new Date(options.create_at);
+            if (options && options.created_at) {
+                newestDate = new Date(options.created_at);
             }
 
 
@@ -59,6 +59,7 @@ Posts = function (PostGre) {
 
                     if (countryId) {
                         qb.where('country_id', countryId);
+                        orderBy = 'created_at';
                     }
 
                     if (userId) {
@@ -66,7 +67,7 @@ Posts = function (PostGre) {
                     }
 
                     if (newestDate) {
-                        qb.where('created_at', "<" , newestDate)
+                        qb.where('created_at', ">" , newestDate)
                     }
 
                     qb.offset(( page - 1 ) * limit)
