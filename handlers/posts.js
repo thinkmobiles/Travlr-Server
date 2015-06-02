@@ -18,8 +18,8 @@ Posts = function (PostGre) {
     var countryHelper = new CountryHelper(PostGre);
 
     this.getPosts = function (req, res, next) {
-
         var options = req.query;
+
 
         if (options.lat && options.lon) {
             getPostsByRadius(options, function (err, resp) {
@@ -33,14 +33,16 @@ Posts = function (PostGre) {
 
             var page = options.page || 1;
             var limit = options.count || 25;
-            //TODO change order by logic. Use Object. The same like in users
+            var sortObject = req.query.sort;
 
-            var orderBy = options.orderBy;
-            var order = options.order || 'ASC';
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
             var userId = parseInt(options.uId);
             var newestDate;
+
+            var sortName;
+            var sortAliase;
+            var sortOrder;
 
             if (options && options.created_at) {
                 newestDate = new Date(options.created_at);
@@ -53,7 +55,7 @@ Posts = function (PostGre) {
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         qb.whereRaw(
-                            "LOWER(body) LIKE '%" + searchTerm + "%' "
+                            "LOWER(title) LIKE '%" + searchTerm + "%' "
                         )
                     }
 
@@ -74,8 +76,25 @@ Posts = function (PostGre) {
                     qb.offset(( page - 1 ) * limit)
                         .limit(limit);
 
-                    if (orderBy) {
-                        qb.orderBy(orderBy, order);
+                    if (typeof sortObject === 'object') {
+                        sortAliase = Object.keys(sortObject);
+                        sortAliase = sortAliase[0];
+                        if (sortAliase === 'body') {
+                            sortName = 'body';
+                        } else if (sortAliase === 'title') {
+                            sortName = 'title';
+                        } else if (sortAliase === 'country') {
+                            sortName = 'country_id';
+                        } else if (sortAliase === 'city') {
+                            sortName = 'city_id';
+                        }  else if (sortAliase === 'createdDate') {
+                            sortName = 'created_at';
+                        }
+
+                        if (sortName) {
+                            sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                            qb.orderBy(sortName, sortOrder);
+                        }
                     }
                 })
                 .fetch({
@@ -113,8 +132,8 @@ Posts = function (PostGre) {
                         },
                         'image'
                     ]
-                }).
-                then(function (postCollection) {
+                })
+                .then(function (postCollection) {
                     var posts = ( postCollection ) ? postCollection.toJSON() : [];
                     var postsJSON = [];
 
@@ -410,16 +429,16 @@ Posts = function (PostGre) {
                 .fetch()
                 .then(function (postModel) {
                     if (postModel && postModel.id) {
-                        if (postModel.get('author_id') == authorId) {
+                        //if (postModel.get('author_id') == authorId) {
                             postModel
                                 .destroy()
                                 .then(function () {
                                     res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                                 })
                                 .otherwise(next);
-                        } else {
+                       /* } else {
                             next(RESPONSES.INVALID_PARAMETERS);
-                        }
+                        }*/
                     } else {
                         next(RESPONSES.INVALID_PARAMETERS);
                     }

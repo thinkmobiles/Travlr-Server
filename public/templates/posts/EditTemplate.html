@@ -3,6 +3,7 @@
         <div id="add_avatar">
             <div>Upload photo</div>
             <input type="file" value="Edit" id="inputImg" accept="image/*">
+            <img src = "<%=_.escape(model.image.image_url)%>"/>
             <canvas id="avatar" width="140" height="140"></canvas>
         </div>
     </div>
@@ -31,7 +32,8 @@
                     <label>lon</label>
                 </td>
                 <td>
-                    <input type="text" placeholder="longtitude" id="lon" value="<%=_.escape(model.lon)%>" maxlength="30"/>
+                    <%=_.escape(model.lon)%>
+                    <!--<input type="text" placeholder="longtitude" id="lon" value="<%=_.escape(model.lon)%>" maxlength="30"/>-->
                 </td>
             </tr>
 
@@ -40,7 +42,8 @@
                     <label>lat</label>
                 </td>
                 <td>
-                    <input type="text" placeholder="latitude" id="lat" value="<%=_.escape(model.lat)%>" maxlength="30"/>
+                    <%=_.escape(model.lat)%>
+                    <!--<input type="text" placeholder="latitude" id="lat" value="<%=_.escape(model.lat)%>" maxlength="30"/>-->
                 </td>
             </tr>
 
@@ -49,7 +52,8 @@
                     <label>Country</label>
                 </td>
                 <td>
-                    <input type="text"  id="country" value="<%=_.escape(model.country.id)%>" maxlength="30"/>
+                    <%=_.escape(model.country.name)%>
+                   <!-- <input type="text"  id="country" value="<%=_.escape(model.country.id)%>" maxlength="30"/>-->
                 </td>
 
             <tr>
@@ -57,7 +61,8 @@
                     <label>City</label>
                 </td>
                 <td>
-                    <input type="text"  id="city" value="<%=_.escape(model.city.id)%>" maxlength="30"/>
+                    <%=_.escape(model.city.name)%>
+                    <!--<input type="text"  id="city" value="<%=_.escape(model.city.id)%>" maxlength="30"/>-->
                 </td>
             </tr>
         </table>
