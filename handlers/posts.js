@@ -60,6 +60,7 @@ Posts = function (PostGre) {
                     if (countryId) {
                         qb.where('country_id', countryId);
                         orderBy = 'created_at';
+                        order = 'DESC';
                     }
 
                     if (userId) {
