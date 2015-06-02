@@ -4,11 +4,11 @@ define([
     'custom',
     'constants/responses'
 
-], function (EditFakeUserTemplate, UserModel, custom, RESPONSES) {
+], function (EditUserTemplate, UserModel, custom, RESPONSES) {
 
     var LoginView = Backbone.View.extend({
         el: '#content-holder',
-        template: _.template(EditFakeUserTemplate),
+        template: _.template(EditUserTemplate),
         imageSrc: '',
         initialize: function (options) {
             this.render();
@@ -23,7 +23,7 @@ define([
                 email: this.$el.find('#email').val()
             };
             if (this.imageSrc) {
-                editData['image_src'] = this.imageSrc;
+                editData['image'] = this.imageSrc;
             }
 
             this.model.urlRoot = '/users/';

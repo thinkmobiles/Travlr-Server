@@ -10,12 +10,6 @@ define([],function () {
                 }
             });
         },
-        defaults: {
-          //  imageSrc: "",
-            first_name:"",
-            last_name:"",
-            email: ""
-        },
         urlRoot: function () {
             return "/users/signUp";
         }
