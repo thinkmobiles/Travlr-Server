@@ -1,0 +1,17 @@
+<% complaintsCollection.forEach(function(complaint, index){ %>
+<tr data-index="<%= index %>" data-id="<%=complaint.id%>">
+  <td class="notForm"><input type="checkbox" value="" class="checkbox" /></td>
+  <td class="numberUser"><%=startNumber + index + 1 %></td>
+
+  <td class="userBirthday"><%=_.escape(complaint.birthday)%></td>
+  <td class="userName"><%=_.escape(complaint.first_name + ' ' + complaint.last_name)%></td>
+  <td class="userEmail"><%=_.escape(complaint.email)%></td>
+
+  <td>
+      <button class="editButton">Edit</button>
+  </td>
+  <td>
+      <button class="deleteButton">Delete</button>
+  </td>
+</tr>
+<% }) %>
