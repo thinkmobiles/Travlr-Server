@@ -79,7 +79,7 @@ Complaints = function (PostGre) {
                     'created_at'
                 ],
                 withRelated: [
-                        'post'
+                    'post'
                 ]
             })
             .then(function (complaint) {
@@ -126,8 +126,25 @@ Complaints = function (PostGre) {
                     'author_id',
                     'post_id',
                     'created_at'
-                ]/*,
-                withRelated: ['post']*/
+                ],
+                withRelated: [
+                    {
+                        author: function () {
+                            this.columns([
+                                'id',
+                                'first_name',
+                                'last_name'
+                            ])
+                        },
+                        post: function () {
+                            this.columns([
+                                'id',
+                                'title',
+                                'body'
+                            ])
+                        }
+                    }
+                ]
             })
             .then(function (complaints) {
                 res.status(200).send(complaints)

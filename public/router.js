@@ -133,7 +133,7 @@ define([
             sort = (sort) ? JSON.parse(decodeURIComponent(sort)) : "";
 
             require([
-                "js/views/complaints/complaintsView",
+                "js/views/complaints/ComplaintsView",
                 "js/collections/complaints/complaintsCollection"
             ],  function (ComplaintsView, ComplaintsCollection) {
                 if (this.current) {

@@ -4,60 +4,23 @@
         <table>
             <tr>
                 <td>
-                    <label>Title</label>
+                    <label>Author_id</label>
                 </td>
                 <td>
-                    <input type="text" placeholder="Post title" id="title" value="<%=_.escape(model.title)%>" maxlength="30"/>
+                    <input type="text" placeholder="Author_id" id="author" value="<%=_.escape(model.author_id)%>" maxlength="30"/>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <label>Body</label>
+                    <label>Post_id</label>
                 </td>
                 <td>
-                    <textarea  id="body" cols="21" maxlength="300"><%=_.escape(model.body)%></textarea>
+                    <input  type="text" id="post_id"  placeholder="Post_id" value="<%=_.escape(model.post_id)%>" maxlength="30"/>
                 </td>
             </tr>
 
-            <tr>
-                <td>
-                    <label>lon</label>
-                </td>
-                <td>
-                    <%=_.escape(model.lon)%>
-                    <!--<input type="text" placeholder="longtitude" id="lon" value="<%=_.escape(model.lon)%>" maxlength="30"/>-->
-                </td>
-            </tr>
 
-            <tr>
-                <td>
-                    <label>lat</label>
-                </td>
-                <td>
-                    <%=_.escape(model.lat)%>
-                    <!--<input type="text" placeholder="latitude" id="lat" value="<%=_.escape(model.lat)%>" maxlength="30"/>-->
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <label>Country</label>
-                </td>
-                <td>
-                    <%=_.escape(model.country.name)%>
-                   <!-- <input type="text"  id="country" value="<%=_.escape(model.country.id)%>" maxlength="30"/>-->
-                </td>
-
-            <tr>
-                <td>
-                    <label>City</label>
-                </td>
-                <td>
-                    <%=_.escape(model.city.name)%>
-                    <!--<input type="text"  id="city" value="<%=_.escape(model.city.id)%>" maxlength="30"/>-->
-                </td>
-            </tr>
         </table>
     </div>
 

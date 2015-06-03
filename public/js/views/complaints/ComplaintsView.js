@@ -23,11 +23,11 @@ define([
             this.render();
         },
         events: {
-            "click .edit": "editPost",
-            "click .editButton": "editPost",
-            "click .remove": "removePosts",
-            "click .deleteButton": "removePosts",
-            "click .create": "createPost",
+            /*"click .edit": "editComplaint",
+            "click .editButton": "editComplaint",*/
+            "click .remove": "removeComplaints",
+            "click .deleteButton": "removeComplaints",
+            //"click .create": "createPost",
             "click .checkAll": "checkAll",
             "click table.fakeUserList tr": "check",
             "click .oe-sortable": "goSort",
@@ -39,7 +39,7 @@ define([
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
             "click #nextPage": "nextPage",
-            "click #searchButton": "searchPost"
+            "click #searchButton": "searchComplaint"
         },
 
         previousPage: function (event) {
@@ -115,7 +115,7 @@ define([
             this.checkItemCount = 0;
             this.$el.find(".remove").hide();
             this.$el.find(".edit").hide();
-            this.collection = new postsCollection({
+            this.collection = new complaintsCollection({
                 sort: this.sort,
                 page: this.page,
                 searchTerm: document.getElementById('searchTerm').value,
@@ -222,7 +222,7 @@ define([
             }
         },
 
-        removePosts: function (e) {
+        removeComplaints: function (e) {
             var id;
             var model;
             var self = this;
@@ -282,7 +282,7 @@ define([
             this.getTotalLength(null, this.defaultItemsNumber);
         },
 
-        editPost: function (e) {
+        editComplaint: function (e) {
             var id;
             var model;
             var targetClass = $(e.target).attr('class');
@@ -296,7 +296,7 @@ define([
             }
             model = this.collection.get(id);
             model.bind('change', this.updateElement, this);
-            new EditPostView({model: model});
+            new EditComplaintView({model: model});
             return false;
         },
 
@@ -306,11 +306,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

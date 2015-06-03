@@ -3,13 +3,14 @@
   <td class="notForm"><input type="checkbox" value="" class="checkbox" /></td>
   <td class="numberUser"><%=startNumber + index + 1 %></td>
 
-  <td class="userBirthday"><%=_.escape(complaint.birthday)%></td>
-  <td class="userName"><%=_.escape(complaint.first_name + ' ' + complaint.last_name)%></td>
-  <td class="userEmail"><%=_.escape(complaint.email)%></td>
+  <td class="complaintAuthor"><%=_.escape(complaint.author.first_name + complaint.author.last_name)%></td>
+  <td class="complaintPostTitle"><%=_.escape(complaint.post.title)%></td>
+  <td class="complaintPostBody"><%=_.escape(complaint.post.body)%></td>
+  <td class="complaintDate"><%=_.escape(complaint.created_at)%></td>
 
-  <td>
+ <!-- <td>
       <button class="editButton">Edit</button>
-  </td>
+  </td>-->
   <td>
       <button class="deleteButton">Delete</button>
   </td>

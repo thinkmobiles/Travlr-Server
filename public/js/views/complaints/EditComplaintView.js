@@ -1,6 +1,6 @@
 define([
     'text!templates/complaints/EditTemplate.html',
-    'js/models/ComplaintsModel',
+    'js/models/ComplaintModel',
     'custom',
     'constants/responses'
 
@@ -66,7 +66,7 @@ define([
                     }
                 }
             });
-            custom.canvasDraw({ url: this.model.toJSON().avatar }, this);
+            //custom.canvasDraw({ url: this.model.toJSON().avatar }, this);
             return this;
         }
 
