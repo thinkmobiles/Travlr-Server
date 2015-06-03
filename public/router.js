@@ -18,6 +18,7 @@ define([
             "users/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "users",
             "feedbacks": "feedbacks",
             "complaints": "complaints",
+            "complaints/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "complaints",
             "posts/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "posts",
             "posts": "posts",
 			"*any": "any"

@@ -108,7 +108,6 @@ define([
         },
 
         searchPost: function (e) {
-            console.log(5)
             this.fetchCollection()
         },
 

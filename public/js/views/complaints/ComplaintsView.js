@@ -42,6 +42,10 @@ define([
             "click #searchButton": "searchComplaint"
         },
 
+        searchComplaint: function (e) {
+            this.fetchCollection();
+        },
+
         previousPage: function (event) {
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
@@ -106,11 +110,6 @@ define([
             custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
-        searchPost: function (e) {
-            console.log(5)
-            this.fetchCollection()
-        },
-
         fetchCollection: function () {
             this.checkItemCount = 0;
             this.$el.find(".remove").hide();
@@ -162,7 +161,7 @@ define([
 
         getTotalLength: function (currentNumber, itemsNumber) {
             var self = this;
-            custom.getData('/posts/count', {
+            custom.getData('/complaints/count', {
             }, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
