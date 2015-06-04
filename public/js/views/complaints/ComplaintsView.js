@@ -24,7 +24,7 @@ define([
         },
         events: {
             /*"click .edit": "editComplaint",
-            "click .editButton": "editComplaint",*/
+             "click .editButton": "editComplaint",*/
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
             //"click .create": "createPost",
@@ -43,8 +43,9 @@ define([
         },
 
         searchComplaint: function (e) {
+            this.searchTerm = e.target.previousElementSibling.value;
             this.fetchCollection();
-            this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
         },
 
         previousPage: function (event) {
@@ -118,7 +119,7 @@ define([
             this.collection = new complaintsCollection({
                 sort: this.sort,
                 page: this.page,
-                searchTerm: document.getElementById('searchTerm').value,
+                searchTerm: this.searchTerm,
                 count: this.defaultItemsNumber
             });
             this.collection.bind('reset', this.renderContent, this);
@@ -160,10 +161,15 @@ define([
             custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
-        getTotalLength: function (currentNumber, itemsNumber) {
+        getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
+            var url = '/complaints/count';
             var self = this;
-            custom.getData('/complaints/count', {
-            }, function (response) {
+            var urlData = {};
+            if (searchTerm) {
+                urlData.searchTerm =  searchTerm;
+            }
+
+            custom.getData(url, urlData, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
                 if (itemsNumber * (page - 1) > length) {

@@ -177,6 +177,7 @@ Complaints = function (PostGre) {
     this.getComplaintsCount = function (req, res, next) {
         var postId = req.query.postId;
         var authorId = req.query.authorId;
+        var searchTerm = req.query.searchTerm;
         var query = PostGre.knex(TABLES.COMPLAINTS);
 
         if (postId) {
@@ -188,6 +189,11 @@ Complaints = function (PostGre) {
             query.where({
                 author_id: authorId
             })
+        }
+        if (searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            query.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
+                .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
         }
         query
             .count()
