@@ -1,17 +1,10 @@
-/**
- * Created by Roman on 23.02.2015.
- */
+var RESPONSES = require('../constants/responseMessages');
 
 module.exports = function () {
     //ToDo load constants
     var DEFAULT_ERROR_NAME = 'Error';
     var DEFAULT_ERROR_MESSAGE = 'error';
     var DEFAULT_ERROR_STATUS = 400;
-
-    var NOT_ENAUGH_PARAMS = "Not enough incoming parameters.";
-    var INVALID_EMAIL = "Invalid email address.";
-    var EMAIL_IN_USE = 'Email in use. Please input another email address.';
-    var NO_UPDATE_PARAMS = 'There are no params for update';
 
     function CustomError (options) {
         //http://j-query.blogspot.com/2014/03/custom-error-objects-in-javascript.html
@@ -30,7 +23,7 @@ module.exports = function () {
             errOptions.name = "NotEnoughIncomingParameters";
         }
         if (!errOptions.message) {
-            errOptions.message = NOT_ENAUGH_PARAMS;
+            errOptions.message = RESPONSES.NOT_ENOUGH_PARAMETERS;
         }
         if (options && options.reqParams) {
             errOptions.message += 'This parameters are required: ' + options.reqParams;
@@ -46,7 +39,7 @@ module.exports = function () {
             errOptions.name = "InvalidEmal";
         }
         if (!errOptions.message) {
-            errOptions.message = INVALID_EMAIL;
+            errOptions.message = RESPONSES.INVALID_EMAIL;
         }
 
         return new CustomError(errOptions);
@@ -59,7 +52,7 @@ module.exports = function () {
             errOptions.name = 'DoubledEmail';
         }
         if (!errOptions.message) {
-            errOptions.message = EMAIL_IN_USE;
+            errOptions.message = RESPONSES.NOT_UNIQUE_EMAIL;
         }
 
         return new CustomError(errOptions);
@@ -72,7 +65,7 @@ module.exports = function () {
             errOptions.name = 'NoUpdateParams';
         }
         if (!errOptions.message) {
-            errOptions.message = NO_UPDATE_PARAMS;
+            errOptions.message = RESPONSES.NO_UPDATE_PARAMS;
         }
 
         return new CustomError(errOptions);

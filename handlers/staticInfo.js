@@ -4,18 +4,14 @@ var MODELS = require('../constants/models');
 var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
 var Session = require('../handlers/sessions');
-var crypPass = require('../helpers/cryptoPass');
-var cryptoPass = new crypPass();
-var generator = require('../helpers/randomPass.js');
-var Mailer = require('../helpers/mailer.js');
-var Users;
 var async = require('async');
 var crypto = require("crypto");
-var UsersHelper = require('../helpers/users');
+
 
 Static_Info = function (PostGre) {
     var StaticModel = PostGre.Models[MODELS.STATIC_INFO];
     var StaticCollection = PostGre.Collections[COLLECTIONS.STATIC_INFO];
+    var redisClient = require('../helpers/redisClient')();
 
     this.createInfo = function (req, res, next) {
         var options = req.body;
@@ -23,7 +19,9 @@ Static_Info = function (PostGre) {
         StaticModel
             .forge(options)
             .save()
-            .then(function () {
+            .then(function (info) {
+                info = info.toJSON();
+                redisClient.cacheStore.writeToStorage(info.id, info.updated_at);
                 res.status(201).send({success: RESPONSES.WAS_CREATED})
             })
             .otherwise(next)
@@ -40,7 +38,9 @@ Static_Info = function (PostGre) {
             .save(options, {
                 patch: true
             })
-            .then(function () {
+            .then(function (info) {
+                info = info.toJSON();
+                redisClient.cacheStore.writeToStorage(info.id, info.updated_at);
                 res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
             })
             .otherwise(next)
@@ -54,7 +54,8 @@ Static_Info = function (PostGre) {
                 id: infoId
             })
             .destroy()
-            .then(function () {
+            .then(function (info) {
+                redisClient.cacheStore.removeFromStorage(info.id);
                 res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
             })
             .otherwise(next)
