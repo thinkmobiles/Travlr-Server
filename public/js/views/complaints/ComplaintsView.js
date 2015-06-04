@@ -44,6 +44,7 @@ define([
 
         searchComplaint: function (e) {
             this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber);
         },
 
         previousPage: function (event) {
@@ -172,8 +173,6 @@ define([
                 }
                 custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
             }, this);
-
-
         },
 
         check: function (e) {
@@ -298,7 +297,6 @@ define([
             new EditComplaintView({model: model});
             return false;
         },
-
 
         render: function (options) {
             this.$el.html(this.template());

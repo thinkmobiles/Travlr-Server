@@ -285,6 +285,8 @@ Users = function (PostGre) {
                         } else if (!!usersList.userByFBId) {
                             callback(null, usersList.userByFBId, CONSTANTS.FB_ACTIONS.SIGN_IN)
                         } else if (!usersList.userByFBId && !!usersList.userByEmail) {
+                            validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+
                             usersList.userByEmail
                                 .save(validOptions, {
                                     patch: true
