@@ -31,7 +31,10 @@ Users = function (PostGre) {
 
                         if (options.id && validOptions.change_email) {
                             qb.where('email', validOptions.change_email)
-                                .andWhere('id', '!=', options.id)
+                        }
+
+                        if (options.id) {
+                            qb.where('id', '!=', options.id)
                         }
                     })
                     .fetch()
@@ -86,6 +89,7 @@ Users = function (PostGre) {
         first_name: ['isString'],
         last_name: ['isString'],
         change_email: ['isEmail'],
+        email: ['isEmail'],
         gender: ['isInt'],
         birthday: ['isDate'],
         confirm_token: ['isString'],
@@ -188,61 +192,55 @@ Users = function (PostGre) {
     };
 
     this.updateUserByOptions = function (options, callback, settings) {
-        var imageData;
+        var saveImageData;
+        var deleteImageData;
+        var error;
+
         self.checkUpdateUserOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err)
             } else {
-
-                UserModel
-                    .forge({
-                        id: options.id
-                    })
-                    .save(validOptions, {
-                        patch: true
-                    })
-                    .then(function (user) {
+                async.parallel([
+                    function(cb) {
                         if (options.image) {
                             async.series([
                                 function (cb) {
-                                    imageData = {
+                                    deleteImageData = {
                                         imageable_id: options.id,
-                                        imageable_type: options.imageType
+                                        imageable_type: TABLES.USERS
                                     };
-                                    imagesHelper.deleteImageByOptions(imageData, function (err) {
-                                        if (err) {
-                                            cb(err);
-                                        } else {
-                                            cb()
-                                        }
-                                    });
+                                    imagesHelper.deleteImageByOptions(deleteImageData, cb);
                                 },
                                 function (cb) {
-                                    imageData = {
+                                    saveImageData = {
                                         image: options.image,
                                         imageable_id: options.id,
-                                        imageable_type: options.imageType
+                                        imageable_type: TABLES.USERS
                                     };
-                                    imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                        if (err) {
-                                            cb(err);
-                                        } else {
-                                            cb()
-                                        }
-                                    });
+                                    imagesHelper.createImageByOptions(saveImageData, cb);
                                 }
-                            ], function (err) {
-                                if (err) {
-                                    callback(err)
-                                } else {
-                                    callback(null, user)
-                                }
-                            })
+                            ], cb);
                         } else {
-                            callback(null, user)
+                            cb();
                         }
-                    })
-                    .otherwise(callback)
+                    },
+                    function(cb) {
+                        UserModel
+                            .forge({
+                                id: options.id
+                            })
+                            .save(validOptions, {
+                                patch: true
+                            })
+                            .exec(cb);
+                    }
+                ], function(err, results) {
+                    if (err) {
+                        callback(err)
+                    } else {
+                        callback(null, results[1]);
+                    }
+                });
             }
         }, settings)
     };

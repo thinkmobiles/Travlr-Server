@@ -23,12 +23,15 @@ define([
         },
 
         initialize: function () {
-			$(document).on("click", function (e) {
-	            if ($(e.target).closest(".popUp").length == 0 && $(e.target).closest(".trill-dialog").length == 0) {
-	                $(".popUp").hide();
-	                $(".trill-dialog").hide();
-	            }
-	        });
+			/*$(document).on("click", function (e) {
+                var overflow = $('#dialog-overflow');
+                var dialogs = overflow.find(".trill-dialog");
+                var className = e.target.getAttribute('class');
+                var pos = overflow.find(".trill-dialog").index($(e.target).parents(".trill-dialog"));
+                if (pos !== dialogs.length - 1 && className !== "ui-button-text") {
+                    dialogs[dialogs.length - 1].remove();
+                }
+	        });*/
         },
 
         any: function () {

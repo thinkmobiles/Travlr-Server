@@ -19,6 +19,7 @@ define(['constants/responses'], function (RESPONSES) {
             Backbone.history.navigate("login", { trigger: true });
         }
     };
+
     var checkLogin = function (callback) {
         var url = "/isAuthenticated";
         $.ajax({
@@ -79,6 +80,7 @@ define(['constants/responses'], function (RESPONSES) {
                             $(".crop-images-dialog").css({"top": ($(window).height() - h) / 2 + "px"});
                         }
                     });
+
                     $('.image_input img').Jcrop({
                         bgColor: 'white',
                         bgOpacity: .6,
@@ -91,7 +93,6 @@ define(['constants/responses'], function (RESPONSES) {
                         minSize: [10, 10]
                         //maxSize: [140, 140]
                     });
-
 
                     function imgSelect(sellictions) {
                         if (parseInt(sellictions.w) > 0) {
@@ -113,7 +114,13 @@ define(['constants/responses'], function (RESPONSES) {
                         resizable: true,
                         title: "Crop Images",
                         width: "900px",
-                        appendTo: "#wrapper",
+                        appendTo: "#dialog-overflow",
+                        modal: true,
+                        open: function(){
+                            $('.ui-widget-overlay').bind('click', function(){
+                                $('.cropImages').dialog('close');
+                            })
+                        },
                         buttons: {
                             save: {
                                 text: "Crop",
@@ -128,20 +135,21 @@ define(['constants/responses'], function (RESPONSES) {
                                             imageSrc: $('.image_output').attr('src')
                                         }
                                     }
-                                    canvasDrawing({ model: model, canvas: canvas }, context);
-                                    $(this).dialog("close");
+                                    canvasDrawing({model: model, canvas: canvas}, context);
+                                    $(this).dialog('close');
                                 }
-
                             },
                             cancel: {
                                 text: "Cancel",
                                 class: "btn",
                                 click: function () {
-                                    $(this).dialog("close");
+                                    $(this).dialog('close');
                                 }
                             }
+                        },
+                        close: function() {
+                            $(this).dialog('destroy')
                         }
-
                     });
 
                 };
@@ -158,6 +166,7 @@ define(['constants/responses'], function (RESPONSES) {
         canvasDrawing(options, context);
 
     };
+
     var getData = function (url, data, callback, context) {
         $.get(url, data, function (response) {
             if (context) {
@@ -257,6 +266,7 @@ define(['constants/responses'], function (RESPONSES) {
 
         Backbone.history.navigate(url);
     };
+
     var prevP = function (dataObject, custom) {
         this.startTime = new Date();
         var itemsNumber = $("#itemsNumber").text();

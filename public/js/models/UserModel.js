@@ -11,7 +11,7 @@ define([],function () {
             });
         },
         urlRoot: function () {
-            return "/users/signUp";
+            return "/users";
         }
     });
     return UserModel;

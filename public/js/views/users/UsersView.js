@@ -22,6 +22,7 @@ define([
             this.getTotalLength(null, this.defaultItemsNumber);
             this.render();
         },
+
         events: {
             "click .edit": "editUser",
             "click .editButton": "editUser",
@@ -167,8 +168,6 @@ define([
                 }
                 custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
             }, this);
-
-
         },
 
         check: function (e) {
@@ -194,6 +193,7 @@ define([
                 this.$el.find(".edit").hide();
             }
         },
+
         checkAll: function (e) {
             if ($(e.target).prop("checked")) {
                 this.checkItemCount = this.$el.find("table tr td input").length;
@@ -214,46 +214,51 @@ define([
                 this.$el.find(".remove").hide();
             }
         },
+
         removeUsers: function (e) {
             var id;
             var model;
             var self = this;
             var targetClass = $(e.target).attr('class');
+            var deleteConfirm;
 
             e.stopPropagation();
 
-            if (targetClass.indexOf('deleteButton') !== -1) {
-                id = $(e.target).closest("tr").data("id");
-                model = self.collection.get(id);
-                model.destroy({
-                    wait: true,
-                    success: function () {
+            deleteConfirm = confirm("Are you sure you want to delete?");
+            if (deleteConfirm) {
+                if (targetClass.indexOf('deleteButton') !== -1) {
+                    id = $(e.target).closest("tr").data("id");
+                    model = self.collection.get(id);
+                    model.destroy({
+                        wait: true,
+                        success: function () {
                             self.fetchCollection();
                             self.getTotalLength(null, self.defaultItemsNumber);
-                    },
-                    error: custom.errorHandler
-                });
-            } else {
-                this.$el.find("table tr th input").prop("checked", false);
-                this.$el.find(".remove").hide();
-                var count = this.$el.find("table tr td input:checked").length;
-                this.$el.find("table tr td input").each(function () {
-                    if ($(this).prop("checked")) {
-                        id = $(this).closest("tr").data("id");
-                        model = self.collection.get(id);
-                        model.destroy({
-                            wait: true,
-                            success: function () {
-                                count--;
-                                if (!count) {
-                                    self.fetchCollection();
-                                    self.getTotalLength(null, self.defaultItemsNumber);
-                                }
-                            },
-                            error: custom.errorHandler
-                        });
-                    }
-                });
+                        },
+                        error: custom.errorHandler
+                    });
+                } else {
+                    this.$el.find("table tr th input").prop("checked", false);
+                    this.$el.find(".remove").hide();
+                    var count = this.$el.find("table tr td input:checked").length;
+                    this.$el.find("table tr td input").each(function () {
+                        if ($(this).prop("checked")) {
+                            id = $(this).closest("tr").data("id");
+                            model = self.collection.get(id);
+                            model.destroy({
+                                wait: true,
+                                success: function () {
+                                    count--;
+                                    if (!count) {
+                                        self.fetchCollection();
+                                        self.getTotalLength(null, self.defaultItemsNumber);
+                                    }
+                                },
+                                error: custom.errorHandler
+                            });
+                        }
+                    });
+                }
             }
         },
 
@@ -275,7 +280,7 @@ define([
             var id;
             var model;
             var targetClass = $(e.target).attr('class');
-
+            var self = this;
             e.stopPropagation();
 
             if (targetClass.indexOf('editButton') !== -1) {
@@ -284,8 +289,14 @@ define([
                 id = this.$el.find("table tr td input:checked").eq(0).closest("tr").data("id");
             }
             model = this.collection.get(id);
-            model.bind('change', this.updateElement, this);
-            new EditUserView({model: model});
+            model.fetch({
+                success: function (model) {
+                    model.bind('change', self.updateElement, self);
+                    new EditUserView({model: model});
+                },
+                error: custom.errorHandler
+            });
+
             return false;
         },
         createUser: function (e) {

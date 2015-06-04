@@ -26,6 +26,7 @@ define([
                 password: this.$el.find('#password').val(),
 				image_src: this.imageSrc
             };
+            this.model.urlRoot = '/users/signUp';
             this.model.save(createData,{
                 success: function (model, response) {
 					model.set({id: model.toJSON().success.id})
@@ -92,7 +93,7 @@ define([
                 dialogClass: "trill-dialog",
                 width: "520",
                 title: "Create User",
-				appendTo: "#content-holder" ,
+				appendTo: "#dialog-overflow" ,
                 buttons: {
                     save: {
                         text: "Create",

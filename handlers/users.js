@@ -277,7 +277,6 @@ Users = function (PostGre) {
         var options = req.body;
         var mailOptions;
         options.id = parseInt(req.params.id);
-        options.imageType = TABLES.USERS;
         if (options.change_email) {
             options.confirm_token = generator.generate(15);
             options.confirm_status = CONSTANTS.CONFIRM_STATUS.CHANGE_EMAIL;
