@@ -142,8 +142,8 @@ var imagesUploader = function (dirConfig) {
                     callback(err)
                 }
             } else {
-                var contentType = res.headers['content-type'];
-                var _imageUrl = contentType.split("/");
+                //var contentType = res.headers['content-type'];
+                var _imageUrl = imageUrl.split(".");
                 var type = (_imageUrl.length ? _imageUrl[_imageUrl.length-1] : 'error');
                 if (ALLOWED_DOWNLOAD_TYPES.indexOf(type) !== -1) {
                     var imageNameWithExt = imageName + "." + type;
@@ -178,7 +178,7 @@ var imagesUploader = function (dirConfig) {
 
                 } else {
                     if (callback && typeof callback === 'function') {
-                        callback({error: "Doesn't not allow download type"});
+                        callback('Doesn\'t not allow download type');
                     }
                 }
 /*

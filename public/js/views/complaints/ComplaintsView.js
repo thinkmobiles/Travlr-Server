@@ -1,20 +1,19 @@
 define([
-    'js/views/posts/EditPostView',
-    'js/views/posts/CreatePostView',
-    "js/collections/posts/postsCollections",
-    'text!templates/posts/PostsTemplate.html',
-    'text!templates/posts/ListTemplate.html',
+    'js/views/complaints/EditComplaintView',
+    "js/collections/complaints/complaintsCollection",
+    'text!templates/complaints/ComplaintsTemplate.html',
+    'text!templates/complaints/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditPostView, CreatePostView, postsCollection, PostsTemplate, ListTemplate, custom, RESPONSES) {
+], function (EditComplaintView, complaintsCollection, ComplaintsTemplate, ListTemplate, custom, RESPONSES) {
 
-    var PostsView = Backbone.View.extend({
+    var ComplaintsView = Backbone.View.extend({
         el: '#content-holder',
-        template: _.template(PostsTemplate),
+        template: _.template(ComplaintsTemplate),
         initialize: function (options) {
-            this.collection = options.postsCollection;
+            this.collection = options.complaintsCollection;
             this.checkItemCount = 0;
-            this.contentType = "posts";
+            this.contentType = "complaints";
             this.sort = this.collection.sort;
             this.page = this.collection.page;
             this.searchTerm = this.collection.searchTerm;
@@ -24,11 +23,11 @@ define([
             this.render();
         },
         events: {
-            "click .edit": "editPost",
-            "click .editButton": "editPost",
-            "click .remove": "removePosts",
-            "click .deleteButton": "removePosts",
-            "click .create": "createPost",
+            /*"click .edit": "editComplaint",
+             "click .editButton": "editComplaint",*/
+            "click .remove": "removeComplaints",
+            "click .deleteButton": "removeComplaints",
+            //"click .create": "createPost",
             "click .checkAll": "checkAll",
             "click table.fakeUserList tr": "check",
             "click .oe-sortable": "goSort",
@@ -40,7 +39,13 @@ define([
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
             "click #nextPage": "nextPage",
-            "click #searchButton": "searchPost"
+            "click #searchButton": "searchComplaint"
+        },
+
+        searchComplaint: function (e) {
+            this.searchTerm = e.target.previousElementSibling.value;
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
         },
 
         previousPage: function (event) {
@@ -107,18 +112,14 @@ define([
             custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
-        searchPost: function (e) {
-            this.fetchCollection()
-        },
-
         fetchCollection: function () {
             this.checkItemCount = 0;
             this.$el.find(".remove").hide();
             this.$el.find(".edit").hide();
-            this.collection = new postsCollection({
+            this.collection = new complaintsCollection({
                 sort: this.sort,
                 page: this.page,
-                searchTerm: document.getElementById('searchTerm').value,
+                searchTerm: this.searchTerm,
                 count: this.defaultItemsNumber
             });
             this.collection.bind('reset', this.renderContent, this);
@@ -160,10 +161,15 @@ define([
             custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
-        getTotalLength: function (currentNumber, itemsNumber) {
+        getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
+            var url = '/complaints/count';
             var self = this;
-            custom.getData('/posts/count', {
-            }, function (response) {
+            var urlData = {};
+            if (searchTerm) {
+                urlData.searchTerm =  searchTerm;
+            }
+
+            custom.getData(url, urlData, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
                 if (itemsNumber * (page - 1) > length) {
@@ -173,8 +179,6 @@ define([
                 }
                 custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
             }, this);
-
-
         },
 
         check: function (e) {
@@ -222,7 +226,7 @@ define([
             }
         },
 
-        removePosts: function (e) {
+        removeComplaints: function (e) {
             var id;
             var model;
             var self = this;
@@ -282,7 +286,7 @@ define([
             this.getTotalLength(null, this.defaultItemsNumber);
         },
 
-        editPost: function (e) {
+        editComplaint: function (e) {
             var id;
             var model;
             var targetClass = $(e.target).attr('class');
@@ -296,12 +300,7 @@ define([
             }
             model = this.collection.get(id);
             model.bind('change', this.updateElement, this);
-            new EditPostView({model: model});
-            return false;
-        },
-
-        createPost: function (e) {
-            new CreatePostView({collection: this.collection});
+            new EditComplaintView({model: model});
             return false;
         },
 
@@ -310,16 +309,16 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 
     });
 
-    return PostsView;
+    return ComplaintsView;
 
 });

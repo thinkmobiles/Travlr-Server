@@ -10,7 +10,8 @@ module.exports = {
     UNAUTHORIZED : 'Unauthorized',
     AUTHORIZED : 'Authorized',
     INCORRECT_ID_PASSWORD: 'Incorrect ID or Password',
-    FAMILY_CONTACT: 'Can\'t remove family contact member',
+    INVALID_EMAIL: 'Invalid email address',
+    NO_UPDATE_PARAMS: 'There are no params for update',
     // Validation errors
     NOT_UNIQUE_EMAIL: 'Email not unique',
     UNCOFIRMED_EMAIL: 'Email is unconfirmed',

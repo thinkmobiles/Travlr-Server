@@ -9,6 +9,10 @@ module.exports = function (PostGre, ParentModel) {
 
         post: function () {
             return this.belongsTo(PostGre.Models[MODELS.POST], 'post_id');
+        },
+
+        author: function () {
+            return this.belongsTo(PostGre.Models[MODELS.USER], 'author_id');
         }
     });
 };

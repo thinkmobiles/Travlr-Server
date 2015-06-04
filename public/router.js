@@ -17,6 +17,8 @@ define([
             "users": "users",
             "users/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "users",
             "feedbacks": "feedbacks",
+            "complaints": "complaints",
+            "complaints/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "complaints",
             "posts/list(/p=:page)(/c=:countPerPage)(/sort=:sort)": "posts",
             "posts": "posts",
 			"*any": "any"
@@ -123,6 +125,34 @@ define([
                 function createViews() {
                     feedbacksCollection.unbind('reset');
                     self.changeView(FeedbacksView, {feedbacksCollection: feedbacksCollection});
+                }
+            });
+        },
+
+        complaints: function (page, countPerPage, sort){
+            var self = this;
+            this.main();
+            var navigatePage = (page) ? parseInt(page) || 1 : 1;
+            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+            sort = (sort) ? JSON.parse(decodeURIComponent(sort)) : "";
+
+            require([
+                "js/views/complaints/ComplaintsView",
+                "js/collections/complaints/complaintsCollection"
+            ],  function (ComplaintsView, ComplaintsCollection) {
+                if (this.current) {
+                    this.current.undelegateEvents();
+                }
+                var complaintsCollection = new ComplaintsCollection({
+                    page: navigatePage,
+                    count: count,
+                    sort: sort
+                });
+
+                complaintsCollection.bind('reset', _.bind(createViews, self));
+                function createViews() {
+                    complaintsCollection.unbind('reset');
+                    self.changeView(ComplaintsView, {complaintsCollection: complaintsCollection});
                 }
             });
         },

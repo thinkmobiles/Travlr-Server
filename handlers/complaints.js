@@ -79,7 +79,7 @@ Complaints = function (PostGre) {
                     'created_at'
                 ],
                 withRelated: [
-                        'post'
+                    'post'
                 ]
             })
             .then(function (complaint) {
@@ -98,9 +98,13 @@ Complaints = function (PostGre) {
         var userId = req.query.userId;
         var postId = req.query.postId;
         var page = req.query.page || 1;
-        var limit = req.query.limit || 25;
-        var orderBy = req.query.orderBy;
-        var order = req.query.order || 'ASC';
+        var limit = req.query.count || 25;
+        var sortObject = req.query.sort;
+        var searchTerm = req.query.searchTerm;
+
+        var sortName;
+        var sortAliase;
+        var sortOrder;
 
         ComplaintCollection
             .query(function (qb) {
@@ -114,20 +118,55 @@ Complaints = function (PostGre) {
                         post_id: postId
                     })
                 }
-                if (orderBy) {
-                    qb.orderBy(orderBy, order)
+                if (searchTerm) {
+                    searchTerm = searchTerm.toLowerCase();
+                    qb.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
+                        .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
+                }
+                if (typeof sortObject === 'object') {
+                    sortAliase = Object.keys(sortObject);
+                    sortAliase = sortAliase[0];
+                    if (sortAliase === 'author') {
+                        sortName = 'author_id';
+                    } else if (sortAliase === 'post') {
+                        sortName = 'post_id';
+                    } else if (sortAliase === 'date') {
+                        sortName = 'created_at';
+                    }
+
+                    if (sortName) {
+                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                        qb.orderBy(sortName, sortOrder);
+                    }
                 }
                 qb.offset(( page - 1 ) * limit)
                     .limit(limit)
             })
             .fetch({
                 columns: [
-                    'id',
+                    TABLES.COMPLAINTS + '.id',
                     'author_id',
                     'post_id',
-                    'created_at'
-                ]/*,
-                withRelated: ['post']*/
+                    TABLES.COMPLAINTS + '.created_at'
+                ],
+                withRelated: [
+                    {
+                        author: function () {
+                            this.columns([
+                                'id',
+                                'first_name',
+                                'last_name'
+                            ])
+                        },
+                        post: function () {
+                            this.columns([
+                                'id',
+                                'title',
+                                'body'
+                            ])
+                        }
+                    }
+                ]
             })
             .then(function (complaints) {
                 res.status(200).send(complaints)
@@ -138,6 +177,7 @@ Complaints = function (PostGre) {
     this.getComplaintsCount = function (req, res, next) {
         var postId = req.query.postId;
         var authorId = req.query.authorId;
+        var searchTerm = req.query.searchTerm;
         var query = PostGre.knex(TABLES.COMPLAINTS);
 
         if (postId) {
@@ -149,6 +189,11 @@ Complaints = function (PostGre) {
             query.where({
                 author_id: authorId
             })
+        }
+        if (searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            query.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
+                .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
         }
         query
             .count()
