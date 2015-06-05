@@ -24,7 +24,7 @@ Posts = function (PostGre) {
 
     this.checkUpdatePostOptions = new Validation.Check({
         body: ['required'],
-        author_id: ['required'],
+        //author_id: ['required'],
         title: ['required'],
         lon: ['required'],
         lat: ['required'],

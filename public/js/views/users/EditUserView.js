@@ -64,7 +64,8 @@ define([
                         text: "Cancel",
                         class: "btn",
                         click: function () {
-                            $(this).remove();
+                            $(this).dialog('close');
+                            //$(this).remove();
                         }
                     }
                 },
