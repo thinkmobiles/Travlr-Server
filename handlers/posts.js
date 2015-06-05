@@ -58,6 +58,7 @@ Posts = function (PostGre) {
                         qb.whereRaw(
                             "LOWER(title) LIKE '%" + searchTerm + "%' "
                         )
+
                     }
 
                     if (countryId) {
@@ -526,6 +527,14 @@ Posts = function (PostGre) {
 
     this.getPostsCount = function (req, res, next) {
         var query = PostGre.knex(TABLES.POSTS);
+        var searchTerm = req.query.searchTerm;
+
+        if (searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            query.whereRaw(
+                    "LOWER(title) LIKE '%" + searchTerm + "%' "
+            )
+        }
 
         query
             .count()

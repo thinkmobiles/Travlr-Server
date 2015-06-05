@@ -6,7 +6,7 @@ define([
     'text!templates/users/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditUserView, CreateUserView, userCollection, UsersTemplate, ListTemplate, custom, RESPONSES) {
+], function ( EditUserView, CreateUserView, userCollection, UsersTemplate, ListTemplate, custom, RESPONSES) {
 
     var UsersView = Backbone.View.extend({
         el: '#content-holder',
@@ -52,7 +52,7 @@ define([
 
         previousPage: function (event) {
             $("#top-bar-deleteBtn").hide();
-            $('#check_all').p+rop('checked', false);
+            $('#check_all').prop('checked', false);
             event.preventDefault();
             custom.prevP.call(this, {
                 sort: this.sort

@@ -65,42 +65,47 @@ define([
             var model;
             var self = this;
             var targetClass = $(e.target).attr('class');
+            var deleteConfirm;
 
             e.stopPropagation();
+            deleteConfirm = confirm("Are you sure you want to delete?");
 
-            if (targetClass.indexOf('deleteButton') !== -1) {
-                id = $(e.target).closest("tr").data("id");
-                model = self.collection.get(id);
-                model.destroy({
-                    wait: true,
-                    success: function () {
-                        self.fetchCollection();
-                        self.getTotalLength(null, self.defaultItemsNumber);
-                    },
-                    error: custom.errorHandler
-                });
-            } else {
-                this.$el.find("table tr th input").prop("checked", false);
-                this.$el.find(".remove").hide();
-                var count = this.$el.find("table tr td input:checked").length;
-                this.$el.find("table tr td input").each(function () {
-                    if ($(this).prop("checked")) {
-                        id = $(this).closest("tr").data("id");
-                        model = self.collection.get(id);
-                        model.destroy({
-                            wait: true,
-                            success: function () {
-                                count--;
-                                if (!count) {
-                                    self.fetchCollection();
-                                    self.getTotalLength(null, self.defaultItemsNumber);
-                                }
-                            },
-                            error: custom.errorHandler
-                        });
-                    }
-                });
+            if (deleteConfirm) {
+                if (targetClass.indexOf('deleteButton') !== -1) {
+                    id = $(e.target).closest("tr").data("id");
+                    model = self.collection.get(id);
+                    model.destroy({
+                        wait: true,
+                        success: function () {
+                            self.fetchCollection();
+                            self.getTotalLength(null, self.defaultItemsNumber);
+                        },
+                        error: custom.errorHandler
+                    });
+                } else {
+                    this.$el.find("table tr th input").prop("checked", false);
+                    this.$el.find(".remove").hide();
+                    var count = this.$el.find("table tr td input:checked").length;
+                    this.$el.find("table tr td input").each(function () {
+                        if ($(this).prop("checked")) {
+                            id = $(this).closest("tr").data("id");
+                            model = self.collection.get(id);
+                            model.destroy({
+                                wait: true,
+                                success: function () {
+                                    count--;
+                                    if (!count) {
+                                        self.fetchCollection();
+                                        self.getTotalLength(null, self.defaultItemsNumber);
+                                    }
+                                },
+                                error: custom.errorHandler
+                            });
+                        }
+                    });
+                }
             }
+
         },
 
         createFeedback: function (e) {
