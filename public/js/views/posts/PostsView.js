@@ -40,7 +40,13 @@ define([
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
             "click #nextPage": "nextPage",
-            "click #searchButton": "searchPost"
+            "click #searchButton": "search"
+        },
+
+        search: function (e) {
+            this.searchTerm = e.target.previousElementSibling.value;
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
         },
 
         previousPage: function (event) {
@@ -107,9 +113,6 @@ define([
             custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
-        searchPost: function (e) {
-            this.fetchCollection()
-        },
 
         fetchCollection: function () {
             this.checkItemCount = 0;
@@ -118,7 +121,7 @@ define([
             this.collection = new postsCollection({
                 sort: this.sort,
                 page: this.page,
-                searchTerm: document.getElementById('searchTerm').value,
+                searchTerm: this.searchTerm,
                 count: this.defaultItemsNumber
             });
             this.collection.bind('reset', this.renderContent, this);
@@ -160,10 +163,16 @@ define([
             custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
-        getTotalLength: function (currentNumber, itemsNumber) {
+        getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
             var self = this;
-            custom.getData('/posts/count', {
-            }, function (response) {
+            var urlData = {};
+
+            urlData.searchTerm = searchTerm || this.searchTerm || null;
+            if (urlData.searchTerm === null) {
+                delete urlData.searchTerm;
+            }
+
+            custom.getData('/posts/count', urlData, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
                 if (itemsNumber * (page - 1) > length) {

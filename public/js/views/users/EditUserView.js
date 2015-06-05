@@ -4,11 +4,11 @@ define([
     'custom',
     'constants/responses'
 
-], function (EditFakeUserTemplate, UserModel, custom, RESPONSES) {
+], function (EditUserTemplate, UserModel, custom, RESPONSES) {
 
     var LoginView = Backbone.View.extend({
         el: '#content-holder',
-        template: _.template(EditFakeUserTemplate),
+        template: _.template(EditUserTemplate),
         imageSrc: '',
         initialize: function (options) {
             this.render();
@@ -23,7 +23,7 @@ define([
                 email: this.$el.find('#email').val()
             };
             if (this.imageSrc) {
-                editData['image_src'] = this.imageSrc;
+                editData['image'] = this.imageSrc;
             }
 
             this.model.urlRoot = '/users/';
@@ -36,14 +36,22 @@ define([
             })
         },
         render: function (options) {
+            var modelJSON =  this.model.toJSON();
             var self = this;
-            var formString = this.template({model: this.model.toJSON()});
+            var formString = this.template({model: modelJSON});
+            var imageUrl;
             this.$el = $(formString).dialog({
                 closeOnEscape: false,
                 dialogClass: "trill-dialog",
                 width: "520",
                 title: "Edit User",
-                appendTo: "#content-holder",
+                appendTo: "#dialog-overflow",
+                modal: true,
+                open: function(){
+                    $('.ui-widget-overlay').bind('click', function(){
+                        $('.ui-dialog-content').dialog('close');
+                    });
+                },
                 buttons: {
                     save: {
                         text: "Save",
@@ -59,12 +67,17 @@ define([
                             $(this).remove();
                         }
                     }
+                },
+                close: function() {
+                    $(this).dialog('destroy');
                 }
             });
-            custom.canvasDraw({ url: this.model.toJSON().avatar }, this);
+            if (modelJSON.image && modelJSON.image.image_url) {
+                imageUrl = modelJSON.image.image_url
+            }
+            custom.canvasDraw({url: imageUrl}, this);
             return this;
         }
-
     });
 
     return LoginView;
