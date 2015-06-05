@@ -15,6 +15,7 @@ module.exports = function (PostGre, app) {
     router.get('/count', postsHandler.getPostsCount);
 
     router.get('/feesCount/:uId', postsHandler.getFeesCount);
+    router.get('/feesPoints/:uId', postsHandler.getFeesPoints);
     router.get('/feesCountryCount/:uId', postsHandler.getFeesCountByCountry);
 
     router.route('/:id')

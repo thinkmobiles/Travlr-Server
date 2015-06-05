@@ -35,8 +35,8 @@ module.exports = function (knex, Promise) {
                         row.string('body').notNullable();
                         row.string('lat').notNullable();
                         row.string('lon').notNullable();
-                        row.string('city_id').index();
-                        row.string('country_id').index();
+                        row.integer('city_id').index();
+                        row.integer('country_id').index();
                         row.specificType('type', 'int[]');
 
                         row.timestamp('updated_at', true);
