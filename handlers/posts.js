@@ -20,7 +20,6 @@ Posts = function (PostGre) {
     this.getPosts = function (req, res, next) {
         var options = req.query;
 
-
         if (options.lat && options.lon) {
             getPostsByRadius(options, function (err, resp) {
                 if (err) {
@@ -38,8 +37,9 @@ Posts = function (PostGre) {
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
             var userId = parseInt(options.uId);
-            var newestDate;
+            var filters = options.filters.split(',');
 
+            var newestDate;
             var sortName;
             var sortAliase;
             var sortOrder;
@@ -47,7 +47,6 @@ Posts = function (PostGre) {
             if (options && options.created_at) {
                 newestDate = new Date(options.created_at);
             }
-
 
             PostCollection
                 .forge()
@@ -69,8 +68,14 @@ Posts = function (PostGre) {
                         qb.where('author_id', userId);
                     }
 
+                    if (filters) {
+                        qb.whereRaw(
+                            "ARRAY[" + filters + "] <@ type "
+                        );
+                    }
+
                     if (newestDate) {
-                        qb.where('created_at', ">" , newestDate)
+                        qb.where('created_at', ">", newestDate)
                     }
 
                     qb.offset(( page - 1 ) * limit)
@@ -87,7 +92,7 @@ Posts = function (PostGre) {
                             sortName = 'country_id';
                         } else if (sortAliase === 'city') {
                             sortName = 'city_id';
-                        }  else if (sortAliase === 'createdDate') {
+                        } else if (sortAliase === 'createdDate') {
                             sortName = 'created_at';
                         }
 
@@ -195,7 +200,8 @@ Posts = function (PostGre) {
     this.getPostById = function (req, res, next) {
         var postId = req.params.id;
         var postJSON;
-        // TODO return not all field for author
+        var error;
+
         if (postId) {
             PostModel
                 .forge({id: postId})
@@ -247,37 +253,16 @@ Posts = function (PostGre) {
 
 
                     } else {
-                        // TODO use new Error
                         next(RESPONSES.INTERNAL_ERROR);
                     }
                 })
                 .otherwise(next);
         } else {
-            next(RESPONSES.INTERNAL_ERROR);
+            error = new Error(RESPONSES.NOT_ENOUGH_PARAMETERS);
+            error.status = 400;
+            next(error);
         }
     };
-
-    function getPostsByRadius(options, callback) {
-        var lat = options.lat;
-        var lon = options.lon;
-        var distance = 10000;
-        if (lat && lon) {
-            PostGre.knex
-                .raw(
-                "SELECT * FROM posts, " +
-                "ST_Distance_Sphere( " +
-                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
-                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
-                " ) AS distance " +
-                "Where distance < " + distance
-            )
-                .then(function (queryResult) {
-                    var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
-                    callback(null, models);
-                })
-                .otherwise(callback);
-        }
-    }
 
     this.createPost = function (req, res, next) {
         var options = req.body;
@@ -338,17 +323,6 @@ Posts = function (PostGre) {
                     next(err);
                 }
             });
-
-
-        /* if (saveData.lat && saveData.lon) {
-         postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
-         if (!err) {
-
-         } else {
-         next(err);
-         }
-         });
-         }*/
     };
 
     this.updatePost = function (req, res, next) {
@@ -404,20 +378,11 @@ Posts = function (PostGre) {
                     next(err);
                 }
             });
-        /*if (saveData.lat && saveData.lon) {
-         /!*postsHelper.getCountryCity({lat: saveData.lat, lon: saveData.lon}, function (err, resp) {
-         if (!err) {*!/
-
-         } else {
-         next(err);
-         }
-         });
-         }*/
     };
 
     this.deletePost = function (req, res, next) {
         var postId = req.params.id;
-        var authorId = req.session.userId;
+        var error;
 
         // TODO need check user/admin access
 
@@ -429,27 +394,100 @@ Posts = function (PostGre) {
                 .fetch()
                 .then(function (postModel) {
                     if (postModel && postModel.id) {
-                        //if (postModel.get('author_id') == authorId) {
-                            postModel
-                                .destroy()
-                                .then(function () {
-                                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
-                                })
-                                .otherwise(next);
-                       /* } else {
-                            next(RESPONSES.INVALID_PARAMETERS);
-                        }*/
+                        postModel
+                            .destroy()
+                            .then(function () {
+                                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+                            })
+                            .otherwise(next);
                     } else {
                         next(RESPONSES.INVALID_PARAMETERS);
                     }
                 })
                 .otherwise(next)
         } else {
-            next(RESPONSES.INVALID_PARAMETERS);
+            error = new Error(RESPONSES.NOT_ENOUGH_PARAMETERS);
+            error.status = 400;
+            next(error);
         }
     };
 
+    this.getFeesCount = function (req, res, next) {
+        var userId = req.params.uId;
+        var error;
 
+        if (userId) {
+            var sql =
+                "SELECT " +
+                "count(DISTINCT cities.name) as city_count, " +
+                "count(DISTINCT countries.name) as countries_count " +
+                "FROM cities " +
+                "LEFT JOIN posts " +
+                "ON posts.city_id = cities.id " +
+                "LEFT JOIN countries " +
+                "ON posts.country_id = countries.id " +
+                "WHERE posts.author_id = " + userId;
+
+            PostGre.knex
+                .raw(sql)
+                .then(function (queryResult) {
+                    res.status(200).send(queryResult.rows[0]);
+                })
+                .otherwise(next);
+        } else {
+            error = new Error(RESPONSES.NOT_ENOUGH_PARAMETERS);
+            error.status = 400;
+            next(error);
+        }
+    };
+
+    this.getFeesCountByCountry = function (req, res, next) {
+        var userId = req.params.uId;
+        if (userId) {
+            var sql =
+                "Select " +
+                "countries.name,  " +
+                "countries.code,  " +
+                "count(p.id) " +
+                "FROM countries " +
+                "INNER JOIN posts p " +
+                "ON p.country_id = countries.id " +
+                "AND p.author_id = " + userId +
+                "GROUP BY countries.name, countries.code";
+            PostGre.knex
+                .raw(sql)
+                .then(function (queryResult) {
+                    res.status(200).send(queryResult.rows);
+                })
+                .otherwise(next);
+        } else {
+            var error = new Error(RESPONSES.NOT_ENOUGH_PARAMETERS);
+            error.status = 400;
+            next(error);
+        }
+    };
+
+    function getPostsByRadius(options, callback) {
+        var lat = options.lat;
+        var lon = options.lon;
+        var distance = 10000;
+        if (lat && lon) {
+            PostGre.knex
+                .raw(
+                "SELECT * FROM posts, " +
+                "ST_Distance_Sphere( " +
+                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                " ) AS distance " +
+                "Where distance < " + distance
+            )
+                .then(function (queryResult) {
+                    var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
+                    callback(null, models);
+                })
+                .otherwise(callback);
+        }
+    }
 
     this.getPostsCount = function (req, res, next) {
         var query = PostGre.knex(TABLES.POSTS);
