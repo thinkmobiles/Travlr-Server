@@ -38,7 +38,13 @@ define([
                 dialogClass: "trill-dialog",
                 width: "520",
                 title: "Edit Feedback",
-                appendTo: "#content-holder",
+                appendTo: "#dialog-overflow",
+                modal: true,
+                open: function(){
+                    $('.ui-widget-overlay').bind('click', function(){
+                        $('.ui-dialog-content').dialog('close');
+                    });
+                },
                 buttons: {
                     save: {
                         text: "Save",
@@ -51,9 +57,12 @@ define([
                         text: "Cancel",
                         class: "btn",
                         click: function () {
-                            $(this).remove();
+                            $(this).dialog('close');
                         }
                     }
+                },
+                close: function() {
+                    $(this).dialog('destroy');
                 }
             });
             return this;

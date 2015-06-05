@@ -66,3 +66,27 @@ undefined
 Thu Jun 04 2015 17:09:23 GMT+0300 (Финляндия (лето))
 undefined
 ---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\users\users_34_1433426963474.jpeg'-------------------------------------------------------
+Fri Jun 05 2015 11:54:35 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\posts\posts_3_1433497258206.png'-------------------------------------------------------
+Fri Jun 05 2015 12:49:42 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\posts\posts_46_1433496900956.jpeg'-------------------------------------------------------
+Fri Jun 05 2015 14:20:41 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\posts\posts_45_1433236555921.jpg'-------------------------------------------------------
+Fri Jun 05 2015 14:22:20 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\posts\posts_43_1433236521023.jpg'-------------------------------------------------------
+Fri Jun 05 2015 14:28:14 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------
+------------------------------ -> image physical destroying ->  imageUpload.removeImageError: ENOENT, unlink 'c:\Users\root\WebstormProjects\Travlr-Server\public\uploads\posts\posts_47_1433236820266.jpg'-------------------------------------------------------
+Fri Jun 05 2015 14:28:29 GMT+0300 (Финляндия (лето))
+undefined
+---------------------------------------------------------------------------------------------------------

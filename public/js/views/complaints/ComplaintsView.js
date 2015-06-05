@@ -237,7 +237,7 @@ define([
 
             e.stopPropagation();
             deleteConfirm = confirm("Are you sure you want to delete?");
-            
+
             if (deleteConfirm) {
                 if (targetClass.indexOf('deleteButton') !== -1) {
                     id = $(e.target).closest("tr").data("id");

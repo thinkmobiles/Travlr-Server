@@ -20,8 +20,10 @@ define([
             var editData = {
                 title: this.$el.find('#title').val(),
                 body: this.$el.find('#body').val(),
-                lon: this.model.attributes.lon,
-                lat: this.model.attributes.lat,
+//                lon: this.model.attributes.lon,
+//                lat: this.model.attributes.lat,
+                lon: this.$el.find('#lon').val(),
+                lat: this.$el.find('#lat').val(),
                 country: {
                     name: this.model.attributes.country.name,
                     city: this.model.attributes.city.name,
