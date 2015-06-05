@@ -262,6 +262,13 @@ Users = function (PostGre) {
 
     this.getUsersCount = function (req, res, next) {
         var query = PostGre.knex(TABLES.USERS);
+        var searchTerm = req.query.searchTerm;
+
+        if (searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            query.whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' "
+            );
+        }
 
         query
             .where('role', '=', CONSTANTS.USERS_ROLES.USER)

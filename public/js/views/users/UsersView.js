@@ -17,6 +17,7 @@ define([
             this.contentType = "users";
             this.sort = this.collection.sort;
             this.page = this.collection.page;
+            this.searchTerm = this.collection.searchTerm;
             this.defaultItemsNumber = this.collection.count || 50;
             this.collection.bind('add', this.addElement, this);
             this.getTotalLength(null, this.defaultItemsNumber);
@@ -39,12 +40,19 @@ define([
             "click #firstShowPage": "firstPage",
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
-            "click #nextPage": "nextPage"
+            "click #nextPage": "nextPage",
+            "click #searchButton": "search"
+        },
+
+        search: function (e) {
+            this.searchTerm = e.target.previousElementSibling.value;
+            this.fetchCollection();
+            this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
         },
 
         previousPage: function (event) {
             $("#top-bar-deleteBtn").hide();
-            $('#check_all').prop('checked', false);
+            $('#check_all').p+rop('checked', false);
             event.preventDefault();
             custom.prevP.call(this, {
                 sort: this.sort
@@ -114,6 +122,7 @@ define([
             this.collection = new userCollection({
                 sort: this.sort,
                 page: this.page,
+                searchTerm: this.searchTerm,
                 count: this.defaultItemsNumber
             });
             this.collection.bind('reset', this.renderContent, this);
@@ -155,10 +164,16 @@ define([
             custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
-        getTotalLength: function (currentNumber, itemsNumber) {
+        getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
             var self = this;
-            custom.getData('/users/count', {
-            }, function (response) {
+            var urlData = {};
+
+            urlData.searchTerm = searchTerm || this.searchTerm || null;
+            if (urlData.searchTerm === null) {
+                delete urlData.searchTerm;
+            }
+
+            custom.getData('/users/count', urlData, function (response) {
                 var page = self.page || 1;
                 var length = self.listLength = response.count || 0;
                 if (itemsNumber * (page - 1) > length) {
