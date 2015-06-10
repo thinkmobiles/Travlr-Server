@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var PostsHandler = require('../handlers/posts');
+var Session = require('../handlers/sessions');
 
 module.exports = function (PostGre, app) {
    var postsHandler = new PostsHandler(PostGre, app);
+   var session = new Session(PostGre);
+
 
     router.route('/')
         .get(postsHandler.getPosts)
@@ -19,10 +22,10 @@ module.exports = function (PostGre, app) {
     router.get('/feesCountryCount/:uId', postsHandler.getFeesCountByCountry);
 
     router.route('/:id')
-        .get(postsHandler.getPostById)
-        .delete(postsHandler.deletePost)
-        .put(postsHandler.updatePost)
-        .patch(postsHandler.updatePost);
+        .get(session.checkAccessRights, postsHandler.getPostById)
+        .delete(session.checkAccessRights, postsHandler.deletePost)
+        .put(session.checkAccessRights, postsHandler.updatePost)
+        .patch(session.checkAccessRights, postsHandler.updatePost);
 
 
     return router;

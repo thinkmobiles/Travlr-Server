@@ -15,6 +15,7 @@ module.exports = {
     // Validation errors
     NOT_UNIQUE_EMAIL: 'Email not unique',
     UNCOFIRMED_EMAIL: 'Email is unconfirmed',
+    INVALID_PATH: 'Invalid path',
 
 
     IMAGE_DESTROY: ' -> image physical destroying ->  imageUpload.removeImage',

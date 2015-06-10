@@ -414,7 +414,7 @@ Users = function (PostGre) {
      };*/
 
     this.deleteUsersImage = function (req, res, next) {
-        var userId = req.session.userId;
+        var userId = req.params.id;
         var imageType = TABLES.USERS;
         var imageData = {
             imageable_id: userId,

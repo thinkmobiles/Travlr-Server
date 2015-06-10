@@ -18,17 +18,17 @@ module.exports = function (PostGre, app) {
     //router.post('/image', usersHandler.createUsersImage);
 
     router.get('/signOut', usersHandler.signOut);
-    router.get('/count', usersHandler.getUsersCount);
+    router.get('/count', session.isAdmin, usersHandler.getUsersCount);
     router.get('/confirm', usersHandler.confirmEmail);
-    router.get('/:id', usersHandler.getUserById);
-    router.get('/', usersHandler.getUsers);
+    router.get('/:id', session.checkAccessRights , usersHandler.getUserById);
+    router.get('/', session.isAdmin, usersHandler.getUsers);
 
     //router.put('/image', usersHandler.updateUsersImage);
-    router.put('/:id', usersHandler.updateUser);
-    router.patch('/:id', usersHandler.updateUser);
+    router.put('/:id', session.checkAccessRights, usersHandler.updateUser);
+    router.patch('/:id', session.checkAccessRights, usersHandler.updateUser);
 
-    router.delete('/image', usersHandler.deleteUsersImage);
-    router.delete('/:id', usersHandler.deleteUser);
+    router.delete('/image/:id', session.checkAccessRights, usersHandler.deleteUsersImage);
+    router.delete('/:id', session.checkAccessRights, usersHandler.deleteUser);
 
     return router;
 };

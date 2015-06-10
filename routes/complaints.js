@@ -15,7 +15,7 @@ module.exports = function (PostGre, app) {
 
     router.post('/',complaintsHandler.createComplaint);
 
-    router.delete('/:id',complaintsHandler.deleteComplaint);
+    router.delete('/:id', session.isAdmin, complaintsHandler.deleteComplaint);
     router.get('/:id',complaintsHandler.getComplaint);
 
     router.get('/',complaintsHandler.getComplaints);

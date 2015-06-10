@@ -12,13 +12,13 @@ module.exports = function (PostGre, app) {
         res.status(200).send('Test OK');
     });
 
-    router.post('/',infoHandler.createInfo);
+    router.post('/', session.isAdmin, infoHandler.createInfo);
 
-    router.put('/:id',infoHandler.updateInfo);
+    router.put('/:id', session.isAdmin, infoHandler.updateInfo);
 
-    router.delete('/:id',infoHandler.deleteInfo);
+    router.delete('/:id', session.isAdmin, infoHandler.deleteInfo);
 
-    router.get('/',infoHandler.getInfo);
+    router.get('/', infoHandler.getInfo);
     router.get('/:id',infoHandler.getInfoById);
 
     return router;

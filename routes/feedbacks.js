@@ -13,8 +13,8 @@ module.exports = function (PostGre, app) {
 
     router.post('/',feedbacksHandler.createFeedback);
 
-    router.put('/:id',feedbacksHandler.updateFeedback);
-    router.patch('/:id',feedbacksHandler.updateFeedback);
+    router.put('/:id', session.isAdmin, feedbacksHandler.updateFeedback);
+    router.patch('/:id', session.isAdmin, feedbacksHandler.updateFeedback);
 
     router.delete('/:id',feedbacksHandler.deleteFeedback);
 
