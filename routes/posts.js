@@ -9,20 +9,20 @@ module.exports = function (PostGre, app) {
 
 
     router.route('/')
-        .get(postsHandler.getPosts)
-        .post(postsHandler.createPost);
+        .get(session.isAuthenticated, postsHandler.getPosts)
+        .post(session.checkAccessRights, postsHandler.createPost);
 
     router.route('/count')
-        .get(postsHandler.getPostsCount);
+        .get(session.isAuthenticated, postsHandler.getPostsCount);
 
-    router.get('/count', postsHandler.getPostsCount);
+    router.get('/count', session.isAuthenticated, postsHandler.getPostsCount);
 
-    router.get('/feesCount/:uId', postsHandler.getFeesCount);
-    router.get('/feesPoints/:uId', postsHandler.getFeesPoints);
-    router.get('/feesCountryCount/:uId', postsHandler.getFeesCountByCountry);
+    router.get('/feesCount/:uId', session.isAuthenticated, postsHandler.getFeesCount);
+    router.get('/feesPoints/:uId', session.isAuthenticated, postsHandler.getFeesPoints);
+    router.get('/feesCountryCount/:uId', session.isAuthenticated, postsHandler.getFeesCountByCountry);
 
     router.route('/:id')
-        .get(session.checkAccessRights, postsHandler.getPostById)
+        .get(session.isAuthenticated, postsHandler.getPostById)
         .delete(session.checkAccessRights, postsHandler.deletePost)
         .put(session.checkAccessRights, postsHandler.updatePost)
         .patch(session.checkAccessRights, postsHandler.updatePost);

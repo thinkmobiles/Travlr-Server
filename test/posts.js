@@ -37,7 +37,6 @@ describe('Posts Test:', function () {
             });
     });
 
-
     it('Create user', function (done) {
         if (needCreateAdmin) {
             agent
@@ -59,6 +58,32 @@ describe('Posts Test:', function () {
     it('Get posts', function (done) {
         agent
             .get('/posts')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Get fees points', function (done) {
+        agent
+            .get('/posts/feesCountryCount/14')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Get fees Country Count', function (done) {
+        agent
+            .get('/posts/feesCountryCount/14')
             .expect(200)
             .end(function (err, res) {
                 if (err) {
@@ -157,7 +182,7 @@ describe('Posts Test:', function () {
                 }
             });
     });
-/*
+
     it('Delete post by ID', function (done) {
         agent
             .delete('/posts/' + postId)
@@ -170,5 +195,5 @@ describe('Posts Test:', function () {
                 }
             });
 
-    });*/
+    });
 });

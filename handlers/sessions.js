@@ -105,26 +105,6 @@ var Session = function (PostGre) {
                     })
                     .otherwise(next)
 
-            } else if (tableName === TABLES.POSTS) {
-                query
-                    .where('id', reqId)
-                    .then(function (post) {
-                        if (!post || !post.length) {
-                            err = new Error(RESPONSES.INVALID_PARAMETERS);
-                            err.status = 400;
-                            next(err)
-                        } else {
-                            if (post[0].author_id !== userId) {
-                                err = new Error(RESPONSES.FORBIDDEN);
-                                err.status = 403;
-                                next(err)
-                            } else {
-                                next()
-                            }
-                        }
-                    })
-                    .otherwise(next)
-
             }  else {
                 err = new Error(RESPONSES.INVALID_PATH);
                 err.status = 400;
