@@ -23,14 +23,14 @@ Posts = function (PostGre) {
     });
 
     this.checkUpdatePostOptions = new Validation.Check({
-        /*body: ['required'],
+        body: ['required'],
         //author_id: ['required'],
         title: ['required'],
         lon: ['required'],
         lat: ['required'],
         type: ['isArray'],
         city_id: ['required'],
-        country_id: ['required']*/
+        country_id: ['required']
     });
 
     this.getCountryCity = function (location, callback) {
