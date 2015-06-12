@@ -34,6 +34,17 @@ var Session = function (PostGre) {
          }*/
     };
 
+    this.isAuthorized = function (req, res, next) {
+        var err;
+        if (req.session && req.session.userId) {
+            next()
+        } else {
+            err = new Error(RESPONSES.UNAUTHORIZED);
+            err.status = 401;
+            next(err);
+        }
+    };
+
     this.isAdmin = function (req, res, next) {
         var err;
 
