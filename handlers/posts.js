@@ -362,7 +362,7 @@ Posts = function (PostGre) {
     };
 
     this.updatePost = function (req, res, next) {
-        // TODO need check user/admin access
+
         var options = req.body;
         var postId = req.params.id;
         var saveData;
@@ -398,16 +398,20 @@ Posts = function (PostGre) {
                         if (err) {
                             next(err);
                         } else {
-                            imageData = {
-                                image: options.image,
-                                imageable_type: TABLES.POSTS,
-                                imageable_id: postId
-                            };
-                            imagesHelper.updateImageByOptions(imageData, function (err, resp) {
-                                if (!err) {
-                                    res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
-                                }
-                            });
+                            if(options.image && typeof options.image == 'string' && options.image.indexOf(';base64,') >= 0){
+                                imageData = {
+                                    image: options.image,
+                                    imageable_type: TABLES.POSTS,
+                                    imageable_id: postId
+                                };
+                                imagesHelper.updateImageByOptions(imageData, function (err, resp) {
+                                    if (!err) {
+                                        res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                                    }
+                                });
+                            }else{
+                                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                            }
                         }
                     });
                 } else {

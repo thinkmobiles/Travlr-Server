@@ -215,7 +215,7 @@ define([
                 this.$el.find("table tr td input").each(function () {
                     $(this).prop("checked", true);
                 });
-                this.$el.find(".remove").show();
+                this.$el.find(".remove").toggle();
                 if (this.checkItemCount == 1) {
                     this.$el.find(".edit").show();
                 } else {
