@@ -1,9 +1,9 @@
 define([
-    'js/views/posts/EditPostView',
-    'js/views/posts/CreatePostView',
-    "js/collections/posts/postsCollections",
-    'text!templates/posts/PostsTemplate.html',
-    'text!templates/posts/ListTemplate.html',
+    'views/posts/EditPostView',
+    'views/posts/CreatePostView',
+    "collections/posts/postsCollections",
+    'text!/templates/posts/PostsTemplate.html',
+    'text!/templates/posts/ListTemplate.html',
     'custom',
     'constants/responses'
 ], function (EditPostView, CreatePostView, postsCollection, PostsTemplate, ListTemplate, custom, RESPONSES) {
@@ -112,7 +112,6 @@ define([
             $('#check_all').prop('checked', false);
             custom.changeLocationHash.call(this, 1, itemsNumber);
         },
-
 
         fetchCollection: function () {
             this.checkItemCount = 0;
@@ -324,11 +323,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {usersCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

@@ -1,5 +1,5 @@
 define([
-    'text!templates/topMenu/TopMenuTemplate.html'
+    'text!/templates/topMenu/TopMenuTemplate.html'
 ], function (TopMenuTemplate) {
 
     var TopMenuView = Backbone.View.extend({

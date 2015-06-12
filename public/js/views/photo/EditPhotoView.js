@@ -1,7 +1,7 @@
 define([
-    'text!templates/photo/EditTemplate.html',
-    'js/models/PhotoModel',
-	'js/collections/users/usersCollections'
+    'text!/templates/photo/EditTemplate.html',
+    'modelsPhotoModel',
+	'collections/users/usersCollections'
 
 ], function (EditFakePhotoTemplate,PhotoModel, UsersCollections) {
 

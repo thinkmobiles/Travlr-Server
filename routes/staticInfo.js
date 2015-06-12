@@ -7,19 +7,14 @@ module.exports = function (PostGre, app) {
     var session = new Session(PostGre);
     var infoHandler = new InfoHandler(PostGre, app);
 
-
-    router.get('/test', function(req, res, next){
-        res.status(200).send('Test OK');
-    });
-
+    router.get('/',infoHandler.getInfo);
+    router.get('/:id',infoHandler.getInfoById);
     router.post('/', session.isAdmin, infoHandler.createInfo);
-
-    router.put('/:id', session.isAdmin, infoHandler.updateInfo);
+    router.patch('/:id', session.isAdmin, infoHandler.updateInfo);
 
     router.delete('/:id', session.isAdmin, infoHandler.deleteInfo);
 
-    router.get('/', infoHandler.getInfo);
-    router.get('/:id',infoHandler.getInfoById);
+   // router.get('/', infoHandler.getInfo);
 
     return router;
 };

@@ -1,5 +1,5 @@
 define([
-    'text!templates/login/LoginTemplate.html',
+    'text!/templates/login/LoginTemplate.html',
     'custom'
 ], function (LoginTemplate, Custom) {
 

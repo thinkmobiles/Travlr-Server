@@ -1,5 +1,5 @@
 define([
-        'text!templates/main/MainTemplate.html'
+        'text!/templates/main/MainTemplate.html'
     ], function(MainTemplate) {
 
         var MainView = Backbone.View.extend({

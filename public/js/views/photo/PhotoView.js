@@ -1,8 +1,8 @@
 define([
-    'js/collections/Photos/fakePhotosCollection.js',
-    'js/views/photo/EditPhotoView',
-    'text!templates/photo/ListTemplate.html',
-    'text!templates/photo/PhotosTemplate.html',
+    'collections/Photos/fakePhotosCollection.js',
+    'views/photo/EditPhotoView',
+    'text!/templates/photo/ListTemplate.html',
+    'text!/templates/photo/PhotosTemplate.html',
 	'custom'
 ], function (photosCollection, EditPhotoView, ListTemplate, PhotosTemplate, custom) {
 

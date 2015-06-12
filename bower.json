@@ -1,0 +1,29 @@
+{
+  "name": "Travlr-Server",
+  "version": "0.0.0",
+  "homepage": "https://github.com/thinkmobiles/Travlr-Server",
+  "authors": [
+    ""
+  ],
+  "keywords": [
+    "travlr-server"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.2.1",
+    "jquery": "~2.1.4",
+    "jqueryui": "~1.11.4",
+    "text": "~2.0.14",
+    "moment": "~2.10.3",
+    "requirejs": "~2.1.18",
+    "less": "~2.5.1",
+    "trumbowyg": "~1.1.7"
+  }
+}

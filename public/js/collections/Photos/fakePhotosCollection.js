@@ -1,5 +1,5 @@
 define([
-    "js/models/PhotoModel"
+    "modelsPhotoModel"
 ],
        function (PhotoModel) {
            var PhotoCollection = Backbone.Collection.extend({

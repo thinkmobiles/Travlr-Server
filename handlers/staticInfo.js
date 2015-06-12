@@ -22,7 +22,7 @@ Static_Info = function (PostGre) {
             .then(function (info) {
                 info = info.toJSON();
                 redisClient.cacheStore.writeToStorage(info.id, info.updated_at);
-                res.status(201).send({success: RESPONSES.WAS_CREATED})
+                res.status(201).send(info);
             })
             .otherwise(next)
     };
@@ -41,7 +41,7 @@ Static_Info = function (PostGre) {
             .then(function (info) {
                 info = info.toJSON();
                 redisClient.cacheStore.writeToStorage(info.id, info.updated_at);
-                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                res.status(200).send(info)
             })
             .otherwise(next)
     };
@@ -100,7 +100,7 @@ Static_Info = function (PostGre) {
             })
             .then(function (info) {
                 if (info && info.id) {
-                    res.status(200).send(info)
+                    res.status(200).send(info);
                 } else {
                     error = new Error(RESPONSES.INVALID_PARAMETERS);
                     error.status = 400;

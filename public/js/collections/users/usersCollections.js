@@ -1,5 +1,5 @@
 define([
-    "js/models/UserModel"
+    "models/UserModel"
 ],
     function (UserModel) {
         var UsersCollection = Backbone.Collection.extend({

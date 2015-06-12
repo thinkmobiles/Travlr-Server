@@ -1,6 +1,6 @@
 define([
-    'text!templates/feedbacks/CreateTemplate.html',
-    'js/models/FeedbackModel',
+    'text!/templates/feedbacks/CreateTemplate.html',
+    'models/FeedbackModel',
     'custom'
 
 ], function (CreateFakeFeedbackTemplate, FeedbackModel, custom) {

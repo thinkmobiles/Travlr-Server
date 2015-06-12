@@ -1,6 +1,6 @@
 define([
-    'text!templates/feedbacks/EditTemplate.html',
-    'js/models/FeedbackModel',
+    'text!/templates/feedbacks/EditTemplate.html',
+    'models/FeedbackModel',
     'custom',
     'constants/responses'
 

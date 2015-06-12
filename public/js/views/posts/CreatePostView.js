@@ -1,6 +1,6 @@
 define([
-    'text!templates/posts/CreateTemplate.html',
-    'js/models/PostModel',
+    'text!/templates/posts/CreateTemplate.html',
+    'models/PostModel',
     'custom'
 
 ], function (CreatePostTemplate, PostModel, custom) {

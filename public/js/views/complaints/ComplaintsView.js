@@ -1,8 +1,8 @@
 define([
-    'js/views/complaints/EditComplaintView',
-    "js/collections/complaints/complaintsCollection",
-    'text!templates/complaints/ComplaintsTemplate.html',
-    'text!templates/complaints/ListTemplate.html',
+    'views/complaints/EditComplaintView',
+    "collections/complaints/complaintsCollection",
+    'text!/templates/complaints/ComplaintsTemplate.html',
+    'text!/templates/complaints/ListTemplate.html',
     'custom',
     'constants/responses'
 ], function (EditComplaintView, complaintsCollection, ComplaintsTemplate, ListTemplate, custom, RESPONSES) {
@@ -315,11 +315,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate, {complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

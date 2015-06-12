@@ -1,8 +1,8 @@
 define([
-    'text!templates/moderation/ModerationTemplate.html',
-    'text!templates/moderation/ListTemplate.html',
-    "js/collections/Photos/photosCollection",
-    'js/models/PhotoModel',
+    'text!/templates/moderation/ModerationTemplate.html',
+    'text!/templates/moderation/ListTemplate.html',
+    "collections/Photos/photosCollection",
+    'modelsPhotoModel',
     'custom'
 ], function (ModerationTemplate, ListTemplate, photosCollection, PhotoModel, custom) {
 

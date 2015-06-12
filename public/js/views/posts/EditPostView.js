@@ -1,6 +1,6 @@
 define([
-    'text!templates/posts/EditTemplate.html',
-    'js/models/PostModel',
+    'text!/templates/posts/EditTemplate.html',
+    'models/PostModel',
     'custom',
     'constants/responses'
 

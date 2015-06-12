@@ -1,6 +1,6 @@
 define([
-    'text!templates/complaints/EditTemplate.html',
-    'js/models/ComplaintModel',
+    'text!/templates/complaints/EditTemplate.html',
+    'models/ComplaintModel',
     'custom',
     'constants/responses'
 

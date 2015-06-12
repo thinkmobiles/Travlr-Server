@@ -1,9 +1,9 @@
 define([
-    'js/views/feedbacks/EditFeedbackView',
-    'js/views/feedbacks/CreateFeedbackView',
-    "js/collections/feedbacks/feedbacksCollection",
-    'text!templates/feedbacks/feedbacksTemplate.html',
-    'text!templates/feedbacks/ListTemplate.html',
+    'views/feedbacks/EditFeedbackView',
+    'views/feedbacks/CreateFeedbackView',
+    "collections/feedbacks/feedbacksCollection",
+    'text!/templates/feedbacks/feedbacksTemplate.html',
+    'text!/templates/feedbacks/ListTemplate.html',
     'custom',
     'constants/responses'
 ], function (EditFeedbackView, CreateFeedbackView,  feedbacksCollection, feedbacksTemplate, ListTemplate, custom, RESPONSES) {
@@ -309,11 +309,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#feedbacksList tbody:last").html(_.template(ListTemplate, {feedbacksCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#feedbacksList tbody:last").html(_.template(ListTemplate)({feedbacksCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#feedbacksList tbody:last").html(_.template(ListTemplate, {feedbacksCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#feedbacksList tbody:last").html(_.template(ListTemplate)({feedbacksCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

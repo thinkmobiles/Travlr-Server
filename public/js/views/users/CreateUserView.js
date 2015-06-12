@@ -1,6 +1,6 @@
 define([
-    'text!templates/users/CreateTemplate.html',
-    'js/models/UserModel',
+    'text!/templates/users/CreateTemplate.html',
+    'models/UserModel',
 	'custom'
 
 ], function (CreateFakeUserTemplate, UserModel, custom) {

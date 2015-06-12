@@ -1,8 +1,9 @@
-﻿process.env.APP_HOST = 'http://192.168.88.52';
-process.env.HOST = 'localhost:3035';
+﻿﻿process.env.APP_HOST = 'http://192.168.88.21';
 process.env.DB_HOST = '192.168.88.250';
-//process.env.APP_HOST = 'http://localhost';
 //process.env.DB_HOST = 'localhost';
+//process.env.APP_HOST = 'http://localhost';
+process.env.HOST = 'localhost';
+//process.env.HOST = '192.168.88.84:3035';
 process.env.DB_USER = "postgres";
 process.env.DB_PASS = "postgres";
 process.env.DB_NAME = "travlr_dev";

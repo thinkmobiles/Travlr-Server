@@ -1,5 +1,5 @@
 define([
-        "js/models/ComplaintModel"
+        "models/ComplaintModel"
     ],
     function (ComplaintModel) {
         var ComplaintsCollection = Backbone.Collection.extend({

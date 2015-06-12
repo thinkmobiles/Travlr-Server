@@ -1,5 +1,5 @@
 define([
-        "js/models/PostModel"
+        "models/PostModel"
     ],
     function (PostModel) {
         var PostsCollection = Backbone.Collection.extend({
