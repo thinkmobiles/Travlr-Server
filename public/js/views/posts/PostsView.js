@@ -30,7 +30,7 @@ define([
             "click .deleteButton": "removePosts",
             "click .create": "createPost",
             "click .checkAll": "checkAll",
-            "click table.fakeUserList tr": "check",
+            "click table#postList td": "check",
             "click .oe-sortable": "goSort",
             "click .itemsNumber": "switchPageCounter",
             "click #itemsButton": "itemsNumber",
@@ -194,7 +194,9 @@ define([
             if (currentCheckbox.prop("checked")) {
                 this.checkItemCount++;
             } else {
-                this.checkItemCount--;
+                if(this.checkItemCount > 0){
+                    this.checkItemCount--;
+                }
             }
             if (this.checkItemCount) {
                 this.$el.find(".remove").show();
@@ -323,11 +325,11 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#postList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#userList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#postList tbody:last").html(_.template(ListTemplate)({postsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
             return this;
         }
 

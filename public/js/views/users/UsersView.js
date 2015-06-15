@@ -29,9 +29,8 @@ define([
             "click .editButton": "editUser",
             "click .remove": "removeUsers",
             "click .deleteButton": "removeUsers",
-            "click .create": "createUser",
             "click .checkAll": "checkAll",
-            "click table.fakeUserList tr": "check",
+            "click table.fakeUserList td": "check",
             "click .oe-sortable": "goSort",
             "click .itemsNumber": "switchPageCounter",
             "click #itemsButton": "itemsNumber",
@@ -194,9 +193,11 @@ define([
             if (currentCheckbox.prop("checked")) {
                 this.checkItemCount++;
             } else {
-                this.checkItemCount--;
+                if(this.checkItemCount > 0){
+                    this.checkItemCount--;
+                }
             }
-            if (this.checkItemCount) {
+            if (this.checkItemCount > 0) {
                 this.$el.find(".remove").show();
                 if (this.checkItemCount == 1) {
                     this.$el.find(".edit").show();
@@ -312,10 +313,6 @@ define([
                 error: custom.errorHandler
             });
 
-            return false;
-        },
-        createUser: function (e) {
-            new CreateUserView({collection: this.collection});
             return false;
         },
         render: function (options) {

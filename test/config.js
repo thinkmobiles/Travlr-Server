@@ -59,8 +59,8 @@ module.exports = function () {
             "name": "Ukraine1",
             "city": "Uzhhorod",
             "code" : "UA1"
-        },
-        "image": image2
+        }//,
+       // "image": image2
     };
 
     this.user = {

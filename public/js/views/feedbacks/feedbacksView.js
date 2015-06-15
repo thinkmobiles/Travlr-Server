@@ -30,7 +30,7 @@ define([
             "click .deleteButton": "removeFeedback",
             "click .create": "createFeedback",
             "click .checkAll": "checkAll",
-            "click table.fakeUserList tr": "check",
+            "click table#feedbacksList tbody td": "check",
             "click .oe-sortable": "goSort",
             "click .itemsNumber": "switchPageCounter",
             "click #itemsButton": "itemsNumber",
@@ -251,7 +251,9 @@ define([
             if (currentCheckbox.prop("checked")) {
                 this.checkItemCount++;
             } else {
-                this.checkItemCount--;
+                if( this.checkItemCount > 0){
+                    this.checkItemCount--;
+                }
             }
             if (this.checkItemCount) {
                 this.$el.find(".remove").show();
