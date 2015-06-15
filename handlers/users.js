@@ -280,7 +280,6 @@ Users = function (PostGre) {
     };
 
     this.updateUser = function (req, res, next) {
-        // TODO need check user/admin access
         var options = req.body;
         var mailOptions;
         options.id = parseInt(req.params.id);
