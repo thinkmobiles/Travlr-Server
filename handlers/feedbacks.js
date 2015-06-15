@@ -4,14 +4,9 @@ var MODELS = require('../constants/models');
 var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
 var Session = require('../handlers/sessions');
-var crypPass = require('../helpers/cryptoPass');
-var cryptoPass = new crypPass();
-var generator = require('../helpers/randomPass.js');
-var Mailer = require('../helpers/mailer.js');
 var Users;
 var async = require('async');
 var crypto = require("crypto");
-var UsersHelper = require('../helpers/users');
 
 Feedbacks = function (PostGre) {
     var FeedbackModel = PostGre.Models[MODELS.FEEDBACK];
@@ -29,7 +24,7 @@ Feedbacks = function (PostGre) {
                 body: options.body
             })
             .then(function () {
-               res.status(201).send({success: RESPONSES.WAS_CREATED})
+                res.status(201).send({success: RESPONSES.WAS_CREATED})
             })
             .otherwise(next)
     };
@@ -52,7 +47,7 @@ Feedbacks = function (PostGre) {
                             body: options.body
                         },
                         {
-                            patch:true
+                            patch: true
                         })
                         .then(function () {
                             res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
@@ -68,29 +63,15 @@ Feedbacks = function (PostGre) {
     };
 
     this.deleteFeedback = function (req, res, next) {
-        // TODO fix delete. use knex.
         var feedbackId = req.params.id;
-        var userId = req.session.userId;
-        var error;
 
         FeedbackModel
             .forge({
                 id: feedbackId
             })
-            .fetch()
-            .then(function (feedback) {
-                if (userId === feedback.get('author_id')) {
-                    feedback
-                        .destroy()
-                        .then(function () {
-                            res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
-                        })
-                        .otherwise(next)
-                } else {
-                    error = new Error(RESPONSES.FORBIDDEN);
-                    error.status = 403;
-                    next(error);
-                }
+            .destroy()
+            .then(function () {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
             })
             .otherwise(next)
     };
@@ -104,7 +85,6 @@ Feedbacks = function (PostGre) {
         var sortName;
         var sortAliase;
         var sortOrder;
-
 
 
         FeedbackCollection
@@ -130,15 +110,17 @@ Feedbacks = function (PostGre) {
                     .limit(limit)
             })
             .fetch({
-                withRelated: [{
-                    author: function() {
-                        this.columns([
-                            'id',
-                            'first_name',
-                            'last_name'
-                        ])
+                withRelated: [
+                    {
+                        author: function () {
+                            this.columns([
+                                'id',
+                                'first_name',
+                                'last_name'
+                            ])
+                        }
                     }
-                }],
+                ],
                 columns: [
                     'id',
                     'author_id',
@@ -161,15 +143,17 @@ Feedbacks = function (PostGre) {
                 id: feedbackId
             })
             .fetch({
-                withRelated: [{
-                    author: function() {
-                        this.columns([
-                            'id',
-                            'first_name',
-                            'last_name'
-                        ])
+                withRelated: [
+                    {
+                        author: function () {
+                            this.columns([
+                                'id',
+                                'first_name',
+                                'last_name'
+                            ])
+                        }
                     }
-                }],
+                ],
                 columns: [
                     'id',
                     'author_id',

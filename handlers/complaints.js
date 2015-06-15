@@ -4,14 +4,9 @@ var MODELS = require('../constants/models');
 var COLLECTIONS = require('../constants/collections');
 var CONSTANTS = require('../constants/constants');
 var Session = require('../handlers/sessions');
-var crypPass = require('../helpers/cryptoPass');
-var cryptoPass = new crypPass();
-var generator = require('../helpers/randomPass.js');
-var Mailer = require('../helpers/mailer.js');
 var Users;
 var async = require('async');
 var crypto = require("crypto");
-var UsersHelper = require('../helpers/users');
 
 Complaints = function (PostGre) {
     var ComplaintModel = PostGre.Models[MODELS.COMPLAINT];
