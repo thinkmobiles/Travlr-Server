@@ -9,8 +9,8 @@ module.exports = function (PostGre, app) {
 
 
     router.route('/')
-        .get( postsHandler.getPosts)
-        .post(session.checkAccessRights, postsHandler.createPost);
+        .get(postsHandler.getPosts)
+        .post(postsHandler.createPost);
 
     router.route('/count')
         .get( postsHandler.getPostsCount);

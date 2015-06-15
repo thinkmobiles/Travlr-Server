@@ -47,6 +47,7 @@ define([
             this.searchTerm = e.target.previousElementSibling.value;
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
+            ///this.renderContent();
         },
 
         previousPage: function (event) {
@@ -91,17 +92,26 @@ define([
 
         showPage: function (event) {
             event.preventDefault();
+            $("#pageList").hide();
             custom.showP.call(this, event, { sort: this.sort }, custom);
+
+           /* event.preventDefault();
+            this.showP(event, {sort: this.sort});*/
+            //
         },
 
         itemsNumber: function (e) {
-            $(e.target).closest("button").next("ul").toggle();
+            var list = $(e.target).closest("button").next("ul");
+            list.toggle();
+            $('.allNumberPerPage').onblur = function(){
+                $(this).hide();
+            };
             return false;
         },
 
         switchPageCounter: function (e) {
             e.preventDefault();
-            $(e.target).closest(".popUp").hide();
+            $(e.target).closest(".allNumberPerPage").hide();
             this.startTime = new Date();
             var itemsNumber = event.target.textContent;
             this.defaultItemsNumber = itemsNumber;
@@ -124,8 +134,8 @@ define([
                 searchTerm: this.searchTerm,
                 count: this.defaultItemsNumber
             });
-           // this.collection.bind('reset', this.renderContent, this);
-//			this.collection.bind('remove', this.deleteElement, this);
+            this.collection.bind('reset', this.renderContent, this);
+			this.collection.bind('remove', this.deleteElement, this);
             this.collection.bind('add', this.addElement, this);
         },
 

@@ -26,6 +26,11 @@ define([
         },
 
         initialize: function () {
+            $(document).on("click", function (e) {
+                if ($(e.target).closest(".popUp").length === 0 ) {
+                    $(".popUp").hide();
+                }
+            });
 			/*$(document).on("click", function (e) {
                 var overflow = $('#dialog-overflow');
                 var dialogs = overflow.find(".trill-dialog");

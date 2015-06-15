@@ -377,28 +377,38 @@ Posts = function (PostGre) {
 
         async.parallel([
                 function (cb) {
-                    cityData = {
-                        name: saveData.city
-                    };
-                    cityHelper.createCityByOptions(cityData, cb);
+                    if(saveData.city){
+                        cityData = {
+                            name: saveData.city
+                        };
+                        cityHelper.createCityByOptions(cityData, cb);
+                    }else{
+                        cb();
+                    }
                 },
                 function (cb) {
-                    countryData = {
-                        name: saveData.countryName,
-                        code: saveData.countryCode
-                    };
-                    countryHelper.createCountryByOptions(countryData, cb);
+                    if(saveData.countryName && saveData.countryCode){
+                        countryData = {
+                            name: saveData.countryName,
+                            code: saveData.countryCode
+                        };
+                        countryHelper.createCountryByOptions(countryData, cb);
+                    }else{
+                        cb();
+                    }
                 }
             ],
             function (err, results) {
                 if (!err) {
-                    saveData.city_id = results[0].id;
-                    saveData.country_id = results[1].id;
+                    if(results && results[0]){
+                        saveData.city_id = results[0].id;
+                        saveData.country_id = results[1].id;
+                    }
                     postsHelper.updatePostByOptions(saveData, function (err, resp) {
                         if (err) {
                             next(err);
                         } else {
-                            if(options.image && typeof options.image == 'string' && options.image.indexOf(';base64,') >= 0){
+                            if(options.image && typeof options.image == 'string'){
                                 imageData = {
                                     image: options.image,
                                     imageable_type: TABLES.POSTS,

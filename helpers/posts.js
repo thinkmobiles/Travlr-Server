@@ -23,18 +23,17 @@ Posts = function (PostGre) {
     });
 
     this.checkUpdatePostOptions = new Validation.Check({
-        body: ['required'],
+        body: ['isString'],
         //author_id: ['required'],
-        title: ['required'],
-        lon: ['required'],
-        lat: ['required'],
+        title: ['isString'],
+        lon: ['isFloat'],
+        lat: ['isFloat'],
         type: ['isArray'],
-        city_id: ['required'],
-        country_id: ['required']
+        city_id: ['isInt'],
+        country_id: ['isInt']
     });
 
     this.getCountryCity = function (location, callback) {
-
         if (location.lat && location.lon) {
             var lngStr = location.lon + ',' + location.lat;
             gm.reverseGeocode(lngStr, function (err, data) {
@@ -62,7 +61,6 @@ Posts = function (PostGre) {
                 }
             });
         }
-
     };
 
 
