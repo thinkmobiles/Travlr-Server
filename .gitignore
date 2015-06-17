@@ -3,3 +3,5 @@
 node_modules
 migrations/node_modules
 config/development.js
+config
+log.txt
