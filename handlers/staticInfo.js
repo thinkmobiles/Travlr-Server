@@ -78,7 +78,7 @@ Static_Info = function (PostGre) {
                 ]
             })
             .then(function (info) {
-                res.status(200).send(info)
+                res.status(200).send(info);
             })
             .otherwise(next)
     };

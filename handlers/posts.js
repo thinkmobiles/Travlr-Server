@@ -39,7 +39,7 @@ Posts = function (PostGre) {
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
             var userId = parseInt(options.uId);
-            var filters = options.filters;
+            var filters = options.tags;
 
             var newestDate;
             var sortName;
@@ -58,7 +58,6 @@ Posts = function (PostGre) {
                         qb.whereRaw(
                             "LOWER(title) LIKE '%" + searchTerm + "%' "
                         )
-
                     }
 
                     if (countryId) {
