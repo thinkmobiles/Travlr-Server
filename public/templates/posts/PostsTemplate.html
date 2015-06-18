@@ -1,6 +1,5 @@
 <div>
     <div id="top-bar">
-        <h3>Posts</h3>
         <div id="searchContainer">
             <input type="text" placeholder="Search term" id="searchTerm"  maxlength="30"/>
             <input type="button" value="Search" id="searchButton"/>
@@ -15,6 +14,14 @@
         </div>
     </div>
     <div class="postListContainer">
+        <div class="clear"></div>
+        <div id="template-switcher" class="footer-switcher right">
+            <ul class="btn-list">
+                <li><a href="javascript:;" class="icon edit" title="Edit" id="top-bar-editBtn">4</a></li>
+                <li><a href="javascript:;" class="remove icon" data-view-type="thumbnails" id="thumbBtn">1</a></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
         <table id="postList">
             <col width="10%"/>
             <col width="10%"/>
@@ -23,7 +30,6 @@
             <col width="10%"/>
             <col width="10%"/>
             <tr class="table-header">
-                <th><input type="checkbox" value="" class="checkAll" /></th>
                 <th>#</th>
                 <th class="oe-sortable" data-sort="name">Name<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
                 <th class="oe-sortable" data-sort="email">Email<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
@@ -32,8 +38,9 @@
                 <th class="oe-sortable" data-sort="country">Country<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
                 <th class="oe-sortable" data-sort="city">City<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
                 <th class="oe-sortable" data-sort="createdDate">Created Date<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
+                <th><input type="checkbox" value="" class="checkAll" /></th>
                 <!--          <th class="oe-sortable" data-sort="baned">Baned<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>-->
-
+                <th></th>
             </tr>
             <tbody>
             </tbody>
