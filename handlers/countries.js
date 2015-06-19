@@ -1,7 +1,7 @@
 var RESPONSES = require('../constants/responseMessages');
+var CONSTANTS = require('../constants/constants');
 var TABLES = require('../constants/tables');
 var COLLECTIONS = require('../constants/collections');
-var CONSTANTS = require('../constants/constants');
 var Countries;
 
 Countries = function (PostGre) {
@@ -52,7 +52,7 @@ Countries = function (PostGre) {
 
         redisClient.cacheStore.readFromStorage(CONSTANTS.REDIS_NAME.COUNTRY, function (err, resp) {
             redisCountryiTag = resp;
-            if (itag) {
+            if (typeof itag !== 'undefined') {
                 if (itag === redisCountryiTag) {
                     res.header('itag', redisCountryiTag);
                     res.status(200).send([]);
