@@ -1,27 +1,29 @@
 <div>
     <div id="top-bar">
-        <h3>Feedbacks</h3>
-        <div id="template-switcher" class="right">
-            <ul class="btn-list">
-                <li><a href="javascript:;" class="icon edit" title="Edit" id="top-bar-editBtn">4</a></li>
-                <li><a href="javascript:;" class="remove icon" data-view-type="thumbnails" id="thumbBtn">x</a></li>
-            </ul>
-        </div>
+
     </div>
     <div class="feedbacksListContainer">
+        <div class="clear"></div>
+        <div id="template-switcher" class="footer-switcher right">
+            <ul class="btn-list">
+                <li><a href="javascript:;" class="icon edit" title="Edit" id="top-bar-editBtn">4</a></li>
+                <li><a href="javascript:;" class="remove icon" data-view-type="thumbnails" id="thumbBtn">1</a></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
         <table id="feedbacksList" class="fakeFeedbacksList">
-            <col width="10%"/>
-            <col width="10%"/>
-            <col width="30%"/>
-            <col width="30%"/>
-            <col width="10%"/>
-            <col width="10%"/>
+            <col width="10px"/>
+            <col width="24%"/>
+            <col width="24%"/>
+            <col width="24%"/>
+            <col width="24%"/>
+
             <tr class="table-header">
-                <th><input type="checkbox" value="" class="checkAll" /></th>
                 <th>#</th>
                 <th class="oe-sortable" data-sort="author_id">Author<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
                 <th class="oe-sortable" data-sort="body">Body<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>
-                <!--          <th class="oe-sortable" data-sort="baned">Baned<span class="arrow up icon">v</span><span class="arrow down icon">7</span></th>-->
+                <th></th>
+                <th><input type="checkbox" value="" class="checkAll" /></th>
 
             </tr>
             <tbody>

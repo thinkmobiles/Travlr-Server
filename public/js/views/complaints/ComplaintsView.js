@@ -1,11 +1,13 @@
 define([
     'views/complaints/EditComplaintView',
+    'views/posts/EditPostView',
+    'models/PostModel',
     "collections/complaints/complaintsCollection",
     'text!/templates/complaints/ComplaintsTemplate.html',
     'text!/templates/complaints/ListTemplate.html',
     'custom',
     'constants/responses'
-], function (EditComplaintView, complaintsCollection, ComplaintsTemplate, ListTemplate, custom, RESPONSES) {
+], function (EditComplaintView, EditPostView, PostModel, complaintsCollection, ComplaintsTemplate, ListTemplate, custom, RESPONSES) {
 
     var ComplaintsView = Backbone.View.extend({
         el: '#content-holder',
@@ -25,6 +27,7 @@ define([
         events: {
             /*"click .edit": "editComplaint",
              "click .editButton": "editComplaint",*/
+            "click .viewButton": "viewPost",
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
             //"click .create": "createPost",
@@ -282,7 +285,6 @@ define([
         },
 
         updateElement: function (model) {
-
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
         },
@@ -290,6 +292,36 @@ define([
         addElement: function (model) {
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber);
+        },
+
+
+        viewPost: function(e){
+            var id;
+            var complainModel;
+            var postModel;
+            var targetClass = $(e.target).attr('class');
+
+            e.stopPropagation();
+
+            if (targetClass.indexOf('viewButton') !== -1) {
+                id = $(e.target).closest("tr").data("id");
+            } else {
+                id = this.$el.find("table tr td input:checked").eq(0).closest("tr").data("id");
+            }
+            complainModel = this.collection.get(id);
+            postModel = new PostModel(complainModel.get('post'));
+            postModel.fetch({
+                success: function (model) {
+                    //model.bind('change', self.updateElement, self);
+                    new EditPostView({model: model});
+                },
+                error: custom.errorHandler
+            });
+
+            //model.bind('change', this.updateElement, this);
+
+            return false;
+
         },
 
         editComplaint: function (e) {

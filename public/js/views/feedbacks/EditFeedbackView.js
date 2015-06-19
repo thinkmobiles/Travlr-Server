@@ -37,7 +37,7 @@ define([
                 closeOnEscape: false,
                 dialogClass: "trill-dialog",
                 width: "520",
-                title: "Edit Feedback",
+                title: "View Feedback",
                 appendTo: "#dialog-overflow",
                 modal: true,
                 open: function(){
@@ -46,15 +46,15 @@ define([
                     });
                 },
                 buttons: {
-                    save: {
+                   /* save: {
                         text: "Save",
                         class: "btn",
                         click: function () {
                             self.editClick(this);
                         }
-                    },
+                    },*/
                     cancel: {
-                        text: "Cancel",
+                        text: "Ok",
                         class: "btn",
                         click: function () {
                             $(this).dialog('close');
