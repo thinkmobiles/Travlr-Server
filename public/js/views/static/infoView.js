@@ -55,9 +55,9 @@ define([
             ];
 
             var headers ={
-                'policy': "Private policy",
-                'terms': "Term & condition",
-                'about': "About static text"
+                'policy': "Private Policy",
+                'terms': "Term and Condition",
+                'about': "About"
             };
 
             for(var i=0; i< staticInfo.length; i++){

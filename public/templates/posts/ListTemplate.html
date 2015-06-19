@@ -8,9 +8,9 @@
   <td class="postsBody"><%=_.escape(post.body)%></td>
   <td class="countryName"><%=_.escape(post.country.name)%></td>
   <td class="cityName"><%=_.escape(post.city.name)%></td>
-  <td class="createdDate"><%=_.escape(post.created_at)%></td>
+  <td class="createdDate"><%= _.escape(post.created_at) %></td>
   <td>
-      <button class="editButton">Edit</button>
+      <button class="editButton">View/Edit</button>
   </td>
   <td class="notForm"><input type="checkbox" value="" class="checkbox" /></td>
 </tr>

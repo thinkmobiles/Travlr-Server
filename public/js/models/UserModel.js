@@ -1,6 +1,7 @@
 define([
-    'Validation'
-], function (Validation) {
+    'Validation',
+    'moment'
+], function (Validation, moment) {
     var UserModel = Backbone.Model.extend({
         initialize: function () {
             this.on('invalid', function (model, errors) {
@@ -22,6 +23,14 @@ define([
             Validation.checkEmailField(errors, false, attrs.email, "Email");
             if (errors.length > 0)
                 return errors;
+        },
+        parse: true,
+        parse: function (response) {
+            if (response.birthday){
+                response.birthday = moment(response.birthday).format("MM/DD/YYYY");
+            }
+
+            return response;
         }
     });
     return UserModel;

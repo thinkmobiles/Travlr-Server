@@ -63,7 +63,6 @@ Posts = function (PostGre) {
         }
     };
 
-
     this.getSaveData = function (options) {
         var saveData = {};
 
@@ -105,7 +104,6 @@ Posts = function (PostGre) {
 
         return saveData
     };
-
 
     this.createPostByOptions = function (options, callback) {
         self.checkCreatePostOptions.run(options, function (err, validOptions) {

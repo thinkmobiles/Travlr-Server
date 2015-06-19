@@ -16,7 +16,9 @@ module.exports = {
     FB_ACTIONS: {
         SIGN_IN: 'signIn',
         CREATE: 'create'
+    },
+    REDIS_NAME:{
+        COUNTRY: "COUNTRY"
     }
-
 
 };

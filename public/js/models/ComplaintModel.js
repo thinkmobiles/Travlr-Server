@@ -1,4 +1,6 @@
-define([],function () {
+define([
+    'moment'
+],function (moment) {
     var ComplaintModel = Backbone.Model.extend({
         initialize: function(){
 
@@ -9,6 +11,13 @@ define([],function () {
         },
         urlRoot: function () {
             return "/complaints";
+        },
+        parse: true,
+        parse: function (response) {
+            if (response.created_at)
+                response.created_at = moment(response.created_at).format("MM/DD/YYYY");
+
+            return response;
         }
     });
     return ComplaintModel;

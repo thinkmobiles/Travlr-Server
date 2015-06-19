@@ -1,6 +1,7 @@
 define([
-    'Validation'
-], function (Validation) {
+    'Validation',
+    'moment'
+], function (Validation, moment) {
     var PostModel = Backbone.Model.extend({
         initialize: function () {
             this.on('invalid', function (model, errors) {
@@ -28,6 +29,13 @@ define([
             Validation.checkLonLat(errors, true, attrs.lat, "Latitude");
             if (errors.length > 0)
                 return errors;
+        },
+        parse: true,
+        parse: function (response) {
+            if (response.created_at)
+                response.created_at = moment(response.created_at).format("MM/DD/YYYY");
+
+            return response;
         }
     });
     return PostModel;
