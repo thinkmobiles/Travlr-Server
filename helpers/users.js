@@ -196,6 +196,12 @@ Users = function (PostGre) {
         var deleteImageData;
         var error;
 
+        if (Object.keys(options).length <= 1) {
+            error = new Error(RESPONSES.NO_UPDATE_PARAMS);
+            error.status = 400;
+            callback(error)
+        }
+
         self.checkUpdateUserOptions.run(options, function (err, validOptions) {
             if (err) {
                 callback(err)
