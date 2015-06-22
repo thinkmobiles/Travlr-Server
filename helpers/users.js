@@ -71,6 +71,7 @@ Users = function (PostGre) {
         gender: ['isInt'],
         confirm_status: ['isInt'],
         confirm_token: ['isString'],
+        nationality: ['isString'],
         birthday: ['isDate'],
         role: ['isInt']
     }, self.checkFunctions);
@@ -91,6 +92,7 @@ Users = function (PostGre) {
         change_email: ['isEmail'],
         email: ['isEmail'],
         gender: ['isInt'],
+        nationality: ['isString'],
         birthday: ['isDate'],
         confirm_token: ['isString'],
         confirm_status: ['isInt'],

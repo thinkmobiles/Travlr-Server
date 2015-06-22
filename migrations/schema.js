@@ -17,6 +17,7 @@ module.exports = function (knex, Promise) {
                     row.string('password');
                     row.string('gender', 10);
                     row.string('confirm_token',75);
+                    row.string('nationality',75);
                     row.integer('confirm_status');
                     row.timestamp('birthday');
                     row.string('facebook_id').index();
