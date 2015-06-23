@@ -72,7 +72,7 @@ Users = function (PostGre) {
                             })
                             .then(function () {
                                 req.session.userId = user.id;
-                                res.redirect(process.env.APP_HOST + ':' + process.env.PORT + '/users/' + user.id);
+                                res.redirect(process.env.APP_HOST + ':' + process.env.PORT + '/successConfirm');
                             })
                             .otherwise(next)
                     } else {
@@ -178,7 +178,7 @@ Users = function (PostGre) {
                 .then(function (user) {
                     if (user && user.id) {
                         user = user.toJSON();
-                        if (user.image.name) {
+                        if (user.image && user.image.name) {
                             user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
                         }
                         res.status(200).send(user)
@@ -249,13 +249,7 @@ Users = function (PostGre) {
                 ]
             })
             .then(function (users) {
-                if (users && users.length) {
-                    res.status(200).send(users)
-                } else {
-                    error = new Error(RESPONSES.INVALID_PARAMETERS);
-                    error.status = 400;
-                    next(error);
-                }
+                res.status(200).send(users);
             })
             .otherwise(next)
     };
@@ -292,17 +286,17 @@ Users = function (PostGre) {
             if (err) {
                 next(err)
             } else {
-                if (user.get('change_email')) {
+                /*if (user.get('change_email')) {
                     mailOptions = {
                         email: user.get('change_email'),
                         confirm_token: user.get('confirm_token')
                     };
                     mailer.confirmEmail(mailOptions);
-                }
+                }*/
 
                 res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
             }
-        }, {checkFunctions: ['checkUniqueEmail']})
+        })
     };
 
     this.deleteUser = function (req, res, next) {

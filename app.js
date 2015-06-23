@@ -21,14 +21,19 @@ var PostGre;
 var Models;
 
 app.engine('html', cons.swig);
-app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
+//app.set('view engine', 'html');
+//app.set('views', __dirname + '/views');
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json({strict: false, inflate: false, limit: 1024 * 1024 * 200}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.set('views', __dirname + '/public/templates/static');
+app.set('view engine', 'html');
 
 if (app.get('env') === 'development') {
     require('./config/development');

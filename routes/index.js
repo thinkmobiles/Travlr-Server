@@ -20,6 +20,10 @@ module.exports = function (app, PostGre) {
         res.sendfile('index.html');
     });
 
+    app.get( '/successConfirm', function ( req, res, next ) {
+      res.render('successConfirm.html');
+    });
+
     app.get('/isAuthenticated', session.isAuthenticated);
 
     app.use('/users', usersRouter);

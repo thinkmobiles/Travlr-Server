@@ -20,7 +20,7 @@ module.exports = function (PostGre, app) {
     router.get('/signOut', usersHandler.signOut);
     router.get('/count', session.isAdmin, usersHandler.getUsersCount);
     router.get('/confirm', usersHandler.confirmEmail);
-    router.get('/:id', session.checkAccessRights , usersHandler.getUserById);
+    router.get('/:id', /*session.checkAccessRights ,*/ usersHandler.getUserById);
     router.get('/', session.isAdmin, usersHandler.getUsers);
 
     //router.put('/image', usersHandler.updateUsersImage);

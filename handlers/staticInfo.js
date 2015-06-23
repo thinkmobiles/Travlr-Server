@@ -62,14 +62,8 @@ Static_Info = function (PostGre) {
     };
 
     this.getInfo = function (req, res, next) {
-        var page = req.query.page || 1;
-        var limit = req.query.count || 25;
 
         StaticCollection
-            .query(function (qb) {
-                qb.offset(( page - 1 ) * limit)
-                    .limit(limit)
-            })
             .fetch({
                 columns: [
                     'id',

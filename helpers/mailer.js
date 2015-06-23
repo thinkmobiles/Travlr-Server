@@ -14,7 +14,7 @@ module.exports = function (app) {
             to: options.email,
             subject: 'New password',
             generateTextFromHTML: true,
-            html: _.template(fs.readFileSync('public/templates/mailer/forgotPassword.html', encoding = "utf8"), templateOptions)
+            html: _.template(fs.readFileSync('public/templates/mailer/forgotPassword.html', encoding = "utf8"))(templateOptions)
         };
 
         deliver(mailOptions);
@@ -30,7 +30,7 @@ module.exports = function (app) {
             to: options.email,
             subject: 'Confirm email',
             generateTextFromHTML: true,
-            html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"), templateOptions)
+            html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"))(templateOptions)
         };
 
         deliver(mailOptions);
@@ -47,7 +47,7 @@ module.exports = function (app) {
 
         transport.sendMail(mailOptions, function (err, response) {
             if (err) {
-                console.log(err);
+                console.log('Send Mail error ' + err);
                 if (cb && (typeof cb === 'function')) {
                     cb(err, null);
                 }

@@ -97,7 +97,7 @@ Users = function (PostGre) {
         confirm_token: ['isString'],
         confirm_status: ['isInt'],
         role: ['isInt']
-    }, self.checkFunctions);
+    });
 
     this.checkFBIdOrEmail = function (options, callback) {
         var resultUsersList;
