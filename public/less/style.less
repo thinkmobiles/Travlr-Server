@@ -499,7 +499,7 @@ body {
   .ui-dialog-buttonset button {
     border: none;
     padding: 0;
-    margin: 0 5px 5px 0;
+    margin: 5px 5px 5px 0;
   }
   .ui-dialog-buttonset button span {
     border: 1px solid #dddddd;
@@ -511,6 +511,15 @@ body {
 
     &:hover {
       background-color: #ececec;
+    }
+  }
+  .ui-dialog-content {
+    border-bottom: 1px solid #000;
+
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
     }
   }
 }
