@@ -97,7 +97,8 @@ Images = function (PostGre) {
                             callback(err);
                         } else {
                             callback(null, {
-                                message: RESPONSES.UPDATED_SUCCESS
+                                message: RESPONSES.UPDATED_SUCCESS,
+                                image: results[1]
                             });
                         }
                     });

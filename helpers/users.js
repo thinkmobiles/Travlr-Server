@@ -89,8 +89,6 @@ Users = function (PostGre) {
     this.checkUpdateUserOptions = new Validation.Check({
         first_name: ['isString'],
         last_name: ['isString'],
-        change_email: ['isEmail'],
-        email: ['isEmail'],
         gender: ['isInt'],
         nationality: ['isString'],
         birthday: ['isDate'],
@@ -210,7 +208,7 @@ Users = function (PostGre) {
             } else {
                 async.parallel([
                     function(cb) {
-                        if (options.image) {
+                        if (options.image && typeof options.image == 'string') {
                             async.series([
                                 function (cb) {
                                     deleteImageData = {

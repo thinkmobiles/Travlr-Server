@@ -74,9 +74,9 @@ define([
                 }
             });
             if (modelJSON.image && modelJSON.image.image_url) {
-                imageUrl = modelJSON.image.image_url
+                imageUrl = modelJSON.image.image_url;
+                custom.canvasDraw({url: imageUrl}, this);
             }
-            custom.canvasDraw({url: imageUrl}, this);
             return this;
         }
     });

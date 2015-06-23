@@ -405,7 +405,7 @@ Posts = function (PostGre) {
             saveData.city_id = results[0].id;
             saveData.country_id = results[1].id;
           }
-          postsHelper.updatePostByOptions(saveData, function (err, resp) {
+          postsHelper.updatePostByOptions(saveData, function (err, postModel) {
             if (err) {
               next(err);
             } else {
@@ -417,11 +417,25 @@ Posts = function (PostGre) {
                 };
                 imagesHelper.updateImageByOptions(imageData, function (err, resp) {
                   if (!err) {
-                    res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                    getPostByModel(postModel, function (err, resp) {
+                      if (!err) {
+                        res.status(200).send({
+                          success: RESPONSES.UPDATED_SUCCESS,
+                          post: resp
+                        });
+                      }
+                    })
                   }
                 });
               } else {
-                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+                getPostByModel(postModel, function (err, resp) {
+                  if (!err) {
+                    res.status(200).send({
+                      success: RESPONSES.UPDATED_SUCCESS,
+                      post: resp
+                    });
+                  }
+                });
               }
             }
           });
@@ -430,6 +444,61 @@ Posts = function (PostGre) {
         }
       });
   };
+
+  function getPostByModel(PostModel, callback) {
+    var postJSON;
+    PostModel
+      .fetch({
+        columns: [
+          'id',
+          'title',
+          'body',
+          'lat',
+          'lon',
+          'author_id',
+          'city_id',
+          'country_id'
+        ],
+        withRelated: [
+          {
+            'author': function () {
+              this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+            }
+          },
+          {
+            'author.image': function () {
+            }
+          },
+          {
+            'city': function () {
+              this.columns(['id', 'name'])
+            }
+          },
+          {
+            'country': function () {
+              this.columns(['id', 'name', 'code'])
+            }
+          },
+          'image'
+        ]
+      })
+      .then(function (postModel) {
+        if (postModel && postModel.id) {
+          postJSON = postModel.toJSON();
+          if (postJSON && postJSON.image && postJSON.image.id) {
+            postJSON.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.image.name, 'posts');
+          }
+
+          if (postJSON && postJSON.author.image && postJSON.author.image && postJSON.author.image.id) {
+            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'posts');
+          }
+          callback(null, postJSON);
+        } else {
+          callback(RESPONSES.INTERNAL_ERROR);
+        }
+      })
+      .otherwise(callback);
+  }
 
   this.deletePost = function (req, res, next) {
     var postId = req.params.id;
@@ -449,7 +518,7 @@ Posts = function (PostGre) {
             postModel
               .destroy()
               .then(function () {
-                if(!postCountByParams({cId: cId})){
+                if (!postCountByParams({cId: cId})) {
                   redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY, date.valueOf());
                 }
                 res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
