@@ -1,13 +1,10 @@
-<link rel="stylesheet" href="js/libs/trumbowyg/dist/ui/trumbowyg.min.css">
-
 <% models.forEach(function(model, index){ %>
     <div class="wysiwyg-container">
         <h2><%= headers[model.get('type')] %></h2>
         <div class="wysiwyg">
             <%= model.get('body') %>
         </div>
-        <button class="save" data-type="<%= model.get('type') %>">Save</button>
+        <button class="save btn btn-sm pull-right" data-type="<%= model.get('type') %>">Save</button>
         <span style="color:green; display:none" class="success-msg">Success!!</span>
     </div>
-
 <% }) %>

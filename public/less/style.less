@@ -845,7 +845,6 @@ body {
 .fileprogress {
   .mp;
   list-style: none;
-
 }
 
 #searchTerm {
@@ -873,4 +872,18 @@ body {
 
 .ui-front {
   z-index: 100;
+}
+
+.wysiwyg-container {
+  padding: 0 10px;
+
+  &:after {
+    clear: both;
+    content: ' ';
+    display: table;
+  }
+}
+
+.trumbowyg-box, .trumbowyg-editor {
+  width: 100%;
 }
