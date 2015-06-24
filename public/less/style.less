@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Icons';
+  src: url("../font/icons.eot");
+  src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
+}
+
 .mp {
   margin: 0;
   padding: 0;
@@ -6,14 +12,18 @@
 @thin-border: 1px solid;
 @imagesfolder: "../i/";
 
-@font-face {
-  font-family: 'Icons';
-  src: url("../font/icons.eot");
-  src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%
 }
 
 body {
   .mp;
+}
+
+.text-center {
+  text-align: center !important;
 }
 
 #wrapper {
@@ -210,49 +220,53 @@ body {
   //width: 294px;
   li {
     float: left;
-    &.logout {
-      float: right;
-    }
+
     a {
       display: block;
-      padding: 0px 10px;
-      line-height: 32px;
+      padding: 0 10px;
+      line-height: 31px;
       text-decoration: none;
       color: #fff;
       &:hover {
         text-decoration: underline;
       }
     }
-    #subMenu {
-      .mp;
-      position: absolute;
-      left: 0px;
-      top: 33px;
-      list-style: none;
-      height: 31px;
-      display: none;
-      width: 100%;
-    }
+
     &.active {
       > a {
         background-color: #36a9e1;
         color: white;
         text-decoration: none;
         height: 31px;
-        border-bottom: 1px solid #4d5a75;
+        //border-bottom: 1px solid #4d5a75;
       }
+    }
 
+    &.logout {
+      float: right;
     }
   }
 }
 
-#mainmenu-holder {
-  top: 0px;
+#subMenu {
+  .mp;
+  position: absolute;
   left: 0px;
-  border-bottom: 1px solid #4d5a75;
+  top: 33px;
+  list-style: none;
+  height: 31px;
+  display: none;
+  width: 100%;
+}
+
+#mainmenu-holder {
+  top: 0;
+  left: 0;
+  //border-bottom: 1px solid #4d5a75;
   position: fixed;
   width: 100%;
   z-index: 100;
+  height: 31px;
 }
 
 #top-bar {
@@ -538,8 +552,8 @@ body {
     #feedbacksList,
     #photosList {
       width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
+      //border-collapse: collapse;
+      //border-spacing: 0;
       border: 1px solid silver;
       font-size: 12px;
 
@@ -592,13 +606,13 @@ body {
         padding: 4px 5px;
       }
       .numberUser {
-        width: 50px;
+        //width: 50px;
       }
       .userName {
-        width: 200px;
+        //width: 200px;
       }
       .userEmail {
-        width: 200px;
+        //width: 200px;
       }
       .userEdit {
         text-align: center;
