@@ -113,7 +113,7 @@ define([
             e.preventDefault();
             $(e.target).closest(".allNumberPerPage").hide();
             this.startTime = new Date();
-            var itemsNumber = event.target.textContent;
+            var itemsNumber = e.target.textContent;
             this.defaultItemsNumber = itemsNumber;
             this.getTotalLength(null, itemsNumber);
             this.page = 1;

@@ -247,7 +247,7 @@ define(['constants/responses'], function (RESPONSES) {
 
     var changeLocationHash = function (page, count) {
         var location = window.location.hash;
-        var mainLocation = '#' + this.contentType + '/list';
+        var mainLocation = '#' + this.contentType;
         if (!page) {
             page = (location.split('/p=')[1]) ? location.split('/p=')[1].split('/')[0] : 1;
         }

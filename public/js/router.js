@@ -31,24 +31,13 @@ define([
           $(".popUp").hide();
         }
       });
-
-      // var location = Backbone.history.getFragment();
-      // console.log(location);
-
-      /*$(document).on("click", function (e) {
-       var overflow = $('#dialog-overflow');
-       var dialogs = overflow.find(".trill-dialog");
-       var className = e.target.getAttribute('class');
-       var pos = overflow.find(".trill-dialog").index($(e.target).parents(".trill-dialog"));
-       if (pos !== dialogs.length - 1 && className !== "ui-button-text") {
-       dialogs[dialogs.length - 1].remove();
-       }
-       });*/
     },
 
     any: function () {
       this.mainView = new mainView();
       this.changeWrapperView(this.mainView);
+      /*this.mainView = null;
+      new loginView();*/
     },
 
     login: function () {
