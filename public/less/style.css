@@ -1,0 +1,776 @@
+@font-face {
+  font-family: 'Icons';
+  src: url("../font/icons.eot");
+  src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
+}
+.mp {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+#wrapper {
+  padding: 1px;
+}
+#loginForm {
+  display: block;
+  width: 360px;
+  margin: 130px auto;
+  min-height: 150px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 20px 0 13px;
+  font-family: 'Open Sans', sans-serif;
+}
+#loginForm fieldset {
+  border: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+#loginForm .error {
+  padding-left: 30px;
+  line-height: 30px;
+  display: none;
+  color: red;
+}
+#loginForm h2 {
+  font-weight: 300 !important;
+  font-size: 24px;
+  margin: 25px 0 35px 30px;
+}
+#loginForm .icon-pass,
+#loginForm .icon-login {
+  border: 1px solid #e5e5e5;
+  border-left: 2px solid #35aa74;
+  margin: 0 30px;
+}
+#loginForm .icon-pass .icon,
+#loginForm .icon-login .icon {
+  margin: 8px 0 0 5px;
+  display: block;
+  float: left;
+  width: 25px;
+  height: 19px;
+  background-image: url("../i/login-sprite.png");
+  background-repeat: no-repeat;
+}
+#loginForm .icon-pass:active,
+#loginForm .icon-login:active {
+  border-color: #000;
+  border-left: 2px solid #35aa74;
+}
+#loginForm.notRegister .error {
+  display: block;
+}
+#loginForm.notRegister .icon-pass,
+#loginForm.notRegister .icon-login {
+  border: 1px solid red;
+}
+#loginForm .icon-login .icon {
+  margin-top: 10px;
+  background-position: 50% -48px;
+  height: 14px;
+}
+#loginForm .icon-pass {
+  margin-bottom: 30px;
+}
+#loginForm .icon-pass .icon {
+  margin-top: 10px;
+  background-position: 2px -62px;
+  height: 13px;
+}
+#loginForm #urem {
+  display: none;
+}
+#loginForm p {
+  margin: 10px 0px;
+}
+#loginForm h3 {
+  font-weight: 300 !important;
+  font-size: 18px;
+  color: #555;
+  margin-left: 30px;
+  padding: 20px 0 0;
+}
+#loginForm span.text {
+  line-height: 40px;
+  margin: 0 30px;
+  font-size: 13px;
+}
+#loginForm span.text a {
+  color: #0D638F;
+  font-size: 13px;
+}
+#loginForm span.text a:hover {
+  color: #2A6496;
+  text-decoration: underline;
+}
+#loginForm .dotted-line {
+  margin: 0 30px 5px 30px;
+  border-top: 1px dotted #eee;
+}
+#loginForm .login-button {
+  background-color: #35aa47;
+  padding: 11px 14px 11px 14px;
+  font-size: 14px;
+  color: white;
+  float: right;
+  margin: -9px 30px 0 0;
+}
+#loginForm .login-button:hover {
+  background-color: #1d943b;
+  color: white;
+}
+#loginForm .login-button i {
+  display: inline-block;
+  float: right;
+  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  background-image: url("../i/login-sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0px -81px;
+}
+#loginForm input {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #333;
+  padding-left: 0;
+  border: 0;
+  width: 267px;
+  height: 30px;
+  font-size: 14px;
+}
+#loginForm input:focus {
+  outline-style: none;
+}
+#loginForm input[type="submit"] {
+  font-size: 30px;
+  border: 0;
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  display: block;
+  color: blue;
+  opacity: 0.7;
+  outline: none;
+}
+#loginForm input[type="submit"]:hover {
+  opacity: 1;
+}
+#loginForm a {
+  color: #2672EC;
+  font-size: 14px;
+}
+#loginForm a:hover {
+  color: #002cff;
+}
+#topMenu {
+  margin: 0;
+  padding: 0;
+  background-color: #4D5A75;
+  list-style: none;
+  height: 31px;
+}
+#topMenu li {
+  float: left;
+}
+#topMenu li a {
+  display: block;
+  padding: 0 10px;
+  line-height: 31px;
+  text-decoration: none;
+  color: #fff;
+}
+#topMenu li a:hover {
+  text-decoration: underline;
+}
+#topMenu li.active > a {
+  background-color: #36a9e1;
+  color: white;
+  text-decoration: none;
+  height: 31px;
+}
+#topMenu li.logout {
+  float: right;
+}
+#subMenu {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 0px;
+  top: 33px;
+  list-style: none;
+  height: 31px;
+  display: none;
+  width: 100%;
+}
+#mainmenu-holder {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  height: 31px;
+}
+#top-bar {
+  position: fixed;
+  top: 31px;
+  left: 0;
+  width: 100%;
+  display: block;
+  height: 37px;
+  border-bottom: 1px solid #ababab;
+  background: #fff;
+  clear: both;
+  margin-top: 0;
+  z-index: 5;
+}
+#top-bar h3 {
+  padding: 0 10px;
+  color: #333 !important;
+  font-weight: normal;
+  float: left;
+  margin: 0;
+  line-height: 32px;
+}
+#top-bar #template-switcher ul {
+  padding: 6px 0 0 0;
+  margin: 0;
+}
+#top-bar #template-switcher ul li {
+  float: left;
+  list-style: none;
+  margin-left: 5px;
+}
+#top-bar #template-switcher ul li a,
+#top-bar #template-switcher ul li div {
+  display: block;
+  text-decoration: none;
+  color: #000;
+  font-size: 22px;
+}
+#top-bar #template-switcher ul li a:hover,
+#top-bar #template-switcher ul li div:hover {
+  color: #000;
+}
+#top-bar #template-switcher ul li a.unbannPhoto,
+#top-bar #template-switcher ul li div.unbannPhoto {
+  display: block;
+  width: 17px;
+  height: 17px;
+  background-image: url("../i/unbann.png");
+}
+#top-bar #template-switcher ul li a.bannPhoto,
+#top-bar #template-switcher ul li div.bannPhoto {
+  display: block;
+  width: 17px;
+  height: 17px;
+  background-image: url("../i/bann.png");
+}
+#top-bar #template-switcher ul li a.remove,
+#top-bar #template-switcher ul li div.remove,
+#top-bar #template-switcher ul li a.edit,
+#top-bar #template-switcher ul li div.edit,
+#top-bar #template-switcher ul li a.unbannPhoto,
+#top-bar #template-switcher ul li div.unbannPhoto,
+#top-bar #template-switcher ul li a.bannPhoto,
+#top-bar #template-switcher ul li div.bannPhoto {
+  display: none;
+}
+#template-switcher.footer-switcher {
+  float: right;
+  height: 26px;
+}
+#template-switcher.footer-switcher .btn-list ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#template-switcher.footer-switcher .btn-list li {
+  display: inline;
+}
+#template-switcher.footer-switcher .btn-list li a {
+  display: none;
+}
+.overflow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
+}
+.trill-dialog,
+.trill-dialog-not-hide {
+  z-index: 101;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.93);
+  position: absolute !important;
+  margin-top: -40px;
+}
+.trill-dialog.fileprogress-dialog,
+.trill-dialog-not-hide.fileprogress-dialog {
+  top: 10% !important;
+  margin-top: 0;
+  position: absolute !important;
+  width: auto !important;
+  z-index: 1001;
+}
+.trill-dialog.fileprogress-dialog .ui-dialog-titlebar,
+.trill-dialog-not-hide.fileprogress-dialog .ui-dialog-titlebar {
+  height: 30px;
+  line-height: 30px;
+}
+.trill-dialog.fileprogress-dialog .ui-dialog-titlebar button,
+.trill-dialog-not-hide.fileprogress-dialog .ui-dialog-titlebar button {
+  display: none;
+}
+.trill-dialog.fileprogress-dialog .fileprogress,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress {
+  min-height: inherit !important;
+}
+.trill-dialog.fileprogress-dialog .fileprogress li,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li {
+  position: relative;
+  height: 25px;
+  line-height: 25px;
+  padding: 0px 45px 0px 20px;
+  border-top: 1px solid silver;
+}
+.trill-dialog.fileprogress-dialog .fileprogress li img,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li img,
+.trill-dialog.fileprogress-dialog .fileprogress li span,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li span {
+  position: absolute;
+  top: 0px;
+  right: 20px;
+}
+.trill-dialog.fileprogress-dialog .fileprogress li img.err,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li img.err,
+.trill-dialog.fileprogress-dialog .fileprogress li span.err,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li span.err {
+  color: red;
+}
+.trill-dialog.fileprogress-dialog .fileprogress li .prog,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li .prog {
+  width: 100px;
+  position: absolute;
+  top: 0px;
+  right: 30px;
+  border: 1px solid silver;
+}
+.trill-dialog.fileprogress-dialog .fileprogress li .prog .inner,
+.trill-dialog-not-hide.fileprogress-dialog .fileprogress li .prog .inner {
+  width: 0%;
+  height: 18px;
+  background-color: green;
+}
+.trill-dialog .create_user,
+.trill-dialog-not-hide .create_user,
+.trill-dialog .edit_user,
+.trill-dialog-not-hide .edit_user {
+  width: 100%;
+}
+.trill-dialog .create_user hr,
+.trill-dialog-not-hide .create_user hr,
+.trill-dialog .edit_user hr,
+.trill-dialog-not-hide .edit_user hr {
+  color: #000;
+  width: 95%;
+}
+.trill-dialog .create_user #uploadAvatar,
+.trill-dialog-not-hide .create_user #uploadAvatar,
+.trill-dialog .edit_user #uploadAvatar,
+.trill-dialog-not-hide .edit_user #uploadAvatar {
+  width: 30%;
+  float: left;
+  padding-top: 10px;
+  overflow: hidden;
+}
+.trill-dialog .create_user #uploadAvatar .avatar,
+.trill-dialog-not-hide .create_user #uploadAvatar .avatar,
+.trill-dialog .edit_user #uploadAvatar .avatar,
+.trill-dialog-not-hide .edit_user #uploadAvatar .avatar {
+  margin: 0 auto;
+  display: block;
+  width: 120px;
+  height: 150px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(135, 135, 135, 0.5);
+}
+.trill-dialog .create_user #uploadAvatar #add_avatar,
+.trill-dialog-not-hide .create_user #uploadAvatar #add_avatar,
+.trill-dialog .edit_user #uploadAvatar #add_avatar,
+.trill-dialog-not-hide .edit_user #uploadAvatar #add_avatar {
+  text-align: center;
+  color: #fff;
+  position: relative;
+  left: 0;
+  width: 140px;
+  margin: 0 auto;
+}
+.trill-dialog .create_user #uploadAvatar #add_avatar div,
+.trill-dialog-not-hide .create_user #uploadAvatar #add_avatar div,
+.trill-dialog .edit_user #uploadAvatar #add_avatar div,
+.trill-dialog-not-hide .edit_user #uploadAvatar #add_avatar div {
+  background: #000;
+}
+.trill-dialog .create_user #uploadAvatar #add_avatar input,
+.trill-dialog-not-hide .create_user #uploadAvatar #add_avatar input,
+.trill-dialog .edit_user #uploadAvatar #add_avatar input,
+.trill-dialog-not-hide .edit_user #uploadAvatar #add_avatar input {
+  opacity: 0;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 140px;
+}
+.trill-dialog .create_user #uploadAvatar #add_avatar img,
+.trill-dialog-not-hide .create_user #uploadAvatar #add_avatar img,
+.trill-dialog .edit_user #uploadAvatar #add_avatar img,
+.trill-dialog-not-hide .edit_user #uploadAvatar #add_avatar img {
+  max-width: 100%;
+  width: 100%;
+  max-height: 100%;
+}
+.trill-dialog .create_user #uploadInfo,
+.trill-dialog-not-hide .create_user #uploadInfo,
+.trill-dialog .edit_user #uploadInfo,
+.trill-dialog-not-hide .edit_user #uploadInfo {
+  width: 70%;
+  float: right;
+  padding-top: 10px;
+}
+.trill-dialog .create_user #uploadInfo table,
+.trill-dialog-not-hide .create_user #uploadInfo table,
+.trill-dialog .edit_user #uploadInfo table,
+.trill-dialog-not-hide .edit_user #uploadInfo table {
+  margin: 0 auto;
+}
+.trill-dialog .create_user #uploadInfo input,
+.trill-dialog-not-hide .create_user #uploadInfo input,
+.trill-dialog .edit_user #uploadInfo input,
+.trill-dialog-not-hide .edit_user #uploadInfo input {
+  border: 1px solid #e2e9ef;
+  border-top-color: #CBD3E2;
+  outline-color: #36a9e1;
+}
+.trill-dialog .create_user #uploadInfo textarea,
+.trill-dialog-not-hide .create_user #uploadInfo textarea,
+.trill-dialog .edit_user #uploadInfo textarea,
+.trill-dialog-not-hide .edit_user #uploadInfo textarea {
+  resize: none;
+}
+.trill-dialog .cropImages,
+.trill-dialog-not-hide .cropImages {
+  padding: 10px;
+}
+.trill-dialog .ui-dialog-titlebar,
+.trill-dialog-not-hide .ui-dialog-titlebar {
+  color: #36a9e1;
+  text-align: center;
+  font-size: 20px;
+  height: 20px;
+}
+.trill-dialog .ui-dialog-titlebar button,
+.trill-dialog-not-hide .ui-dialog-titlebar button {
+  width: 17px;
+  height: 18px;
+  float: right;
+  border: none;
+  background-image: url('../i/close.png');
+  background-repeat: no-repeat;
+  background-position: 3px 2px;
+  background-color: #fff;
+}
+.trill-dialog .ui-dialog-titlebar button span,
+.trill-dialog-not-hide .ui-dialog-titlebar button span {
+  visibility: hidden;
+  background: #fff;
+  display: block;
+}
+.trill-dialog .ui-dialog-buttonset,
+.trill-dialog-not-hide .ui-dialog-buttonset {
+  padding: 0 107px;
+  text-align: center;
+}
+.trill-dialog .ui-dialog-buttonset button,
+.trill-dialog-not-hide .ui-dialog-buttonset button {
+  border: none;
+  padding: 0;
+  margin: 5px 5px 5px 0;
+}
+.trill-dialog .ui-dialog-buttonset button span,
+.trill-dialog-not-hide .ui-dialog-buttonset button span {
+  border: 1px solid #dddddd;
+  display: block;
+  line-height: normal;
+  background: #ffffff;
+  padding: .4em 1em;
+  color: #36a9e1;
+}
+.trill-dialog .ui-dialog-buttonset button span:hover,
+.trill-dialog-not-hide .ui-dialog-buttonset button span:hover {
+  background-color: #ececec;
+}
+.trill-dialog .ui-dialog-content,
+.trill-dialog-not-hide .ui-dialog-content {
+  border-bottom: 1px solid #000;
+}
+.trill-dialog .ui-dialog-content:after,
+.trill-dialog-not-hide .ui-dialog-content:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+#content-holder {
+  margin-top: 68px;
+}
+.clear {
+  clear: both;
+}
+.pagination {
+  width: 100%;
+  float: right;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.pagination div {
+  float: left;
+}
+.pagination .countOnPage {
+  float: left;
+}
+.pagination .nextPrev {
+  float: right;
+  margin-right: 5px;
+}
+.pagination .countOnPage {
+  margin-left: 5px;
+}
+.pagination #previousPage,
+.pagination #nextPage,
+.pagination .currentPageList,
+.pagination #firstShowPage,
+.pagination #lastShowPage {
+  background-color: white;
+  background-image: none;
+  line-height: 15px;
+  width: 20px;
+  height: 18px;
+  display: block;
+  text-align: center;
+  padding: 0;
+  border-radius: 0;
+  font-weight: bold;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  float: left;
+}
+.pagination #firstShowPage,
+.pagination #lastShowPage {
+  width: 30px;
+  height: 18px;
+  display: block;
+  font-size: 12px;
+}
+.pagination #previousPage {
+  /*  background-image: url("@{imagesfolder}/arrow-left-1.png");*/
+  margin: 0 3px;
+  font-size: 12px;
+}
+.pagination #nextPage {
+  margin: 0 3px;
+  font-size: 12px;
+}
+.pagination .allPage {
+  position: relative;
+}
+.pagination button {
+  color: rgba(0, 0, 0, 0.75);
+  border: 1px solid silver;
+  outline: 0;
+}
+.pagination button:hover {
+  background-color: #F7F8F9;
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.9);
+}
+.pagination button[disabled] {
+  color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+.pagination .currentShowPageContainer {
+  margin-top: -2px;
+}
+.pagination #currentShowPage {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(0, 0, 0, 0);
+  width: 21px;
+  height: 18px;
+  margin-left: 5px;
+  font-size: 12px !important;
+  position: relative;
+  top: -1px;
+}
+.pagination #pageList {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  position: absolute;
+  bottom: 17px;
+  left: -7px;
+  display: none;
+}
+.pagination #pageList li {
+  display: block;
+  width: 25px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 12px;
+}
+.pagination #pageList li:hover {
+  background-color: #13C4A5;
+  color: white;
+  text-decoration: none;
+}
+.pagination .currentPageList {
+  margin-right: 5px;
+  font-size: 12px;
+}
+.pagination .currentPageList .caret {
+  display: block;
+  height: 15px;
+  background-image: url("../i//arrow-up.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+.pagination .pageList {
+  position: relative;
+}
+.pagination .pageList button {
+  background-color: white;
+  background-image: none;
+  border-radius: 0;
+  width: 27px;
+  margin: 0 5px;
+  line-height: 10px;
+  font-size: 12px;
+  padding: 2px 0px;
+}
+.pagination .pageList button:hover {
+  background-color: #F7F8F9;
+}
+.pagination .pageList ul {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  position: absolute;
+  bottom: 15px;
+  left: 5px;
+  display: none;
+  font-size: 12px;
+  list-style: none;
+}
+.pagination .pageList ul li a {
+  display: block;
+  width: 25px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
+.pagination .pageList ul li a:hover {
+  background-color: #13C4A5;
+  color: white;
+  text-decoration: none;
+}
+.oe-sortable > span {
+  display: none;
+  margin-left: 10px;
+}
+.oe-sortable.sortUp .up {
+  display: inline;
+}
+.oe-sortable.sortDn .down {
+  display: inline;
+}
+#template-switcher a {
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  margin-right: 2px;
+  cursor: pointer;
+  vertical-align: baseline;
+  font-size: 20px !important;
+  color: #4d5a75 !important;
+}
+#template-switcher #progress {
+  margin-top: -1px;
+}
+.icon {
+  font-family: 'Icons';
+}
+#photoList {
+  border: 1px solid #000000;
+  margin: 5px;
+}
+#photoList th {
+  border: 1px solid #000000;
+}
+#photoList td {
+  border: 1px solid #000000;
+}
+.fileprogress {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#searchTerm {
+  margin-top: 5px;
+}
+#searchContainer {
+  float: right;
+}
+#searchButton {
+  margin-right: 10px;
+}
+.ui-widget-overlay {
+  background-color: #666666;
+  opacity: .5;
+  filter: alpha(opacity=50);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.ui-front {
+  z-index: 100;
+}
+.wysiwyg-container {
+  padding: 0 10px;
+}
+.wysiwyg-container:after {
+  clear: both;
+  content: ' ';
+  display: table;
+}
+.trumbowyg-box,
+.trumbowyg-editor {
+  width: 100%;
+}
