@@ -172,6 +172,7 @@ Users = function (PostGre) {
                         'first_name',
                         'last_name',
                         'birthday',
+                        'nationality',
                         'gender'
                     ]
                 })
@@ -282,19 +283,50 @@ Users = function (PostGre) {
             options.confirm_status = CONSTANTS.CONFIRM_STATUS.CHANGE_EMAIL;
         }
 
-        usersHelper.updateUserByOptions(options, function (err, user) {
+        usersHelper.updateUserByOptions(options, function (err, UserModel) {
             if (err) {
                 next(err)
             } else {
-                /*if (user.get('change_email')) {
-                    mailOptions = {
-                        email: user.get('change_email'),
-                        confirm_token: user.get('confirm_token')
-                    };
-                    mailer.confirmEmail(mailOptions);
-                }*/
+                UserModel
+                  .fetch({
+                      withRelated: [
+                          {
+                              image: function () {
+                                  this.columns([
+                                      'imageable_id',
+                                      'name'
+                                  ])
+                              }
+                          }
+                      ],
+                      columns: [
+                          'id',
+                          'first_name',
+                          'last_name',
+                          'birthday',
+                          'nationality',
+                          'gender'
+                      ]
+                  })
+                  .then(function (user) {
+                      if (user && user.id) {
+                          user = user.toJSON();
+                          if (user.image && user.image.name) {
+                              user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
+                          }
+                          res.status(200).send({
+                              success: RESPONSES.UPDATED_SUCCESS,
+                              user: user
+                          });
+                      } else {
+                          error = new Error(RESPONSES.INVALID_PARAMETERS);
+                          error.status = 400;
+                          next(error);
+                      }
+                  })
+                  .otherwise(next)
 
-                res.status(200).send({success: RESPONSES.UPDATED_SUCCESS})
+
             }
         })
     };

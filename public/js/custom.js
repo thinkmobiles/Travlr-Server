@@ -7,7 +7,7 @@ define(['constants/responses'], function (RESPONSES) {
 
         if (success) {
             var url = (App.requestedURL == null) ? Backbone.history.fragment : App.requestedURL;
-            if ((url == "") || (url == "login")) url = 'users/list';
+            if ((url == "") || (url == "login")) url = 'users';
 
             Backbone.history.fragment = "";
             Backbone.history.navigate(url, { trigger: true });

@@ -46,6 +46,8 @@ define([
         },
         render: function (options) {
             var self = this;
+            var modelJSON =  this.model.toJSON();
+            var imageUrl;
             var formString = this.template({model: this.model.toJSON()});
             this.$el = $(formString).dialog({
                 closeOnEscape: false,
@@ -79,7 +81,10 @@ define([
                     $(this).dialog('destroy');
                 }
             });
-            custom.canvasDraw({ url: this.model.toJSON().avatar }, this);
+            if (modelJSON.image && modelJSON.image.image_url) {
+                imageUrl = modelJSON.image.image_url;
+                custom.canvasDraw({url: imageUrl}, this);
+            }
             return this;
         }
 
