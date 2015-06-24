@@ -19,7 +19,7 @@ var Session = function (PostGre) {
         if (req.session) {
             req.session.destroy();
         }
-        res.status(200).send({success: RESPONSES.SUCCESSFUL_LOGOUT});
+        res.redirect(process.env.APP_HOST + ':' + process.env.PORT);
     };
 
     this.isAuthenticated = function (req, res, next) {

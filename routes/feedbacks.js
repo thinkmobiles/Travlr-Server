@@ -7,10 +7,6 @@ module.exports = function (PostGre, app) {
     var session = new Session(PostGre);
     var feedbacksHandler = new FeedbacksHandler(PostGre, app);
 
-    router.get('/test', function(req, res, next){
-        res.status(200).send('Feedback OK');
-    });
-
     router.post('/',feedbacksHandler.createFeedback);
 
     router.put('/:id', session.isAdmin, feedbacksHandler.updateFeedback);
@@ -18,9 +14,9 @@ module.exports = function (PostGre, app) {
 
     router.delete('/:id',feedbacksHandler.deleteFeedback);
 
-    router.get('/',feedbacksHandler.getFeedbacks);
-    router.get('/count',feedbacksHandler.getFeedbacksCount);
-    router.get('/:id',feedbacksHandler.getFeedbackById);
+    router.get('/', session.isAdmin, feedbacksHandler.getFeedbacks);
+    router.get('/count', session.isAdmin, feedbacksHandler.getFeedbacksCount);
+    router.get('/:id', session.isAdmin, feedbacksHandler.getFeedbackById);
 
 
     return router;
