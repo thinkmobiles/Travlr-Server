@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Icons';
+  src: url("../font/icons.eot");
+  src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
+}
+
 .mp {
   margin: 0;
   padding: 0;
@@ -6,10 +12,10 @@
 @thin-border: 1px solid;
 @imagesfolder: "../i/";
 
-@font-face {
-  font-family: 'Icons';
-  src: url("../font/icons.eot");
-  src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%
 }
 
 body {
@@ -210,66 +216,68 @@ body {
   //width: 294px;
   li {
     float: left;
-    &.logout {
-      float: right;
-    }
+
     a {
       display: block;
-      padding: 0px 10px;
-      line-height: 32px;
+      padding: 0 10px;
+      line-height: 31px;
       text-decoration: none;
       color: #fff;
       &:hover {
         text-decoration: underline;
       }
     }
-    #subMenu {
-      .mp;
-      position: absolute;
-      left: 0px;
-      top: 33px;
-      list-style: none;
-      height: 31px;
-      display: none;
-      width: 100%;
-    }
+
     &.active {
       > a {
         background-color: #36a9e1;
         color: white;
         text-decoration: none;
         height: 31px;
-        border-bottom: 1px solid #4d5a75;
+        //border-bottom: 1px solid #4d5a75;
       }
+    }
 
+    &.logout {
+      float: right;
     }
   }
 }
 
-#mainmenu-holder {
-  top: 0px;
+#subMenu {
+  .mp;
+  position: absolute;
   left: 0px;
-  border-bottom: 1px solid #4d5a75;
+  top: 33px;
+  list-style: none;
+  height: 31px;
+  display: none;
+  width: 100%;
+}
+
+#mainmenu-holder {
+  top: 0;
+  left: 0;
+  //border-bottom: 1px solid #4d5a75;
   position: fixed;
   width: 100%;
   z-index: 100;
+  height: 31px;
 }
 
 #top-bar {
   position: fixed;
   top: 31px;
-  left: 0px;
-
+  left: 0;
   width: 100%;
   display: block;
-  height: 30px;
+  height: 37px;
   border-bottom: 1px solid #ababab;
   background: #fff;
   clear: both;
-  margin-top: 0px;
+  margin-top: 0;
   h3 {
-    margin-top: 6px;
-    padding: 0px 10px;
+    padding: 0 10px;
     color: #333 !important;
     font-weight: normal;
     float: left;
@@ -316,7 +324,7 @@ body {
 
 #template-switcher.footer-switcher {
   float: right;
-  height: 10px;
+  height: 26px;
   .btn-list {
     ul {
       list-style-type: none;
@@ -525,87 +533,88 @@ body {
 }
 
 #content-holder {
-  margin-top: 63px;
-  .userListContainer,
-  .postListContainer,
-  .complaintsListContainer,
-  .feedbacksListContainer,
-  .photoListContainer {
-    padding: 5px;
-    #userList,
-    #postList,
-    #complaintList,
-    #feedbacksList,
-    #photosList {
-      width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
-      border: 1px solid silver;
-      font-size: 12px;
-
-      tr:nth-child(2n+1) {
-        background-color: #f9f9f9;
-      }
-
-      thead {
-        font-weight: bold;
-        text-align: left;
-        background: #ccc;
-      }
-      th {
-        text-align: left;
-        border: none;
-      }
-      tr {
-        border-top: 1px solid silver;
-        border-buttom: 1px solid silver;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #f5f5f5;
-        }
-        td {
-          border: none;
-
-          &.userButton {
-            text-align: center;
-          }
-          .edit, .changeBann {
-            border: 1px solid #dddddd;
-            display: block;
-            line-height: normal;
-            background: #ffffff;
-            padding: .2em 1em;
-            &:hover {
-              background-color: #ececec;
-            }
-          }
-        }
-      }
-      tr.table-header {
-        background-color: white;
-        &:hover {
-          background-color: white;
-        }
-      }
-      td, th {
-        padding: 4px 5px;
-      }
-      .numberUser {
-        width: 50px;
-      }
-      .userName {
-        width: 200px;
-      }
-      .userEmail {
-        width: 200px;
-      }
-      .userEdit {
-        text-align: center;
-        width: 50px;
-      }
-    }
-  }
+  margin-top: 68px;
+  //.userListContainer,
+  //.postListContainer,
+  //.complaintsListContainer,
+  //.feedbacksListContainer,
+  //.photoListContainer {
+  //  padding: 5px;
+  //  #userList,
+  //  #postList,
+  //  #complaintList,
+  //  #feedbacksList,
+  //  #photosList {
+  //    width: 100%;
+  //    //border-collapse: collapse;
+  //    //border-spacing: 0;
+  //    border: 1px solid silver;
+  //    font-size: 12px;
+  //
+  //    tr:nth-child(2n+1) {
+  //      background-color: #f9f9f9;
+  //    }
+  //
+  //    thead {
+  //      font-weight: bold;
+  //      text-align: left;
+  //      background: #ccc;
+  //    }
+  //    th {
+  //      text-align: left;
+  //      border: none;
+  //    }
+  //    tr {
+  //      border-top: 1px solid silver;
+  //      border-buttom: 1px solid silver;
+  //      cursor: pointer;
+  //
+  //      &:hover {
+  //        background-color: #f5f5f5;
+  //      }
+  //      td {
+  //        border: none;
+  //        //word-break: break-all;
+  //
+  //        &.userButton {
+  //          text-align: center;
+  //        }
+  //        .edit, .changeBann {
+  //          border: 1px solid #dddddd;
+  //          display: block;
+  //          line-height: normal;
+  //          background: #ffffff;
+  //          padding: .2em 1em;
+  //          &:hover {
+  //            background-color: #ececec;
+  //          }
+  //        }
+  //      }
+  //    }
+  //    tr.table-header {
+  //      background-color: white;
+  //      &:hover {
+  //        background-color: white;
+  //      }
+  //    }
+  //    td, th {
+  //      padding: 4px 5px;
+  //    }
+  //    .numberUser {
+  //      //width: 50px;
+  //    }
+  //    .userName {
+  //      //width: 200px;
+  //    }
+  //    .userEmail {
+  //      //width: 200px;
+  //    }
+  //    .userEdit {
+  //      text-align: center;
+  //      width: 50px;
+  //    }
+  //  }
+  //}
 }
 
 .clear {
