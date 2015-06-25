@@ -27,10 +27,10 @@ define([
         events: {
             /*"click .edit": "editComplaint",
              "click .editButton": "editComplaint",*/
+            //"click .create": "createPost",
             "click .viewButton": "viewPost",
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
-            //"click .create": "createPost",
             "click .checkAll": "checkAll",
             "click table.complaintsList td": "check",
             "click .oe-sortable": "goSort",
@@ -93,7 +93,7 @@ define([
 
         showPage: function (event) {
             event.preventDefault();
-            custom.showP.call(this, event, { sort: this.sort }, custom);
+            custom.showP.call(this, event, {sort: this.sort}, custom);
         },
 
         itemsNumber: function (e) {
@@ -105,14 +105,14 @@ define([
             e.preventDefault();
             $(e.target).closest(".popUp").hide();
             this.startTime = new Date();
-            var itemsNumber = event.target.textContent;
+            var itemsNumber = e.target.textContent;
             this.defaultItemsNumber = itemsNumber;
             this.getTotalLength(null, itemsNumber);
             this.page = 1;
             this.fetchCollection();
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
-            custom.changeLocationHash.call(this, 1, itemsNumber);
+            //custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
         fetchCollection: function () {
@@ -161,7 +161,7 @@ define([
             sortObject[sortBy] = sortConst;
             this.sort = sortObject;
             this.fetchCollection();
-            custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
+            //custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
         getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
@@ -180,7 +180,7 @@ define([
                 if (itemsNumber * (page - 1) > length) {
                     self.page = page = Math.ceil(length / self.defaultItemsNumber);
                     self.fetchCollection();
-                    custom.changeLocationHash.call(this, page, self.defaultItemsNumber, "users");
+                    //custom.changeLocationHash.call(this, page, self.defaultItemsNumber, "users");
                 }
                 custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
             }, this);
@@ -295,7 +295,7 @@ define([
         },
 
 
-        viewPost: function(e){
+        viewPost: function (e) {
             var id;
             var complainModel;
             var postModel;
@@ -347,11 +347,17 @@ define([
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }
-            this.$el.find("#complaintList tbody:last").html(_.template(ListTemplate)({complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#complaintList tbody:last").html(_.template(ListTemplate)({
+                complaintsCollection: this.collection.toJSON(),
+                startNumber: this.defaultItemsNumber * (this.page - 1)
+            }));
             return this;
         },
         renderContent: function (options) {
-            this.$el.find("#complaintList tbody:last").html(_.template(ListTemplate)({complaintsCollection: this.collection.toJSON(), startNumber: this.defaultItemsNumber * (this.page - 1)}));
+            this.$el.find("#complaintList tbody:last").html(_.template(ListTemplate)({
+                complaintsCollection: this.collection.toJSON(),
+                startNumber: this.defaultItemsNumber * (this.page - 1)
+            }));
             return this;
         }
 

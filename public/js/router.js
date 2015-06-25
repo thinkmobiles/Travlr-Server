@@ -14,13 +14,10 @@ define([
 
     routes: {
       "login": "login",
-      "users": "users",
       "users(/p=:page)(/c=:countPerPage)(/sort=:sort)": "users",
-      "feedbacks": "feedbacks",
-      "complaints": "complaints",
+      "feedbacks(/p=:page)(/c=:countPerPage)(/sort=:sort)": "feedbacks",
       "complaints(/p=:page)(/c=:countPerPage)(/sort=:sort)": "complaints",
       "posts(/p=:page)(/c=:countPerPage)(/sort=:sort)": "posts",
-      "posts": "posts",
       "info/": "static",
       "*any": "any"
     },
@@ -34,10 +31,7 @@ define([
     },
 
     any: function () {
-      this.mainView = new mainView();
-      this.changeWrapperView(this.mainView);
-      /*this.mainView = null;
-      new loginView();*/
+      this.navigate('users', {trigger: true});
     },
 
     login: function () {

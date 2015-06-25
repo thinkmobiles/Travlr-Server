@@ -538,6 +538,7 @@ define(['constants/responses'], function (RESPONSES) {
             console.log(err);
         }
     };
+
     return {
         runApplication: runApplication,
         checkLogin: checkLogin,

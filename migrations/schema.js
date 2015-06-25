@@ -97,7 +97,7 @@ module.exports = function (knex, Promise) {
                 createTable(TABLES.STATIC_INFO, function (row) {
                         row.increments('id').primary();
                         row.string('type', 50).notNullable();
-                        row.string('body', 250).notNullable();
+                        row.text('body').notNullable();
 
                         row.timestamp('updated_at', true);
                         row.timestamp('created_at', true);
@@ -133,6 +133,29 @@ module.exports = function (knex, Promise) {
 
                         row.timestamp('updated_at', true);
                         row.timestamp('created_at', true);
+                }, cb)
+            },
+
+            function (cb) {
+                createTable(TABLES.VISITED_COUNTRIES, function (row) {
+                    row.increments('id').primary();
+                    row.string('country_code', 10);
+                    row.integer('author_id').index().notNullable();
+
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
+                }, cb)
+            },
+
+            function (cb) {
+                createTable(TABLES.COUNTRIES_SEARCH_COUNT, function (row) {
+                    row.increments('id').primary();
+                    row.string('country_code', 10);
+                    row.integer('author_id').index().notNullable();
+                    row.integer('count');
+
+                    row.timestamp('updated_at', true);
+                    row.timestamp('created_at', true);
                 }, cb)
             }
 

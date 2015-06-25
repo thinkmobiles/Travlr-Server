@@ -103,14 +103,14 @@ define([
             e.preventDefault();
             $(e.target).closest(".popUp").hide();
             this.startTime = new Date();
-            var itemsNumber = event.target.textContent;
+            var itemsNumber = e.target.textContent;
             this.defaultItemsNumber = itemsNumber;
             this.getTotalLength(null, itemsNumber);
             this.page = 1;
             this.fetchCollection();
             $("#top-bar-deleteBtn").hide();
             $('#check_all').prop('checked', false);
-            custom.changeLocationHash.call(this, 1, itemsNumber);
+            //custom.changeLocationHash.call(this, 1, itemsNumber);
         },
 
         fetchCollection: function () {
@@ -159,7 +159,7 @@ define([
             sortObject[sortBy] = sortConst;
             this.sort = sortObject;
             this.fetchCollection();
-            custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
+            //custom.changeLocationHash.call(this, this.page, this.defaultItemsNumber, "users");
         },
 
         getTotalLength: function (currentNumber, itemsNumber, searchTerm) {
@@ -177,7 +177,7 @@ define([
                 if (itemsNumber * (page - 1) > length) {
                     self.page = page = Math.ceil(length / self.defaultItemsNumber);
                     self.fetchCollection();
-                    custom.changeLocationHash.call(this, page, self.defaultItemsNumber, "users");
+                    //custom.changeLocationHash.call(this, page, self.defaultItemsNumber, "users");
                 }
                 custom.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
             }, this);

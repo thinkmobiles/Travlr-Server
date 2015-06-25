@@ -66,5 +66,39 @@ describe('Countries Test:', function () {
             });
     });
 
+    it('Visit country', function (done) {
+        agent
+            .post('/countries/visit')
+            .send({
+                countryCode : 'AU'
+            })
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
+    it('Add search count', function (done) {
+        agent
+            .post('/countries/search/count')
+            .send({
+                countryCode : 'UA'
+            })
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err);
+                } else {
+                    done(null, res);
+                }
+            });
+    });
+
+
+
 
 });

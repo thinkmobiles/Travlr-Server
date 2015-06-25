@@ -8,6 +8,10 @@ module.exports = function (PostGre, app) {
     router.route('/')
         .get(countryHandler.getCountries);
 
+    router.post('/visit', countryHandler.visitCountry);
+
+    router.post('/search/count', countryHandler.searchCount);
+
 
     return router;
 };

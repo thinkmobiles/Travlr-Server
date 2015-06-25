@@ -103,30 +103,46 @@ Complaints = function (PostGre) {
 
         ComplaintCollection
             .query(function (qb) {
+
+                qb.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');
+                qb.leftJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id');
+
                 if (userId) {
                     qb.where({
                         author_id: userId
                     })
                 }
+
                 if (postId) {
                     qb.where({
                         post_id: postId
                     })
                 }
+
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
                     qb.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
                         .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
                 }
+
+
                 if (typeof sortObject === 'object') {
                     sortAliase = Object.keys(sortObject);
                     sortAliase = sortAliase[0];
-                    if (sortAliase === 'author') {
-                        sortName = 'author_id';
-                    } else if (sortAliase === 'post') {
-                        sortName = 'post_id';
-                    } else if (sortAliase === 'date') {
-                        sortName = 'created_at';
+
+                    switch (sortAliase) {
+                        case 'author':
+                            sortName = 'first_name';
+                            break;
+                        case 'post_title':
+                            sortName = 'title';
+                            break;
+                        case 'post_body':
+                            sortName = 'body';
+                            break;
+                        case 'created_at':
+                            sortName = 'created_at';
+                            break;
                     }
 
                     if (sortName) {
@@ -134,14 +150,16 @@ Complaints = function (PostGre) {
                         qb.orderBy(sortName, sortOrder);
                     }
                 }
+
+
                 qb.offset(( page - 1 ) * limit)
                     .limit(limit)
             })
             .fetch({
                 columns: [
                     TABLES.COMPLAINTS + '.id',
-                    'author_id',
-                    'post_id',
+                    TABLES.COMPLAINTS + '.author_id',
+                    TABLES.COMPLAINTS + '.post_id',
                     TABLES.COMPLAINTS + '.created_at'
                 ],
                 withRelated: [
