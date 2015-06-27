@@ -26,8 +26,6 @@ describe('users', function () {
 
   });
 
-
-
   it('Login admin/admin', function (done) {
 
     agent
@@ -78,7 +76,6 @@ describe('users', function () {
 
   });
 
-
   it('Get users', function (done) {
 
     agent
@@ -115,7 +112,7 @@ describe('users', function () {
 
   });
 
-  it('Delete user', function (done) {
+ /* it('Delete user', function (done) {
 
     agent
       .delete('/users/' + userId)
@@ -129,6 +126,6 @@ describe('users', function () {
         }
       });
 
-  });
+  });*/
 
 });
