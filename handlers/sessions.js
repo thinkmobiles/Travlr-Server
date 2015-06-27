@@ -116,7 +116,7 @@ var Session = function (PostGre) {
                     })
                     .otherwise(next)
 
-            }  else {
+            } else {
                 err = new Error(RESPONSES.INVALID_PATH);
                 err.status = 400;
                 next(err)

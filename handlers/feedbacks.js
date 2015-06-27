@@ -99,7 +99,7 @@ Feedbacks = function (PostGre) {
                     sortAliase = sortAliase[0];
                     if (sortAliase === 'author_id') {
                         sortName = 'author_id';
-                    } else if(sortAliase === 'body') {
+                    } else if (sortAliase === 'body') {
                         sortName = 'body';
                     }
 

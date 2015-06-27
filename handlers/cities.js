@@ -6,21 +6,21 @@ Cities = function (PostGre) {
     var CityModel = PostGre.Models.cities;
 
     this.createCity = function (city, callback) {
-        if(city){
+        if (city) {
             CityModel
                 .forge({'name': city})
                 .fetch()
-                .then(function(cityModel){
-                    if(cityModel && cityModel.id){
+                .then(function (cityModel) {
+                    if (cityModel && cityModel.id) {
                         callback(null, {'cityId': cityModel.id});
-                    }else{
+                    } else {
                         CityModel
                             .forge({'name': city})
                             .save()
-                            .then(function(model){
-                                if(model.id){
+                            .then(function (model) {
+                                if (model.id) {
                                     callback(null, {'cityId': model.id});
-                                }else{
+                                } else {
                                     callback(RESPONSES.INTERNAL_ERROR);
                                 }
                             })
@@ -29,7 +29,7 @@ Cities = function (PostGre) {
                 })
                 .otherwise()
 
-        }else{
+        } else {
             callback(RESPONSES.NOT_ENOUGH_PARAMETERS);
         }
     }

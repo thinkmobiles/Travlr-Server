@@ -150,7 +150,6 @@ Complaints = function (PostGre) {
                     }
                 }
 
-
                 qb.offset(( page - 1 ) * limit)
                     .limit(limit)
             })
