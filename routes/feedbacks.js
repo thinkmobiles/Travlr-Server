@@ -12,7 +12,7 @@ module.exports = function (PostGre, app) {
     router.put('/:id', session.isAdmin, feedbacksHandler.updateFeedback);
     router.patch('/:id', session.isAdmin, feedbacksHandler.updateFeedback);
 
-    router.delete('/:id',feedbacksHandler.deleteFeedback);
+    router.delete('/:id', session.isAdmin, feedbacksHandler.deleteFeedback);
 
     router.get('/', session.isAdmin, feedbacksHandler.getFeedbacks);
     router.get('/count', session.isAdmin, feedbacksHandler.getFeedbacksCount);

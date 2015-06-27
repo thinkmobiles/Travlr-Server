@@ -91,6 +91,7 @@ PostGre.imagesUploader = imagesUploader;
 
 PostGre.Models = new Models(PostGre);
 PostGre.Collections = new Collections(PostGre);
+app.set('PostGre', PostGre);
 
 require('./routes/index')(app, PostGre);
 

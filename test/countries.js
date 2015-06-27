@@ -9,7 +9,7 @@ describe('Countries Test:', function () {
     var config = new Config();
     var app = config.app;
     var agent = request.agent(app);
-
+    var PostGre = app.get('PostGre');
     var loginData;
     var userData = config.superAdmin;
     var needCreateAdmin = false;
@@ -36,17 +36,29 @@ describe('Countries Test:', function () {
 
 
     it('Create user', function (done) {
+        loginData = config.loginAdmin;
         if (needCreateAdmin) {
-            agent
-                .post('/users/signUp')
-                .send(userData)
-                .expect(201)
-                .end(function (err, res) {
-                    if (err) {
-                        return done(err)
-                    } else {
-                        done();
-                    }
+            PostGre.knex
+                .raw('DELETE FROM users WHERE users.email= \'admin@admin.com\';')
+                .then(function (resp) {
+                    var sql = "INSERT INTO users(first_name, last_name, email, password, role)"
+                        + " VALUES ('admin', 'admin', 'admin@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1);";
+                    PostGre.knex
+                        .raw(sql)
+                        .then(function (resp) {
+                            agent
+                                .post('/users/signIn')
+                                .send(loginData)
+                                .expect(200)
+                                .end(function (err, res) {
+                                    if (err) {
+                                        needCreateAdmin = true;
+                                        done();
+                                    } else {
+                                        done(null, res);
+                                    }
+                                });
+                        });
                 });
         } else {
             done()
@@ -70,7 +82,7 @@ describe('Countries Test:', function () {
         agent
             .post('/countries/visit')
             .send({
-                countryCode : 'AU'
+                countryCode : 'TD'
             })
             .expect(200)
             .end(function (err, res) {
@@ -86,7 +98,7 @@ describe('Countries Test:', function () {
         agent
             .post('/countries/search/count')
             .send({
-                countryCode : 'UA'
+                countryCode : 'NE'
             })
             .expect(200)
             .end(function (err, res) {
@@ -97,8 +109,4 @@ describe('Countries Test:', function () {
                 }
             });
     });
-
-
-
-
 });

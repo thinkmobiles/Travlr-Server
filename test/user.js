@@ -9,12 +9,6 @@ describe('users', function () {
   var app = config.app;
   var agent = request.agent(app);
 
-  function getRandomInt() {
-    var min = 1;
-    var max = 100;
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
   this.timeout(12500);
 
   it('Create user', function (done) {
@@ -33,7 +27,7 @@ describe('users', function () {
   });
 
 
-/*
+
   it('Login admin/admin', function (done) {
 
     agent
@@ -65,9 +59,7 @@ describe('users', function () {
 
       });
 
-  });*/
-
-  /*
+  });
   it('Get user by ID', function (done) {
 
     agent
@@ -137,6 +129,6 @@ describe('users', function () {
         }
       });
 
-  });*/
+  });
 
 });

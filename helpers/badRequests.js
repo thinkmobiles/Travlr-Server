@@ -1,7 +1,6 @@
 var RESPONSES = require('../constants/responseMessages');
 
 module.exports = function () {
-    //ToDo load constants
     var DEFAULT_ERROR_NAME = 'Error';
     var DEFAULT_ERROR_MESSAGE = 'error';
     var DEFAULT_ERROR_STATUS = 400;
@@ -20,13 +19,13 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = "NotEnoughIncomingParameters";
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.NOT_ENOUGH_PARAMS;
         }
         if (!errOptions.message) {
             errOptions.message = RESPONSES.NOT_ENOUGH_PARAMETERS;
         }
         if (options && options.reqParams) {
-            errOptions.message += 'This parameters are required: ' + options.reqParams;
+            errOptions.message += RESPONSES.BAD_REQUEST.REQUIRED_PARAMETER + options.reqParams;
         }
 
         return new CustomError(errOptions);
@@ -36,7 +35,7 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = "InvalidEmal";
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.INVALID_EMAIL;
         }
         if (!errOptions.message) {
             errOptions.message = RESPONSES.INVALID_EMAIL;
@@ -49,7 +48,7 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'DoubledEmail';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.DOUBLE_EMAIL;
         }
         if (!errOptions.message) {
             errOptions.message = RESPONSES.NOT_UNIQUE_EMAIL;
@@ -62,7 +61,7 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'NoUpdateParams';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.NO_UPDATE_PARAMS;
         }
         if (!errOptions.message) {
             errOptions.message = RESPONSES.NO_UPDATE_PARAMS;
@@ -76,10 +75,10 @@ module.exports = function () {
         var errMessage;
 
         if (!errOptions.name) {
-            errOptions.name = 'InvalidValue';
+            errOptions.name =  RESPONSES.BAD_REQUEST.NAME.INVALID_VALUE;
         }
         if (!errOptions.message) {
-            errMessage = "Invalid value";
+            errMessage = RESPONSES.BAD_REQUEST.INVALID_VALUE;
             if (errOptions.value) {
                 errMessage += " " + options.value;
             }
@@ -97,10 +96,10 @@ module.exports = function () {
         var errMessage;
 
         if (!errOptions.name) {
-            errOptions.name = 'NotFound';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.NOT_FOUND;
         }
         if (!errOptions.message) {
-            errMessage = "Not Found";
+            errMessage = RESPONSES.BAD_REQUEST.NOT_FOUND;
             if (errOptions.target) {
                 errMessage += " " + errOptions.target;
             }
@@ -117,10 +116,10 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'UnconfirmedEmail';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.UNCONFIRMED_EMAIL;
         }
         if (!errOptions.message) {
-            errOptions.message = 'Please confirm your account';
+            errOptions.message = RESPONSES.BAD_REQUEST.CONFIRM_ACCOUNT;
         }
 
         return new CustomError(errOptions);
@@ -130,10 +129,10 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'SignInError';
+            errOptions.name =  RESPONSES.BAD_REQUEST.NAME.SIGNIN_ERROR;
         }
         if (!errOptions.message) {
-            errOptions.message = 'Invalid email or password';
+            errOptions.message = RESPONSES.BAD_REQUEST.INVALID_EMAIL_PASSWORD;
         }
         if (!errOptions.status) {
             errOptions.status = 401;
@@ -146,10 +145,10 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'AccessError';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.ACCESS_ERROR;
         }
         if (!errOptions.message) {
-            errOptions.message = "You do not have sufficient rights";
+            errOptions.message = RESPONSES.BAD_REQUEST.ACCESS_ERROR;
         }
 
         return new CustomError(errOptions);
@@ -159,10 +158,10 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'InvalidType';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.INVALID_TYPE;
         }
         if (!errOptions.message) {
-            errOptions.message = "Invalid type of variable";
+            errOptions.message = RESPONSES.BAD_REQUEST.INVALID_TYPE;
         }
 
         return new CustomError(errOptions);
@@ -173,10 +172,10 @@ module.exports = function () {
         var errOptions = ( options ) ? options : {};
 
         if (!errOptions.name) {
-            errOptions.name = 'Unauthorized';
+            errOptions.name = RESPONSES.BAD_REQUEST.NAME.UNAUTHORIZED;
         }
         if (!errOptions.message) {
-            errOptions.message = "Unauthorized";
+            errOptions.message = RESPONSES.BAD_REQUEST.UNAUTHORIZED;
         }
         if (!errOptions.status) {
             errOptions.status = 401;

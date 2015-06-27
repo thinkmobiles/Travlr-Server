@@ -121,8 +121,7 @@ Complaints = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
-                        .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
+                    qb.whereRaw("LOWER(first_name || last_name || title || body) LIKE '%" + searchTerm + "%' ");
                 }
 
 

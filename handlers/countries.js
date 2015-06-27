@@ -1,16 +1,14 @@
 var RESPONSES = require('../constants/responseMessages');
 var CONSTANTS = require('../constants/constants');
 var TABLES = require('../constants/tables');
-var COLLECTIONS = require('../constants/collections');
 var MODELS = require('../constants/models');
+var async = require('async');
 var Countries;
 
 Countries = function (PostGre) {
     var CountryModel = PostGre.Models[MODELS.COUNTRY];
     var VisitCountryModel = PostGre.Models[MODELS.VISITED_COUNTRIES];
     var SearchCountryModel = PostGre.Models[MODELS.COUNTRIES_SEARCH_COUNT];
-
-    var CountryCollection = PostGre.Collections[COLLECTIONS.COUNTRIES];
     var redisClient = require('../helpers/redisClient')();
     var date = new Date();
 
@@ -49,43 +47,71 @@ Countries = function (PostGre) {
 
     this.getCountries = function (req, res, next) {
         var itag = req.query.itag;
-        var orderBy = req.query.orderBy || 'name';
-        var order = req.query.order || 'ASC';
-        var searchTerm = req.query.searchTerm;
+        var resItag;
         var redisCountryiTag;
+        var redisiTagSort;
+        var authorId = req.session.userId;
+        var options = {};
 
-        redisClient.cacheStore.readFromStorage(CONSTANTS.REDIS_NAME.COUNTRY, function (err, resp) {
-            redisCountryiTag = resp;
-            if (typeof itag !== 'undefined') {
-                if (itag === redisCountryiTag) {
-                    res.header('itag', redisCountryiTag);
-                    res.status(200).send([]);
-                    return;
+        options.searchTerm = req.query.searchTerm;
+
+        async
+            .parallel([
+                function (cb) {
+                    redisClient.cacheStore.readFromStorage(CONSTANTS.REDIS_NAME.COUNTRY, cb);
+                },
+                function (cb) {
+                    redisClient.cacheStore.readFromStorage(CONSTANTS.REDIS_NAME.COUNTRY + authorId, cb);
                 }
-            }
+            ], function (err, resp) {
+                if (!err) {
+                    redisCountryiTag = resp[0];
+                    redisiTagSort = resp[1];
 
-            CountryCollection
-                .forge()
-                .query(function (qb) {
-                    if (searchTerm) {
-                        searchTerm = searchTerm.toLowerCase();
-                        qb.whereRaw(
-                            "LOWER(body) LIKE '%" + searchTerm + "%' "
-                        )
+                    if (redisCountryiTag) {
+                        resItag = redisCountryiTag.toString();
                     }
 
-                    if (orderBy) {
-                        qb.orderBy(orderBy, order);
+                    if (redisiTagSort) {
+                        resItag += redisiTagSort.toString();
                     }
-                })
-                .fetch()
-                .then(function (countryCollection) {
-                    var country = ( countryCollection ) ? countryCollection : [];
-                    res.header('itag', redisCountryiTag);
-                    res.status(200).send(country);
-                })
-                .otherwise(next);
-        });
+
+                    res.header('itag', resItag);
+
+                    if (typeof itag !== 'undefined') {
+                        if (itag == resItag) {
+                            res.status(200).send([]);
+                            return;
+                        }
+                    }
+
+                    var sql = "SELECT "
+                        + " c.id,"
+                        + " c.name,"
+                        + " c.code,"
+                        + " case WHEN v.updated_at IS NULL then ('1970-01-01')"
+                        + " else  v.updated_at"
+                        + " end as updated_at,"
+                        + " cs.count,"
+                        + " count(p.id) as post_count"
+                        + " FROM countries c"
+                        + " LEFT JOIN visited_countries v on v.country_code = c.code AND v.author_id = " + authorId
+                        + " LEFT JOIN countries_search_count cs on cs.country_code = c.code AND cs.author_id = " + authorId
+                        + " LEFT JOIN posts p ON c.id = p.country_id AND p.author_id = " + authorId
+                        + " GROUP BY c.id, c.name, v.updated_at, cs.count"
+                        + " ORDER BY updated_at DESC, post_count DESC, cs.count DESC, c.name ASC";
+
+                    PostGre.knex
+                        .raw(sql)
+                        .then(function (queryResult) {
+                            res.status(200).send(queryResult.rows);
+                        })
+                        .otherwise(next);
+                } else {
+                    next(err);
+                }
+
+            });
     };
 
     this.visitCountry = function (req, res, next) {
@@ -113,6 +139,7 @@ Countries = function (PostGre) {
                                 patch: true
                             })
                             .then(function (resModel) {
+                                redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.authorId, date.valueOf());
                                 res.status(200).send(resModel);
                             })
                             .otherwise(next)
@@ -121,6 +148,7 @@ Countries = function (PostGre) {
                             .forge()
                             .save(visitOption)
                             .then(function (resModel) {
+                                redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.authorId, date.valueOf());
                                 res.status(200).send(resModel);
                             })
                             .otherwise(next)
@@ -162,15 +190,17 @@ Countries = function (PostGre) {
                                 patch: true
                             })
                             .then(function (resModel) {
+                                redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.authorId, date.valueOf());
                                 res.status(200).send(resModel);
                             })
                             .otherwise(next)
                     } else {
-                        searchOption.count = 0;
+                        searchOption.count = 1;
                         SearchCountryModel
                             .forge()
                             .save(searchOption)
                             .then(function (resModel) {
+                                redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.authorId, date.valueOf());
                                 res.status(200).send(resModel);
                             })
                             .otherwise(next)
@@ -183,8 +213,6 @@ Countries = function (PostGre) {
             next(error)
         }
     }
-
-
 
 };
 

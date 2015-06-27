@@ -1,6 +1,3 @@
-/**
- * Created by soundstorm on 23.03.15.
- */
 var async = require('../node_modules/async');
 
 function Check(validJSON, objectOfValidationFunctions) {
@@ -46,8 +43,7 @@ function Check(validJSON, objectOfValidationFunctions) {
                 if (settings) {
                     if (settings.checkFunctions && settings.checkFunctions.length) {
                         async.each(settings.checkFunctions,function(checkFunctionName, callback) {
-                            //TODO check if is a function objectOfValidationFunctions[checkFunctionName]
-                            if (objectOfValidationFunctions[checkFunctionName]) {
+                            if (objectOfValidationFunctions[checkFunctionName] && typeof objectOfValidationFunctions[checkFunctionName] === 'function') {
                                 objectOfValidationFunctions[checkFunctionName](options, saveModelOptions, callback);
                             } else {
                                 callback();

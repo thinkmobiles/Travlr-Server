@@ -216,10 +216,8 @@ Users = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' "
-                    );
+                    qb.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
                 }
-
 
                 if (typeof sortObject === 'object') {
                     sortAliase = Object.keys(sortObject);
@@ -261,8 +259,7 @@ Users = function (PostGre) {
 
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
-            query.whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' "
-            );
+            query.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
         }
 
         query
@@ -288,45 +285,43 @@ Users = function (PostGre) {
                 next(err)
             } else {
                 UserModel
-                  .fetch({
-                      withRelated: [
-                          {
-                              image: function () {
-                                  this.columns([
-                                      'imageable_id',
-                                      'name'
-                                  ])
-                              }
-                          }
-                      ],
-                      columns: [
-                          'id',
-                          'first_name',
-                          'last_name',
-                          'birthday',
-                          'nationality',
-                          'gender'
-                      ]
-                  })
-                  .then(function (user) {
-                      if (user && user.id) {
-                          user = user.toJSON();
-                          if (user.image && user.image.name) {
-                              user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
-                          }
-                          res.status(200).send({
-                              success: RESPONSES.UPDATED_SUCCESS,
-                              user: user
-                          });
-                      } else {
-                          error = new Error(RESPONSES.INVALID_PARAMETERS);
-                          error.status = 400;
-                          next(error);
-                      }
-                  })
-                  .otherwise(next)
-
-
+                    .fetch({
+                        withRelated: [
+                            {
+                                image: function () {
+                                    this.columns([
+                                        'imageable_id',
+                                        'name'
+                                    ])
+                                }
+                            }
+                        ],
+                        columns: [
+                            'id',
+                            'first_name',
+                            'last_name',
+                            'birthday',
+                            'nationality',
+                            'gender'
+                        ]
+                    })
+                    .then(function (user) {
+                        if (user && user.id) {
+                            user = user.toJSON();
+                            if (user.image && user.image.name) {
+                                user.image.image_url = PostGre.imagesUploader.getImageUrl(user.image.name, TABLES.USERS);
+                            }
+                            res.status(200).send({
+                                success: RESPONSES.UPDATED_SUCCESS,
+                                user: user
+                            });
+                        } else {
+                            error = new Error(RESPONSES.INVALID_PARAMETERS);
+                            error.status = 400;
+                            next(error);
+                        }
+                    })
+                    .otherwise(next)
             }
         })
     };

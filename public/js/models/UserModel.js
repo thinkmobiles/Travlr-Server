@@ -18,8 +18,8 @@ define([
         },
         validate: function (attrs) {
             var errors = [];
-            Validation.checkNameField(errors, false, attrs.first_name, "First name");
-            Validation.checkNameField(errors, false, attrs.last_name, "Last name");
+            Validation.checkNotesField(errors, false, attrs.first_name, "First name");
+            Validation.checkNotesField(errors, false, attrs.last_name, "Last name");
             Validation.checkEmailField(errors, false, attrs.email, "Email");
             if (errors.length > 0)
                 return errors;

@@ -20,6 +20,7 @@ Posts = function (PostGre) {
     var imagesHelper = new ImagesHelper(PostGre);
     var cityHelper = new CityHelper(PostGre);
     var countryHelper = new CountryHelper(PostGre);
+    var date = new Date();
 
     this.getPosts = function (req, res, next) {
         var options = req.query;
@@ -56,12 +57,13 @@ Posts = function (PostGre) {
                 .forge()
                 .query(function (qb) {
                     qb.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
+                    qb.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id');
                     qb.leftJoin(TABLES.USERS, TABLES.POSTS + '.author_id', TABLES.USERS + '.id');
 
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         qb.whereRaw(
-                            "LOWER(title) LIKE '%" + searchTerm + "%' "
+                            "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
                         )
                     }
 
@@ -356,6 +358,7 @@ Posts = function (PostGre) {
                                     if (err) {
                                         next(err);
                                     } else {
+                                        redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.userId, date.valueOf());
                                         res.status(201).send({
                                             message: RESPONSES.WAS_CREATED,
                                             id: postId
@@ -513,7 +516,8 @@ Posts = function (PostGre) {
         var postId = req.params.id;
         var error;
         var cId;
-        var date = new Date();
+
+        var userId = req.session.userId;
 
         if (postId) {
             PostModel
@@ -527,11 +531,7 @@ Posts = function (PostGre) {
                         postModel
                             .destroy()
                             .then(function () {
-                                postCountByParams({cId: cId}, function (err, resp) {
-                                    if (!resp) {
-                                        redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY, date.valueOf());
-                                    }
-                                });
+                                redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + userId, date.valueOf());
                                 res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
                             })
                             .otherwise(next)
@@ -639,10 +639,14 @@ Posts = function (PostGre) {
         var searchTerm = reqQuery.searchTerm;
         var cId = reqQuery.cId;
 
+        query.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
+        query.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id');
+        query.leftJoin(TABLES.USERS, TABLES.POSTS + '.author_id', TABLES.USERS + '.id');
+
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
             query.whereRaw(
-                "LOWER(title) LIKE '%" + searchTerm + "%' "
+                "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
             )
         }
 
@@ -659,7 +663,6 @@ Posts = function (PostGre) {
             })
             .otherwise(cb)
     }
-}
-
+};
 
 module.exports = Posts;

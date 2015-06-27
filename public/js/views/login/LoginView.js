@@ -9,7 +9,13 @@ define([
             this.render();
         },
         events: {
-           'click .login-button': 'login'
+           'click .login-button': 'login',
+            'keypress form': 'keypress'
+        },
+        keypress: function(e){
+            if(e.which == 13){
+                this.login(e);
+            }
         },
         login: function(e){
             e.preventDefault();
@@ -25,7 +31,6 @@ define([
                     Custom.runApplication(true);
                 },
                 error: function () {
-                    //Custom.runApplication(false, "Server is unavailable...");
                     $("#loginForm").addClass("notRegister");
                     $("#loginForm .error").text("Such user doesn't registered").show();
                 }

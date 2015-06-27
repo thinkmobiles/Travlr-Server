@@ -28,6 +28,32 @@ module.exports = {
     SUCCESSFUL_LOGIN: 'Login successful',
     SUCCESSFUL_LOGOUT: 'Logout successful',
 
+    BAD_REQUEST: {
+        REQUIRED_PARAMETER: 'This parameters are required: ',
+        INVALID_VALUE: 'Invalid value',
+        NOT_FOUND: 'Not Found',
+        CONFIRM_ACCOUNT: 'Please confirm your account',
+        INVALID_EMAIL_PASSWORD: 'Invalid email or password',
+        ACCESS_ERROR: "You do not have sufficient rights",
+        INVALID_TYPE: "Invalid type of variable",
+        UNAUTHORIZED: "Unauthorized",
+
+
+        NAME:{
+            NOT_ENOUGH_PARAMS:'NotEnoughIncomingParameters',
+            INVALID_EMAIL:"InvalidEmal",
+            DOUBLE_EMAIL:"DoubledEmail",
+            NO_UPDATE_PARAMS:"NoUpdateParams",
+            INVALID_VALUE:"InvalidValue",
+            NOT_FOUND:"NotFound",
+            UNCONFIRMED_EMAIL:"UnconfirmedEmail",
+            SIGNIN_ERROR:"SignInError",
+            ACCESS_ERROR:"AccessError",
+            INVALID_TYPE:"InvalidType",
+            UNAUTHORIZED:'Unauthorized'
+        }
+    },
+
     USER_USED_FIELDS: {
         EMAIL: 'Email is already used',
         USERNAME: 'Username is already used'

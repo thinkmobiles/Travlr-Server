@@ -43,6 +43,7 @@ define([
         render: function (options) {
             var self = this;
             var formString = this.template({model: this.model.toJSON()});
+
             this.$el = $(formString).dialog({
                 closeOnEscape: false,
                 dialogClass: "trill-dialog",

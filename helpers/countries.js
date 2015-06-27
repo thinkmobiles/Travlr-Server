@@ -40,16 +40,13 @@ Countries = function (PostGre) {
                                     } else {
                                         callback(RESPONSES.INTERNAL_ERROR);
                                     }
-                                })
-                                //.exec(callback);
+                                });
                         }
                     })
                     .otherwise(callback);
             }
         });
     };
-
-
 };
 
 module.exports = Countries;

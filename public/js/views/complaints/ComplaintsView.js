@@ -25,9 +25,6 @@ define([
             this.render();
         },
         events: {
-            /*"click .edit": "editComplaint",
-             "click .editButton": "editComplaint",*/
-            //"click .create": "createPost",
             "click .viewButton": "viewPost",
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
@@ -42,13 +39,20 @@ define([
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
             "click #nextPage": "nextPage",
-            "click #searchButton": "searchComplaint"
+            "click #searchButton": "search",
+            "keypress #searchContainer": "searchByEnter"
         },
 
-        searchComplaint: function (e) {
-            this.searchTerm = e.target.previousElementSibling.value;
+        search: function (e) {
+            this.searchTerm = $('#searchTerm').val();
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
+        },
+
+        searchByEnter: function (e) {
+            if (e.which == 13) {
+                this.search();
+            }
         },
 
         previousPage: function (event) {
@@ -344,6 +348,7 @@ define([
 
         render: function (options) {
             this.$el.html(this.template());
+
             if (this.sort) {
                 this.$el.find(".table-header .oe-sortable[data-sort='" + Object.keys(this.sort)[0] + "']").addClass(this.sort[Object.keys(this.sort)[0]] == 1 ? "sortUp" : "sortDn");
             }

@@ -15,15 +15,13 @@ module.exports = function (PostGre, app) {
     router.post('/signIn', usersHandler.signIn);
     router.post('/forgotPass', usersHandler.forgotPassword);
     router.post('/signInViaFB', usersHandler.signInViaFB);
-    //router.post('/image', usersHandler.createUsersImage);
 
     router.get('/signOut', usersHandler.signOut);
     router.get('/count', session.isAdmin, usersHandler.getUsersCount);
     router.get('/confirm', usersHandler.confirmEmail);
-    router.get('/:id', /*session.checkAccessRights ,*/ usersHandler.getUserById);
+    router.get('/:id', session.isAuthorized, usersHandler.getUserById);
     router.get('/', session.isAdmin, usersHandler.getUsers);
 
-    //router.put('/image', usersHandler.updateUsersImage);
     router.put('/:id', session.checkAccessRights, usersHandler.updateUser);
     router.patch('/:id', session.checkAccessRights, usersHandler.updateUser);
 

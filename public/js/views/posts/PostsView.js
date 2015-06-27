@@ -40,13 +40,20 @@ define([
             "click #lastShowPage": "lastPage",
             "click #previousPage": "previousPage",
             "click #nextPage": "nextPage",
-            "click #searchButton": "search"
+            "click #searchButton": "search",
+            "keypress #searchContainer": "searchByEnter"
         },
 
         search: function (e) {
-            this.searchTerm = e.target.previousElementSibling.value;
+            this.searchTerm = $('#searchTerm').val();
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);
+        },
+
+        searchByEnter: function (e) {
+            if (e.which == 13) {
+                this.search();
+            }
         },
 
         previousPage: function (event) {

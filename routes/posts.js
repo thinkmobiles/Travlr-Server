@@ -4,25 +4,22 @@ var PostsHandler = require('../handlers/posts');
 var Session = require('../handlers/sessions');
 
 module.exports = function (PostGre, app) {
-   var postsHandler = new PostsHandler(PostGre, app);
-   var session = new Session(PostGre);
-
+    var postsHandler = new PostsHandler(PostGre, app);
+    var session = new Session(PostGre);
 
     router.route('/')
-        .get(postsHandler.getPosts)
-        .post(postsHandler.createPost);
+        .get(session.isAuthorized, postsHandler.getPosts)
+        .post(session.isAuthorized, postsHandler.createPost);
 
     router.route('/count')
-        .get( postsHandler.getPostsCount);
+        .get(session.isAuthorized, postsHandler.getPostsCount);
 
-    router.get('/count', postsHandler.getPostsCount);
-
-    router.get('/feesCount/:uId', postsHandler.getFeesCount);
-    router.get('/feesPoints/:uId', postsHandler.getFeesPoints);
-    router.get('/feesCountryCount/:uId', postsHandler.getFeesCountByCountry);
+    router.get('/feesCount/:uId', session.isAuthorized, postsHandler.getFeesCount);
+    router.get('/feesPoints/:uId', session.isAuthorized, postsHandler.getFeesPoints);
+    router.get('/feesCountryCount/:uId', session.isAuthorized, postsHandler.getFeesCountByCountry);
 
     router.route('/:id')
-        .get( postsHandler.getPostById)
+        .get(session.isAuthorized, postsHandler.getPostById)
         .delete(session.checkAccessRights, postsHandler.deletePost)
         .put(session.checkAccessRights, postsHandler.updatePost)
         .patch(session.checkAccessRights, postsHandler.updatePost);
