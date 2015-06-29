@@ -16,6 +16,19 @@ body {
   margin: 0;
   padding: 0;
 }
+a,
+a:active,
+a:focus,
+a:hover,
+button,
+button:active,
+button:focus,
+button:hover,
+input,
+input:focus {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
 #wrapper {
   padding: 1px;
 }
@@ -145,9 +158,12 @@ body {
   color: #333;
   padding-left: 0;
   border: 0;
-  width: 267px;
+  width: 265px;
   height: 30px;
   font-size: 14px;
+}
+#loginForm input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
 }
 #loginForm input:focus {
   outline-style: none;
@@ -463,12 +479,14 @@ body {
   border: 1px solid #e2e9ef;
   border-top-color: #CBD3E2;
   outline-color: #36a9e1;
+  width: 100%;
 }
 .trill-dialog .create_user #uploadInfo textarea,
 .trill-dialog-not-hide .create_user #uploadInfo textarea,
 .trill-dialog .edit_user #uploadInfo textarea,
 .trill-dialog-not-hide .edit_user #uploadInfo textarea {
   resize: none;
+  width: 100%;
 }
 .trill-dialog .cropImages,
 .trill-dialog-not-hide .cropImages {
