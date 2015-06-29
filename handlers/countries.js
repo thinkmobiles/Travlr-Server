@@ -89,17 +89,17 @@ Countries = function (PostGre) {
                         + " c.id,"
                         + " c.name,"
                         + " c.code,"
-                        + " case WHEN v.updated_at IS NULL then ('1970-01-01')"
-                        + " else  v.updated_at"
-                        + " end as updated_at,"
-                        + " cs.count,"
-                        + " count(p.id) as post_count"
+                        + " (CASE WHEN v.updated_at IS NULL then ('1970-01-01') ELSE v.updated_at END) as updated_at,"
+                        + " count(p.id) as post_count,"
+                        + " (CASE WHEN (cs.count IS NULL) THEN 0 ELSE cs.count END) as count"
+
                         + " FROM countries c"
+
                         + " LEFT JOIN visited_countries v on v.country_code = c.code AND v.author_id = " + authorId
                         + " LEFT JOIN countries_search_count cs on cs.country_code = c.code AND cs.author_id = " + authorId
                         + " LEFT JOIN posts p ON c.id = p.country_id AND p.author_id = " + authorId
                         + " GROUP BY c.id, c.name, v.updated_at, cs.count"
-                        + " ORDER BY updated_at DESC, post_count DESC, cs.count DESC, c.name ASC";
+                        + " ORDER BY updated_at DESC, post_count DESC, count DESC, c.name ASC";
 
                     PostGre.knex
                         .raw(sql)
