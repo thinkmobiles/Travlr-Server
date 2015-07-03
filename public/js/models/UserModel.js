@@ -27,7 +27,7 @@ define([
         parse: true,
         parse: function (response) {
             if (response.birthday){
-                response.birthday = moment(response.birthday).format("MM/DD/YYYY");
+                response.birthday = moment(response.birthday).format("DD/MM/YYYY");
             }
 
             return response;

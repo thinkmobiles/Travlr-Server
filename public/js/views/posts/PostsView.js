@@ -236,6 +236,7 @@ define([
                     $(this).prop("checked", false);
                 });
                 this.$el.find(".remove").hide();
+                this.$el.find(".edit").hide();
             }
         },
 

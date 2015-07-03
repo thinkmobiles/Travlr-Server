@@ -55,8 +55,8 @@ define([
             ];
 
             var headers ={
-                'policy': "Private Policy",
-                'terms': "Term and Condition",
+                'policy': "Privacy Policy",
+                'terms': "Terms and Conditions",
                 'about': "About"
             };
 

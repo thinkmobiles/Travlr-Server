@@ -15,7 +15,7 @@ define([
         parse: true,
         parse: function (response) {
             if (response.created_at)
-                response.created_at = moment(response.created_at).format("MM/DD/YYYY");
+                response.created_at = moment(response.created_at).format("DD/MM/YYYY");
 
             return response;
         }
