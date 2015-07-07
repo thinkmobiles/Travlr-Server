@@ -77,7 +77,8 @@ Complaints = function (PostGre) {
                     TABLES.COMPLAINTS + '.author_id',
                     TABLES.COMPLAINTS + '.post_id',
                     TABLES.COMPLAINTS + 'created_at',
-                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name , ' + TABLES.CITIES + '.name) as location')
+                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name, \' \'  , ' + TABLES.CITIES + '.name) as location')
+
                 ],
                 withRelated: [
                     'post'
@@ -176,7 +177,7 @@ Complaints = function (PostGre) {
                     TABLES.COMPLAINTS + '.author_id',
                     TABLES.COMPLAINTS + '.post_id',
                     TABLES.COMPLAINTS + '.created_at',
-                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name , ' + TABLES.CITIES + '.name) as location')
+                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name, \' \'  , ' + TABLES.CITIES + '.name) as location')
                 ],
                 withRelated: [
                     {

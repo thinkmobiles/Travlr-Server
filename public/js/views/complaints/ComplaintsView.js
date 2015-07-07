@@ -26,6 +26,7 @@ define([
         },
         events: {
             "click .viewButton": "viewPost",
+            "click #top-bar-editBtn": "viewPost",
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
             "click .checkAll": "checkAll",

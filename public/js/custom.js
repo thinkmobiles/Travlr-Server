@@ -195,7 +195,12 @@ define(['constants/responses'], function (RESPONSES) {
             $("#pageList").empty();
             $("#currentShowPage").val(0);
             $("#lastPage").text(0);
+
+            $(".checkAll").hide();
+
         } else {
+            $(".checkAll").show();
+
             currentPage = currentPage || 1;
             start.text(currentPage * itemsNumber - itemsNumber + 1);
             if (totalCount <= itemsNumber || totalCount <= currentPage * itemsNumber) {

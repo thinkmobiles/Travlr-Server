@@ -65,7 +65,7 @@ require(['app'], function (app) {
         $("#itemsNumber").text(itemsNumber);
         var start = $("#grid-start");
         var end = $("#grid-end");
-
+        alert("main");
         if (totalCount == 0 || totalCount == undefined) {
             start.text(0);
             end.text(0);
@@ -77,6 +77,7 @@ require(['app'], function (app) {
             $("#pageList").empty();
             $("#currentShowPage").val(0);
             $("#lastPage").text(0);
+
         } else {
             currentPage = currentPage || 1;
             start.text(currentPage * itemsNumber - itemsNumber + 1);
