@@ -68,6 +68,8 @@ Users = function (PostGre) {
         last_name: ['isString'],
         password: ['required'],
         email: ['required', 'isEmail'],
+        lat: ['required', 'isString'],
+        lon: ['required', 'isString'],
         gender: ['isInt'],
         confirm_status: ['isInt'],
         confirm_token: ['isString'],
@@ -78,6 +80,8 @@ Users = function (PostGre) {
 
     this.checkCreateUserOptionsviaFB = new Validation.Check({
         facebook_id: ['required', 'isString'],
+        lat: ['required', 'isString'],
+        lon: ['required', 'isString'],
         first_name: ['isString'],
         last_name: ['isString'],
         email: ['isEmail'],

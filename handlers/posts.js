@@ -136,7 +136,7 @@ Posts = function (PostGre) {
                     withRelated: [
                         {
                             'author': function () {
-                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                             }
                         },
                         {
@@ -164,7 +164,7 @@ Posts = function (PostGre) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
                                 if (postModel.author && postModel.author.image && postModel.author.image.id) {
-                                    postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'posts');
+                                    postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'users');
                                 }
                                 if (postModel.image && postModel.image.id) {
                                     postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
@@ -232,7 +232,7 @@ Posts = function (PostGre) {
                     withRelated: [
                         {
                             'author': function () {
-                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                             }
                         },
                         {
@@ -260,7 +260,7 @@ Posts = function (PostGre) {
                         }
 
                         if (postJSON && postJSON.author.image && postJSON.author.image && postJSON.author.image.id) {
-                            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'posts');
+                            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'users');
                         }
                         res.status(200).send(postJSON);
 
@@ -480,7 +480,7 @@ Posts = function (PostGre) {
                 withRelated: [
                     {
                         'author': function () {
-                            this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                            this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                         }
                     },
                     {
@@ -615,13 +615,13 @@ Posts = function (PostGre) {
         if (lat && lon) {
             PostGre.knex
                 .raw(
-                "SELECT * FROM posts, " +
-                "ST_Distance_Sphere( " +
-                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
-                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
-                " ) AS distance " +
-                "Where distance < " + distance
-            )
+                    "SELECT * FROM posts, " +
+                    "ST_Distance_Sphere( " +
+                    "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                    "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                    " ) AS distance " +
+                    "Where distance < " + distance
+                )
                 .then(function (queryResult) {
                     var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
                     callback(null, models);

@@ -59,7 +59,7 @@ app.use(session({
 }));
 
 knex = require('knex')({
-    debug: true,
+    //debug: true,
     client: 'pg',
     connection: {
         host: process.env.DB_HOST,

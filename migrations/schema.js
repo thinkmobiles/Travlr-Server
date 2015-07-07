@@ -23,6 +23,9 @@ module.exports = function (knex, Promise) {
                     row.string('facebook_id').index();
                     row.integer('role');
 
+                    row.string('lat').notNullable();
+                    row.string('lon').notNullable();
+
                     row.timestamp('updated_at', true);
                     row.timestamp('created_at', true);
                 }, cb)
@@ -33,7 +36,7 @@ module.exports = function (knex, Promise) {
                         row.increments('id').primary();
                         row.integer('author_id').index().notNullable();
                         row.string('title',100).notNullable();
-                        row.string('body').notNullable();
+                        row.string('body', 3000).notNullable();
                         row.string('lat').notNullable();
                         row.string('lon').notNullable();
                         row.integer('city_id').index();
