@@ -15,6 +15,7 @@ module.exports = function (PostGre, app) {
     router.post('/signIn', usersHandler.signIn);
     router.post('/forgotPass', usersHandler.forgotPassword);
     router.post('/signInViaFB', usersHandler.signInViaFB);
+    router.post('/location', session.isAuthorized, usersHandler.updateUserLocation);
 
     router.get('/signOut', usersHandler.signOut);
     router.get('/count', session.isAdmin, usersHandler.getUsersCount);
