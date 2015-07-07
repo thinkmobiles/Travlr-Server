@@ -2,7 +2,7 @@
 <tr data-index="<%= index %>" data-id="<%=complaint.id%>">
   <td class="numberUser"><%=startNumber + index + 1 %></td>
   <td class="complaintAuthor"><%=_.escape(complaint.author.first_name + ' ' + complaint.author.last_name)%></td>
-  <td class="complaintPostTitle"><%=_.escape(complaint.post.title)%></td>
+  <td class="complaintPostTitle"><%=_.escape(complaint.location)%></td>
   <td class="complaintPostBody"><%=_.escape(complaint.post.body)%></td>
   <td class="complaintDate"><%=_.escape(complaint.created_at)%></td>
   <td class="button">

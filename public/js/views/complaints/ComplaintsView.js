@@ -303,6 +303,7 @@ define([
         viewPost: function (e) {
             var id;
             var complainModel;
+            var self = this;
             var postModel;
             var targetClass = $(e.target).attr('class');
 
@@ -317,7 +318,7 @@ define([
             postModel = new PostModel(complainModel.get('post'));
             postModel.fetch({
                 success: function (model) {
-                    //model.bind('change', self.updateElement, self);
+                    model.bind('change', self.updateElement, self);
                     new EditPostView({model: model});
                 },
                 error: custom.errorHandler

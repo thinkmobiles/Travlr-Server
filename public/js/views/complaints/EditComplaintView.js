@@ -38,7 +38,8 @@ define([
                     $(e).remove();
                 },
                 error: custom.errorHandler
-            })
+            });
+
         },
         render: function (options) {
             var self = this;

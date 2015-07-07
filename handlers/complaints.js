@@ -66,12 +66,18 @@ Complaints = function (PostGre) {
             .forge({
                 id: complaintId
             })
+            .query(function(qb) {
+                qb.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');
+                qb.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
+                qb.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id');
+            })
             .fetch({
                 columns: [
-                    'id',
-                    'author_id',
-                    'post_id',
-                    'created_at'
+                    TABLES.COMPLAINTS + '.id',
+                    TABLES.COMPLAINTS + '.author_id',
+                    TABLES.COMPLAINTS + '.post_id',
+                    TABLES.COMPLAINTS + 'created_at',
+                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name , ' + TABLES.CITIES + '.name) as location')
                 ],
                 withRelated: [
                     'post'
@@ -105,6 +111,9 @@ Complaints = function (PostGre) {
             .query(function (qb) {
 
                 qb.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');
+                qb.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
+                qb.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id');
+
                 qb.leftJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id');
 
                 if (userId) {
@@ -121,7 +130,7 @@ Complaints = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw("LOWER(first_name || last_name || title || body) LIKE '%" + searchTerm + "%' ");
+                    qb.whereRaw("LOWER(first_name || last_name || concat(first_name, ' ', last_name) || concat(countries.name , cities.name) || to_char(complaints.created_at, 'DD/MM/YYYY') || body) LIKE '%" + searchTerm + "%' ");
                 }
 
 
@@ -134,7 +143,7 @@ Complaints = function (PostGre) {
                             sortName = 'first_name';
                             break;
                         case 'post_title':
-                            sortName = 'title';
+                            sortName = 'location';
                             break;
                         case 'post_body':
                             sortName = 'body';
@@ -147,6 +156,8 @@ Complaints = function (PostGre) {
                     if (sortName) {
                         sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
                         qb.orderBy(sortName, sortOrder);
+                    } else {
+                        qb.orderBy('created_at', 'DESC');
                     }
                 }
 
@@ -158,18 +169,21 @@ Complaints = function (PostGre) {
                     TABLES.COMPLAINTS + '.id',
                     TABLES.COMPLAINTS + '.author_id',
                     TABLES.COMPLAINTS + '.post_id',
-                    TABLES.COMPLAINTS + '.created_at'
+                    TABLES.COMPLAINTS + '.created_at',
+                    PostGre.knex.raw('concat(' + TABLES.COUNTRIES + '.name , ' + TABLES.CITIES + '.name) as location')
                 ],
                 withRelated: [
                     {
-                        author: function () {
+                        'author': function () {
                             this.columns([
                                 'id',
                                 'first_name',
                                 'last_name'
                             ])
-                        },
-                        post: function () {
+                        }
+                    },
+                    {
+                        'post': function () {
                             this.columns([
                                 'id',
                                 'title',
@@ -202,9 +216,17 @@ Complaints = function (PostGre) {
             })
         }
         if (searchTerm) {
+
             searchTerm = searchTerm.toLowerCase();
-            query.innerJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id')
-                .whereRaw("LOWER(first_name || last_name) LIKE '%" + searchTerm + "%' ");
+
+            query.leftJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id');
+            query.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');
+            query.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
+            query.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id')
+                .whereRaw("LOWER(first_name || last_name|| concat(first_name, ' ', last_name) || concat(" + TABLES.COUNTRIES + ".name, ' ' , " + TABLES.CITIES + ".name) || to_char(complaints.created_at, 'DD/MM/YYYY') || body) LIKE '%" + searchTerm + "%' ");
+
+            //query.groupBy(TABLES.COUNTRIES + '.name', TABLES.CITIES + '.name');
+            //query.groupBy('first_name');
         }
         query
             .count()

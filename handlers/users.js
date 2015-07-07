@@ -216,7 +216,11 @@ Users = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
+                    qb.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+                    "OR (to_char(users.birthday, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' ");
                 }
 
                 if (typeof sortObject === 'object') {
@@ -229,11 +233,14 @@ Users = function (PostGre) {
                     } else if (sortAliase === 'birthday') {
                         sortName = 'birthday';
                     }
+                }
 
-                    if (sortName) {
-                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
-                        qb.orderBy(sortName, sortOrder);
-                    }
+
+                if (sortName) {
+                    sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                    qb.orderBy(sortName, sortOrder);
+                } else {
+                    qb.orderBy('created_at', 'DESC');
                 }
 
                 qb.offset(( page - 1 ) * count);
@@ -259,7 +266,11 @@ Users = function (PostGre) {
 
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
-            query.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
+            query.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+            "OR (to_char(users.birthday, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' ");
         }
 
         query

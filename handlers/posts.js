@@ -63,7 +63,7 @@ Posts = function (PostGre) {
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         qb.whereRaw(
-                            "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
+                            "LOWER(title || first_name || ' ' || last_name || email || body || countries.name || cities.name || to_char(posts.created_at, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' "
                         )
                     }
 
@@ -115,6 +115,8 @@ Posts = function (PostGre) {
                         if (sortName) {
                             sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
                             qb.orderBy(sortName, sortOrder);
+                        } else {
+                            qb.orderBy('created_at', 'DESC');
                         }
                     }
                 })
@@ -415,8 +417,12 @@ Posts = function (PostGre) {
                 if (!err) {
                     if (results && results[0]) {
                         saveData.city_id = results[0].id;
+                    }
+
+                    if (results && results[1]) {
                         saveData.country_id = results[1].id;
                     }
+
                     postsHelper.updatePostByOptions(saveData, function (err, postModel) {
                         if (err) {
                             next(err);
@@ -646,7 +652,7 @@ Posts = function (PostGre) {
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
             query.whereRaw(
-                "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
+                "LOWER(title || first_name || ' ' || last_name || email || body || countries.name || cities.name || to_char(posts.created_at, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' "
             )
         }
 
@@ -655,7 +661,6 @@ Posts = function (PostGre) {
                 "country_id = " + cId
             )
         }
-
         query
             .count()
             .then(function (postsCount) {
