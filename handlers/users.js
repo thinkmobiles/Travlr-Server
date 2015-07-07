@@ -220,7 +220,7 @@ Users = function (PostGre) {
                     "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
                     "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
                     "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
-                    "OR (to_char(users.birthday, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' ");
+                    "OR to_char(users.birthday, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' ");
                 }
 
                 if (typeof sortObject === 'object') {
@@ -270,7 +270,7 @@ Users = function (PostGre) {
             "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
             "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
             "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
-            "OR (to_char(users.birthday, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' ");
+            "OR to_char(users.birthday, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' ");
         }
 
         query

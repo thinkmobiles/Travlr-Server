@@ -130,9 +130,15 @@ Complaints = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw("LOWER(first_name || last_name || concat(first_name, ' ', last_name) || concat(countries.name , cities.name) || to_char(complaints.created_at, 'DD/MM/YYYY') || body) LIKE '%" + searchTerm + "%' ");
+                    qb.whereRaw(
+                        "LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                        "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                        "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+                        "OR LOWER(concat(" + TABLES.COUNTRIES + ".name, ' ' , " + TABLES.CITIES + ".name)) LIKE '%" + searchTerm + "%' " +
+                        "OR to_char(complaints.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' " +
+                        "OR LOWER(body) LIKE '%" + searchTerm + "%' "
+                );
                 }
-
 
                 if (typeof sortObject === 'object') {
                     sortAliase = Object.keys(sortObject);
@@ -223,8 +229,14 @@ Complaints = function (PostGre) {
             query.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');
             query.leftJoin(TABLES.COUNTRIES, TABLES.COUNTRIES + '.id', TABLES.POSTS + '.country_id');
             query.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id')
-                .whereRaw("LOWER(first_name || last_name|| concat(first_name, ' ', last_name) || concat(" + TABLES.COUNTRIES + ".name, ' ' , " + TABLES.CITIES + ".name) || to_char(complaints.created_at, 'DD/MM/YYYY') || body) LIKE '%" + searchTerm + "%' ");
-
+                .whereRaw(
+                "LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(concat(" + TABLES.COUNTRIES + ".name, ' ' , " + TABLES.CITIES + ".name)) LIKE '%" + searchTerm + "%' " +
+                "OR to_char(complaints.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(body) LIKE '%" + searchTerm + "%' "
+            );
             //query.groupBy(TABLES.COUNTRIES + '.name', TABLES.CITIES + '.name');
             //query.groupBy('first_name');
         }
