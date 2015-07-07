@@ -175,7 +175,7 @@ define([
                     break;
             }
 
-            this.defaultItemsNumber;
+            //this.defaultItemsNumber;
             sortObject[sortBy] = sortConst;
             this.sort = sortObject;
             this.fetchCollection();
@@ -216,7 +216,7 @@ define([
                     this.checkItemCount--;
                 }
             }
-            if (this.checkItemCount > 0) {
+            if (this.checkItemCount) {
                 this.$el.find(".remove").show();
                 if (this.checkItemCount == 1) {
                     this.$el.find(".edit").show();
@@ -235,7 +235,7 @@ define([
                 this.$el.find("table tr td input").each(function () {
                     $(this).prop("checked", true);
                 });
-                this.$el.find(".remove").toggle();
+                this.$el.find(".remove").show();
                 if (this.checkItemCount == 1) {
                     this.$el.find(".edit").show();
                 } else {

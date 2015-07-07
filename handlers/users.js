@@ -229,7 +229,7 @@ Users = function (PostGre) {
                     if (sortAliase === 'email') {
                         sortName = 'email';
                     } else if (sortAliase === 'name') {
-                        sortName = 'first_name';
+                        sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
                     } else if (sortAliase === 'birthday') {
                         sortName = 'birthday';
                     }

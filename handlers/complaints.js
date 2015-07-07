@@ -146,7 +146,7 @@ Complaints = function (PostGre) {
 
                     switch (sortAliase) {
                         case 'author':
-                            sortName = 'first_name';
+                            sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');;
                             break;
                         case 'post_title':
                             sortName = 'location';

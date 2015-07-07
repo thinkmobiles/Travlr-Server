@@ -106,6 +106,9 @@ Posts = function (PostGre) {
                             case 'body':
                                 sortName = 'body';
                                 break;
+                            case 'name':
+                                sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
+                                break;
                             case 'email':
                                 sortName = TABLES.USERS + '.email';
                                 break;
@@ -115,7 +118,13 @@ Posts = function (PostGre) {
                             case 'country':
                                 sortName = TABLES.COUNTRIES + '.name';
                                 break;
+                            case 'city':
+                                sortName = TABLES.CITIES + '.name';
+                                break;
                             case 'created_at':
+                                sortName = 'created_at';
+                                break;
+                            case 'createdDate':
                                 sortName = 'created_at';
                                 break;
                         }
