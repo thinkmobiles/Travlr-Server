@@ -63,7 +63,15 @@ Posts = function (PostGre) {
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         qb.whereRaw(
-                            "LOWER(title || first_name || ' ' || last_name || email || body || countries.name || cities.name || to_char(posts.created_at, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' "
+                            "LOWER(title) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(concat(first_name || ' ' || last_name)) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(email) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(body) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(countries.name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(cities.name) LIKE '%" + searchTerm + "%' " +
+                            "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' "
                         )
                     }
 
@@ -652,7 +660,15 @@ Posts = function (PostGre) {
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
             query.whereRaw(
-                "LOWER(title || first_name || ' ' || last_name || email || body || countries.name || cities.name || to_char(posts.created_at, 'DD/MM/YYYY')) LIKE '%" + searchTerm + "%' "
+                "LOWER(title) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(concat(first_name || ' ' || last_name)) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(email) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(body) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(countries.name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(cities.name) LIKE '%" + searchTerm + "%' " +
+                "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' "
             )
         }
 
