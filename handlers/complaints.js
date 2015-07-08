@@ -159,13 +159,13 @@ Complaints = function (PostGre) {
                             sortName = 'created_at';
                             break;
                     }
+                }
 
-                    if (sortName) {
-                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
-                        qb.orderBy(sortName, sortOrder);
-                    } else {
-                        qb.orderBy('created_at', 'DESC');
-                    }
+                if (sortName) {
+                    sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                    qb.orderBy(sortName, sortOrder);
+                } else {
+                    qb.orderBy('created_at', 'DESC');
                 }
 
                 qb.offset(( page - 1 ) * limit)

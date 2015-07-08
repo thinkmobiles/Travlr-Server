@@ -77,8 +77,6 @@ Posts = function (PostGre) {
 
                     if (countryId) {
                         qb.where('country_id', countryId);
-                        orderBy = 'created_at';
-                        order = 'DESC';
                     }
 
                     if (userId) {
@@ -96,8 +94,6 @@ Posts = function (PostGre) {
                         qb.where('created_at', ">", newestDate)
                     }
 
-                    qb.offset(( page - 1 ) * limit)
-                        .limit(limit);
 
                     if (typeof sortObject === 'object') {
                         sortAliase = Object.keys(sortObject);
@@ -128,14 +124,17 @@ Posts = function (PostGre) {
                                 sortName = 'created_at';
                                 break;
                         }
-
-                        if (sortName) {
-                            sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
-                            qb.orderBy(sortName, sortOrder);
-                        } else {
-                            qb.orderBy('created_at', 'DESC');
-                        }
                     }
+
+                    if (sortName) {
+                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                        qb.orderBy(sortName, sortOrder);
+                    } else {
+                        qb.orderBy('created_at', 'DESC');
+                    }
+
+                    qb.offset(( page - 1 ) * limit)
+                        .limit(limit);
                 })
                 .fetch({
                     columns: [
@@ -547,6 +546,18 @@ Posts = function (PostGre) {
                 .forge({
                     id: postId
                 })
+                .destroy()
+                .then(function () {
+                    redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + userId, date.valueOf());
+                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+                })
+                .otherwise(next);
+
+
+/*            PostModel
+                .forge({
+                    id: postId
+                })
                 .fetch()
                 .then(function (postModel) {
                     if (postModel && postModel.id) {
@@ -564,7 +575,7 @@ Posts = function (PostGre) {
                         next(error);
                     }
                 })
-                .otherwise(next)
+                .otherwise(next)*/
         } else {
             next(RESPONSES.INVALID_PARAMETERS);
         }
@@ -628,7 +639,7 @@ Posts = function (PostGre) {
     function getPostsByRadius(options, callback) {
         var lat = options.lat;
         var lon = options.lon;
-        var distance = 10000;
+        var distance = CONSTANTS.POST_RADIUS;
         if (lat && lon) {
             PostGre.knex
                 .raw(
@@ -637,7 +648,8 @@ Posts = function (PostGre) {
                     "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
                     "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
                     " ) AS distance " +
-                    "Where distance < " + distance
+                    "WHERE distance < " + distance + " " +
+                    "ORDER BY created_at DESC "
                 )
                 .then(function (queryResult) {
                     var models = (queryResult && queryResult.rows) ? queryResult.rows : [];

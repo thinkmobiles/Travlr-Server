@@ -16,19 +16,19 @@ module.exports = function (PostGre, ParentModel) {
         author: function () {
             return this.belongsTo(PostGre.Models[MODELS.USER], 'author_id');
         },
-        country: function(){
+        country: function () {
             return this.belongsTo(PostGre.Models[MODELS.COUNTRY], 'country_id');
         },
-        city: function(){
+        city: function () {
             return this.belongsTo(PostGre.Models[MODELS.CITY], 'city_id');
         },
-        image: function() {
+        image: function () {
             return this.morphOne(PostGre.Models[MODELS.IMAGE], 'imageable');
         },
         initialize: function () {
             this.on('destroying', this.removeDependencies);
         },
-        removeDependencies: function(post) {
+        removeDependencies: function (post) {
             var postId = post.get('id');
             var imageOptions = {
                 imageable_id: postId,
@@ -36,15 +36,23 @@ module.exports = function (PostGre, ParentModel) {
             };
 
             if (postId) {
-                imageHelper.deleteImageByOptions(imageOptions,function(err, resp){
-                   if(err){
-                       logWriter.log(RESPONSES.IMAGE_DESTROY + " -> " + err);
-                   }
+                imageHelper.deleteImageByOptions(imageOptions, function (err, resp) {
+                    if (err) {
+                        logWriter.log(RESPONSES.IMAGE_DESTROY + " -> " + err);
+                    }
                 });
             } else {
                 logWriter.log(RESPONSES.INTERNAL_ERROR);
             }
 
+            PostGre.knex(TABLES.COMPLAINTS)
+                .where({
+                    post_id: postId
+                })
+                .delete()
+                .otherwise(function (err) {
+                    logWriter.log(RESPONSES.COMPLAINTS + " -> " + err);
+                });
         }
     });
 };

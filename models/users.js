@@ -24,19 +24,28 @@ module.exports = function (PostGre, ParentModel) {
                 function (cb) {
                     PostGre.Collections[COLLECTIONS.IMAGES]
                         .forge()
-                        .query(function(qb) {
-                            qb.leftJoin(TABLES.POSTS, function() {
+                        .query(function (qb) {
+                            qb.leftJoin(TABLES.POSTS, function () {
                                 this.on('imageable_id', TABLES.POSTS + '.id');
                                 this.andOn('imageable_type', PostGre.knex.raw('?', [TABLES.POSTS]));
                             });
-                            qb.where('author_id', userId)
+                            qb.where('author_id', userId);
+                            qb.orWhere(function () {
+                                this.where('imageable_id', userId);
+                                this.andWhere('imageable_type', 'users');
+                            });
                         })
                         .fetch()
-                        .then(function(images) {
-                            async.each(images, function (image, callback) {
+                        .then(function (images) {
+                            async.each(images.models, function (image, callback) {
                                 image
                                     .destroy()
-                                    .exec(callback)
+                                    .then(function(){
+                                        callback()
+                                    })
+                                    .otherwise(function(err){
+                                        callback(err)
+                                    })
                             }, function (err) {
                                 if (err) {
                                     cb(err)
@@ -46,6 +55,22 @@ module.exports = function (PostGre, ParentModel) {
                             })
                         })
                         .otherwise(cb);
+
+                },
+                function (cb) {
+                    PostGre.knex.raw(
+                        'DELETE ' +
+                        'FROM ' + TABLES.COMPLAINTS + ' c ' +
+                        'USING ' + TABLES.POSTS + ' p ' +
+                        'WHERE ' +
+                        'p.id = c.post_id and (p.author_id = ' + userId + ' or c.author_id = ' + userId + ')'
+                    )
+                        // TABLES.COMPLAINTS)
+                        //.where({
+                        //    author_id: userId
+                        // })
+                        //.delete()
+                        .exec(cb)
 
                 },
                 function (cb) {
@@ -60,27 +85,8 @@ module.exports = function (PostGre, ParentModel) {
                 function (cb) {
                     PostGre.knex(TABLES.FEEDBACKS)
                         .where({
-                                author_id: userId
-                            })
-                        .delete()
-                        .exec(cb)
-
-                },
-                function (cb) {
-                    PostGre.knex(TABLES.COMPLAINTS)
-                        .where({
-                                author_id: userId
-                            })
-                        .delete()
-                        .exec(cb)
-
-                },
-                function (cb) {
-                    PostGre.knex(TABLES.IMAGES)
-                        .where({
-                                imageable_id: userId,
-                                imageable_type: TABLES.USERS
-                            })
+                            author_id: userId
+                        })
                         .delete()
                         .exec(cb)
 
