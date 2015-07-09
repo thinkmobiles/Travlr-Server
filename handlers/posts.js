@@ -91,7 +91,7 @@ Posts = function (PostGre) {
                     }
 
                     if (newestDate) {
-                        qb.where('created_at', ">", newestDate)
+                        qb.where(TABLES.POSTS + '.created_at', ">", newestDate)
                     }
 
 
@@ -118,10 +118,10 @@ Posts = function (PostGre) {
                                 sortName = TABLES.CITIES + '.name';
                                 break;
                             case 'created_at':
-                                sortName = 'created_at';
+                                sortName = TABLES.POSTS + '.created_at';
                                 break;
                             case 'createdDate':
-                                sortName = 'created_at';
+                                sortName = TABLES.POSTS + '.created_at';
                                 break;
                         }
                     }

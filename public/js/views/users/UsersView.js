@@ -45,6 +45,7 @@ define([
         },
 
         search: function (e) {
+            //$('#check_all').prop('checked', false);
             this.searchTerm = $('#searchTerm').val();
             this.fetchCollection();
             this.getTotalLength(null, this.defaultItemsNumber, this.searchTerm);

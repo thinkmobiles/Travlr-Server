@@ -35,12 +35,15 @@ function Check(validJSON, objectOfValidationFunctions) {
                 })
             }
 
-            if (!errors && !Object.keys(saveModelOptions).length) {
-                errors = 'Save object is empty, wrong name of fields';
+            if (settings && !settings.canBeEmpty) {
+                if (!errors && !Object.keys(saveModelOptions).length) {
+                    errors = 'Save object is empty, wrong name of fields';
+                }
             }
 
-            if (!errors) {
-                if (settings) {
+
+            if (!errors ) {
+                if (settings && Object.keys(saveModelOptions).length) {
                     if (settings.checkFunctions && settings.checkFunctions.length) {
                         async.each(settings.checkFunctions,function(checkFunctionName, callback) {
                             if (objectOfValidationFunctions[checkFunctionName] && typeof objectOfValidationFunctions[checkFunctionName] === 'function') {
@@ -56,7 +59,7 @@ function Check(validJSON, objectOfValidationFunctions) {
                             }
                         });
                     } else {
-                        callback();
+                        callback(null, saveModelOptions);
                     }
                 } else {
                     callback(null, saveModelOptions);

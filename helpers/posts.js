@@ -123,19 +123,19 @@ Posts = function (PostGre) {
       if (err) {
         cb(err);
       } else {
-        PostsModel
-          .forge({
-            id: options.postId
-          })
-          .save(validOptions, {
-            patch: true
-          })
-          .then(function (model) {
-            cb(null, model);
-          })
-          .otherwise(cb)
+          PostsModel
+              .forge({
+                id: options.postId
+              })
+              .save(validOptions, {
+                patch: true
+              })
+              .then(function (model) {
+                cb(null, model);
+              })
+              .otherwise(cb)
       }
-    });
+    }, {canBeEmpty: true});
   }
 
 };
