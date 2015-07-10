@@ -131,6 +131,8 @@ Complaints = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
+                    searchTerm = searchTerm.replace("'", "''");
+
                     qb.whereRaw(
                         "LOWER(first_name) LIKE '%" + searchTerm + "%' " +
                         "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
@@ -225,6 +227,7 @@ Complaints = function (PostGre) {
         if (searchTerm) {
 
             searchTerm = searchTerm.toLowerCase();
+            searchTerm = searchTerm.replace("'", "''");
 
             query.leftJoin(TABLES.USERS, TABLES.COMPLAINTS + '.author_id', TABLES.USERS + '.id');
             query.leftJoin(TABLES.POSTS, TABLES.COMPLAINTS + '.post_id', TABLES.POSTS + '.id');

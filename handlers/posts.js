@@ -62,6 +62,8 @@ Posts = function (PostGre) {
 
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
+                        searchTerm = searchTerm.replace("'", "''");
+
                         qb.whereRaw(
                             "LOWER(title) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
@@ -680,6 +682,8 @@ Posts = function (PostGre) {
 
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
+            searchTerm = searchTerm.replace("'", "''");
+
             query.whereRaw(
                 "LOWER(title) LIKE '%" + searchTerm + "%' " +
                 "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
