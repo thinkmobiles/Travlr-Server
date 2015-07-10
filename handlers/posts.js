@@ -37,7 +37,7 @@ Posts = function (PostGre) {
 
             var page = options.page || 1;
             var limit = options.count || 25;
-            var sortObject = req.query.sort || {'createdDate': 1};
+            var sortObject = req.query.sort || {'created_at': 1};
 
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
@@ -120,9 +120,6 @@ Posts = function (PostGre) {
                                 sortName = TABLES.CITIES + '.name';
                                 break;
                             case 'created_at':
-                                sortName = TABLES.POSTS + '.created_at';
-                                break;
-                            case 'createdDate':
                                 sortName = TABLES.POSTS + '.created_at';
                                 break;
                         }
