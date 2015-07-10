@@ -7,6 +7,7 @@ var Session = require('../handlers/sessions');
 var CrypPass = require('../helpers/cryptoPass');
 var Generator = require('../helpers/randomPass.js');
 var Mailer = require('../helpers/mailer.js');
+var LogWriter = require('../helpers/logWriter.js');
 var Users;
 var async = require('async');
 var crypto = require("crypto");
@@ -22,6 +23,25 @@ Users = function (PostGre) {
     var mailer = new Mailer();
     var cryptoPass = new CrypPass();
     var generator = new Generator();
+    var logWriter = new LogWriter();
+
+    function setUserFirstLoginFlag(userId, flag) {
+
+        UserModel
+            .forge({
+                id: userId
+            })
+            .save({
+                isFirstLogin: flag
+            },
+            {
+                patch: true
+            })
+            .then()
+            .otherwise(function (err) {
+                logWriter.log('setUserFirstLoginFlag', err);
+            })
+    };
 
     this.signUp = function (req, res, next) {
         var options = req.body;
@@ -107,6 +127,10 @@ Users = function (PostGre) {
                             error.status = 400;
                             next(error);
                         } else {
+                            if (!!user.get('isFirstLogin')) {
+                                setUserFirstLoginFlag(user.id, false);
+                            }
+
                             user = user.toJSON();
                             session.register(req, res, user)
                         }
@@ -137,12 +161,15 @@ Users = function (PostGre) {
             if (err) {
                 next(err)
             } else {
-                if (action === CONSTANTS.FB_ACTIONS.CREATE) {
+                /*if (action === CONSTANTS.FB_ACTIONS.CREATE) {
                     res.status(201).send({success: RESPONSES.WAS_CREATED, id: user.id})
                 } else {
                     user = user.toJSON();
                     session.register(req, res, user)
-                }
+                }*/
+                user = user.toJSON();
+                session.register(req, res, user);
+
             }
         })
     };
@@ -173,7 +200,7 @@ Users = function (PostGre) {
                         'last_name',
                         'birthday',
                         'nationality',
-                        'gender',
+                        'isFirstLogin',
                         'lat',
                         'lon'
                     ]
@@ -231,7 +258,7 @@ Users = function (PostGre) {
                     if (sortAliase === 'email') {
                         sortName = 'email';
                     } else if (sortAliase === 'name') {
-                        sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
+                        sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || ' + TABLES.USERS + '.last_name');
                     } else if (sortAliase === 'birthday') {
                         sortName = 'birthday';
                     }

@@ -169,6 +169,7 @@ Users = function (PostGre) {
             if (err) {
                 callback(err);
             } else {
+                validOptions.isFirstLogin = true;
                 UserModel
                     .forge()
                     .save(validOptions)
@@ -270,6 +271,7 @@ Users = function (PostGre) {
                         callback(err);
                     } else {
                         if (!usersList.userByFBId && !usersList.userByEmail && !usersList.userByChangeEmail) {
+                            validOptions.isFirstLogin = true;
                             validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
                             UserModel
                                 .forge()
@@ -291,9 +293,32 @@ Users = function (PostGre) {
                                 .otherwise(callback)
 
                         } else if (!!usersList.userByFBId) {
-                            callback(null, usersList.userByFBId, CONSTANTS.FB_ACTIONS.SIGN_IN)
+                            if (!!usersList.userByFBId.get('isFirstLogin')) {
+                                usersList.userByFBId
+                                    .save({
+                                        isFirstLogin: false
+                                    }, {
+                                        patch: true
+                                    })
+                                    .then(function (user) {
+                                        callback(null, user, CONSTANTS.FB_ACTIONS.SIGN_IN);
+                                    })
+                                    .otherwise(callback)
+                            } else {
+                                callback(null, usersList.userByFBId, CONSTANTS.FB_ACTIONS.SIGN_IN)
+                            }
+
                         } else if (!usersList.userByFBId && !!usersList.userByEmail) {
                             validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+
+                            if (!!usersList.userByEmail.get('isFirstLogin')) {
+                                validOptions.isFirstLogin = false;
+                            }
+
+                            if (usersList.userByEmail.get('confirm_status') === CONSTANTS.CONFIRM_STATUS.UNCONFIRMED) {
+                                validOptions.password = null;
+                            }
+                            validOptions.confirm_token = null;
 
                             usersList.userByEmail
                                 .save(validOptions, {
@@ -318,6 +343,7 @@ Users = function (PostGre) {
                                 },
                                 function (cb) {
                                     validOptions.confirm_status = CONSTANTS.CONFIRM_STATUS.CONFIRMED;
+                                    validOptions.isFirstLogin = true;
                                     UserModel
                                         .forge()
                                         .save(validOptions)
