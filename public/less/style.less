@@ -4,6 +4,57 @@
   src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
 }
 
+
+@font-face {
+  font-family: "SegoeUIRegular";
+  src: url("../font/SegoeUIRegular.eot");
+  src: url("../font/SegoeUIRegular.eot?#iefix")format("embedded-opentype"),
+  url("../font/SegoeUIRegular.woff") format("woff"),
+  url("../font/SegoeUIRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SegoeUIBold";
+  src: url("../font/SegoeUIBold.eot");
+  src: url("../font/SegoeUIBold.eot?#iefix")format("embedded-opentype"),
+  url("../font/SegoeUIBold.woff") format("woff"),
+  url("../font/SegoeUIBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SegoeUIItalic";
+  src: url("../font/SegoeUIItalic.eot");
+  src: url("../font/SegoeUIItalic.eot?#iefix")format("embedded-opentype"),
+  url("../font/SegoeUIItalic.woff") format("woff"),
+  url("../font/SegoeUIItalic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SegoeUILight";
+  src: url("../font/SegoeUILight.eot");
+  src: url("../font/SegoeUILight.eot?#iefix")format("embedded-opentype"),
+  url("../font/SegoeUILight.woff") format("woff"),
+  url("../font/SegoeUILight.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SegoeUISemiBold";
+  src: url("../font/SegoeUISemiBold.eot");
+  src: url("../font/SegoeUISemiBold.eot?#iefix")format("embedded-opentype"),
+  url("../font/SegoeUISemiBold.woff") format("woff"),
+  url("../font/SegoeUISemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
 .mp {
   margin: 0;
   padding: 0;
@@ -13,12 +64,13 @@
 @imagesfolder: "../i/";
 
 html {
-  font-family: sans-serif;
+  font-family: "SegoeUIRegular", sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%
 }
 
 body {
+  font-family: "SegoeUIRegular", sans-serif;
   .mp;
 }
 
@@ -660,7 +712,7 @@ input, input:focus {
           text-overflow: ellipsis;
           padding: 5px;
           max-width: 150px;
-          position: relative;
+          //position: relative;
 
           &.numberUser {
             width: 50px;
@@ -680,15 +732,15 @@ input, input:focus {
           }
 
           .btn {
-            position: absolute;
-            top: 0;
-            left: 0;
-            border: none;
-            width: 100%;
-            height: 100%;
+            //position: absolute;
+            //top: 0;
+            //left: 0;
+            //border: none;
+            //width: 100%;
+            //height: 100%;
             color: #ffffff;
-            border-radius: 0;
-            background-color: #72d4fd;
+            //border-radius: 0;
+            background-color: #68e4bc;
           }
         }
       }
