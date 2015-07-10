@@ -12,7 +12,10 @@ var Session = function (PostGre) {
         } else {
             req.session.isAdmin = false;
         }
-        res.status(200).send({success: RESPONSES.SUCCESSFUL_LOGIN, id: options.id});
+        res.status(200).send({
+            success: RESPONSES.SUCCESSFUL_LOGIN,
+            id: options.id,
+            isFirstLogin: options.isFirstLogin});
     };
 
     this.kill = function (req, res, next) {

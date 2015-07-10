@@ -26,6 +26,8 @@ module.exports = function (knex, Promise) {
                     row.string('lat').notNullable();
                     row.string('lon').notNullable();
 
+                    row.boolean('isFirstLogin').default(false);
+
                     row.timestamp('updated_at', true);
                     row.timestamp('created_at', true);
                 }, cb)
