@@ -108,7 +108,7 @@ app.get('/add_admin', function (req, res) {
     });
     var shaSum = crypto.createHash('sha256');
 
-    shaSum.update("111111");
+    shaSum.update("admin");
     var pass = shaSum.digest('hex');
     admin.forge({
             password: pass,

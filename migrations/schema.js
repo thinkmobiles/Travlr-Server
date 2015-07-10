@@ -23,8 +23,8 @@ module.exports = function (knex, Promise) {
                     row.string('facebook_id').index();
                     row.integer('role');
 
-                    row.string('lat').notNullable();
-                    row.string('lon').notNullable();
+                    row.string('lat');
+                    row.string('lon');
 
                     row.boolean('isFirstLogin').default(false);
 
@@ -50,14 +50,14 @@ module.exports = function (knex, Promise) {
                     },
                     function (err) {
                         if (!err) {
-                            knex.raw('ALTER TABLE posts ADD COLUMN location GEOGRAPHY(POINT,4326)')
+                            /*knex.raw('ALTER TABLE posts ADD COLUMN location GEOGRAPHY(POINT,4326)')
                                 .then(function () {
                                      knex.raw('CREATE INDEX posts_location_index ON posts USING GIST (location)')
                                         .exec(cb);
                                 })
                                 .catch(function (err) {
                                     cb(err);
-                                });
+                                });*/
                         } else {
                             cb(err);
                         }
