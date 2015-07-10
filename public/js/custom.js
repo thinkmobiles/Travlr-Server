@@ -43,7 +43,7 @@ define(['constants/responses'], function (RESPONSES) {
         var img = new Image();
         img.onload = function () {
             var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 140, 140);
+            ctx.drawImage(img, 0, 0, 150, 100); //140 140
         };
         if (options.url) {
             img.src = options.url;
@@ -86,12 +86,12 @@ define(['constants/responses'], function (RESPONSES) {
                         bgColor: 'white',
                         bgOpacity: .6,
                         setSelect: [0, 0, 100, 100],
-                        aspectRatio: 1,
+                        aspectRatio: 1.5,
                         onSelect: imgSelect,
                         onChange: imgSelect,
                         boxWidth: 650,
                         boxHeight: 650,
-                        minSize: [10, 10]
+                        minSize: [15, 10]
                         //maxSize: [140, 140]
                     });
 
@@ -99,8 +99,8 @@ define(['constants/responses'], function (RESPONSES) {
                         if (parseInt(sellictions.w) > 0) {
                             var img = $('.image_input img')[0];
                             var canvasCrop = document.createElement('canvas');
-                            canvasCrop.height = 140;
-                            canvasCrop.width = 140;
+                            canvasCrop.height = 100; //140
+                            canvasCrop.width = 150; //140
                             var ctx = canvasCrop.getContext('2d');
                             ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
                             $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
@@ -195,7 +195,12 @@ define(['constants/responses'], function (RESPONSES) {
             $("#pageList").empty();
             $("#currentShowPage").val(0);
             $("#lastPage").text(0);
+
+            $(".checkAll").prop("checked", false).hide();
+
         } else {
+            $(".checkAll").show();
+
             currentPage = currentPage || 1;
             start.text(currentPage * itemsNumber - itemsNumber + 1);
             if (totalCount <= itemsNumber || totalCount <= currentPage * itemsNumber) {

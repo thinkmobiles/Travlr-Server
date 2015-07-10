@@ -19,6 +19,7 @@ module.exports = {
     },
     REDIS_NAME:{
         COUNTRY: "COUNTRY"
-    }
+    },
+    POST_RADIUS: 10000
 
 };

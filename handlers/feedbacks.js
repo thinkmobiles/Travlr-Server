@@ -89,6 +89,8 @@ Feedbacks = function (PostGre) {
 
         FeedbackCollection
             .query(function (qb) {
+                qb.leftJoin(TABLES.USERS, TABLES.USERS + ".id", TABLES.FEEDBACKS + ".author_id");
+
                 if (userId) {
                     qb.where({
                         author_id: userId
@@ -98,7 +100,8 @@ Feedbacks = function (PostGre) {
                     sortAliase = Object.keys(sortObject);
                     sortAliase = sortAliase[0];
                     if (sortAliase === 'author_id') {
-                        sortName = 'author_id';
+                        //sortName = 'author_id';
+                        sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
                     } else if (sortAliase === 'body') {
                         sortName = 'body';
                     }
@@ -124,10 +127,10 @@ Feedbacks = function (PostGre) {
                     }
                 ],
                 columns: [
-                    'id',
-                    'author_id',
-                    'body',
-                    'updated_at'
+                    TABLES.FEEDBACKS + '.id',
+                    TABLES.FEEDBACKS + '.author_id',
+                    TABLES.FEEDBACKS + '.body',
+                    TABLES.FEEDBACKS + '.updated_at'
                 ]
             })
             .then(function (feedbacks) {

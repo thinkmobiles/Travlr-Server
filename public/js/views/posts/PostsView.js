@@ -136,6 +136,7 @@ define([
         },
 
         goSort: function (e) {
+            e.stopPropagation();
             this.collection.unbind('reset');
             var target$ = $(e.target).closest(".oe-sortable");
             var currentParrentSortClass = target$.attr('class');
@@ -236,6 +237,7 @@ define([
                     $(this).prop("checked", false);
                 });
                 this.$el.find(".remove").hide();
+                this.$el.find(".edit").hide();
             }
         },
 

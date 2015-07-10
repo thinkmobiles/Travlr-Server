@@ -8,12 +8,11 @@ define([
       this.render();
     },
     events: {
-      "click #topMenu li a": "setActive"
+      //"click #topMenu li a": "setActive"
     },
     setActive: function (e) {
       $(e.target).closest("ul").find(">li.active").removeClass("active");
       $(e.target).closest("li").addClass("active");
-
     },
     render: function (options) {
       this.$el.html(_.template(TopMenuTemplate));

@@ -63,14 +63,20 @@ Posts = function (PostGre) {
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         qb.whereRaw(
-                            "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
+                            "LOWER(title) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(concat(first_name || ' ' || last_name)) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(email) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(body) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(countries.name) LIKE '%" + searchTerm + "%' " +
+                            "OR LOWER(cities.name) LIKE '%" + searchTerm + "%' " +
+                            "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' "
                         )
                     }
 
                     if (countryId) {
                         qb.where('country_id', countryId);
-                        orderBy = 'created_at';
-                        order = 'DESC';
                     }
 
                     if (userId) {
@@ -85,11 +91,9 @@ Posts = function (PostGre) {
                     }
 
                     if (newestDate) {
-                        qb.where('created_at', ">", newestDate)
+                        qb.where(TABLES.POSTS + '.created_at', ">", newestDate)
                     }
 
-                    qb.offset(( page - 1 ) * limit)
-                        .limit(limit);
 
                     if (typeof sortObject === 'object') {
                         sortAliase = Object.keys(sortObject);
@@ -97,6 +101,9 @@ Posts = function (PostGre) {
                         switch (sortAliase) {
                             case 'body':
                                 sortName = 'body';
+                                break;
+                            case 'name':
+                                sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
                                 break;
                             case 'email':
                                 sortName = TABLES.USERS + '.email';
@@ -107,16 +114,27 @@ Posts = function (PostGre) {
                             case 'country':
                                 sortName = TABLES.COUNTRIES + '.name';
                                 break;
+                            case 'city':
+                                sortName = TABLES.CITIES + '.name';
+                                break;
                             case 'created_at':
-                                sortName = 'created_at';
+                                sortName = TABLES.POSTS + '.created_at';
+                                break;
+                            case 'createdDate':
+                                sortName = TABLES.POSTS + '.created_at';
                                 break;
                         }
-
-                        if (sortName) {
-                            sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
-                            qb.orderBy(sortName, sortOrder);
-                        }
                     }
+
+                    if (sortName) {
+                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                        qb.orderBy(sortName, sortOrder);
+                    } else {
+                        qb.orderBy('created_at', 'DESC');
+                    }
+
+                    qb.offset(( page - 1 ) * limit)
+                        .limit(limit);
                 })
                 .fetch({
                     columns: [
@@ -134,7 +152,7 @@ Posts = function (PostGre) {
                     withRelated: [
                         {
                             'author': function () {
-                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                             }
                         },
                         {
@@ -162,7 +180,7 @@ Posts = function (PostGre) {
                         async.each(posts, function (postModel, callback) {
                             if (postModel) {
                                 if (postModel.author && postModel.author.image && postModel.author.image.id) {
-                                    postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'posts');
+                                    postModel.author.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.author.image.name, 'users');
                                 }
                                 if (postModel.image && postModel.image.id) {
                                     postModel.image.image_url = PostGre.imagesUploader.getImageUrl(postModel.image.name, 'posts');
@@ -230,7 +248,7 @@ Posts = function (PostGre) {
                     withRelated: [
                         {
                             'author': function () {
-                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                                this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                             }
                         },
                         {
@@ -258,7 +276,7 @@ Posts = function (PostGre) {
                         }
 
                         if (postJSON && postJSON.author.image && postJSON.author.image && postJSON.author.image.id) {
-                            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'posts');
+                            postJSON.author.image.image_url = PostGre.imagesUploader.getImageUrl(postJSON.author.image.name, 'users');
                         }
                         res.status(200).send(postJSON);
 
@@ -415,8 +433,12 @@ Posts = function (PostGre) {
                 if (!err) {
                     if (results && results[0]) {
                         saveData.city_id = results[0].id;
+                    }
+
+                    if (results && results[1]) {
                         saveData.country_id = results[1].id;
                     }
+
                     postsHelper.updatePostByOptions(saveData, function (err, postModel) {
                         if (err) {
                             next(err);
@@ -474,7 +496,7 @@ Posts = function (PostGre) {
                 withRelated: [
                     {
                         'author': function () {
-                            this.columns(['id', 'first_name', 'last_name', 'email', 'gender'])
+                            this.columns(['id', 'first_name', 'last_name', 'email', 'gender', 'nationality', 'lat', 'lon'])
                         }
                     },
                     {
@@ -524,6 +546,18 @@ Posts = function (PostGre) {
                 .forge({
                     id: postId
                 })
+                .destroy()
+                .then(function () {
+                    redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + userId, date.valueOf());
+                    res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY})
+                })
+                .otherwise(next);
+
+
+/*            PostModel
+                .forge({
+                    id: postId
+                })
                 .fetch()
                 .then(function (postModel) {
                     if (postModel && postModel.id) {
@@ -541,7 +575,7 @@ Posts = function (PostGre) {
                         next(error);
                     }
                 })
-                .otherwise(next)
+                .otherwise(next)*/
         } else {
             next(RESPONSES.INVALID_PARAMETERS);
         }
@@ -605,17 +639,18 @@ Posts = function (PostGre) {
     function getPostsByRadius(options, callback) {
         var lat = options.lat;
         var lon = options.lon;
-        var distance = 10000;
+        var distance = CONSTANTS.POST_RADIUS;
         if (lat && lon) {
             PostGre.knex
                 .raw(
-                "SELECT * FROM posts, " +
-                "ST_Distance_Sphere( " +
-                "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
-                "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
-                " ) AS distance " +
-                "Where distance < " + distance
-            )
+                    "SELECT * FROM posts, " +
+                    "ST_Distance_Sphere( " +
+                    "ST_GeomFromText(concat('POINT(', posts.lon, ' ', posts.lat, ')'), 4326), " +
+                    "ST_GeomFromText(" + "'POINT(" + lon + " " + lat + ")'" + ", 4326) " +
+                    " ) AS distance " +
+                    "WHERE distance < " + distance + " " +
+                    "ORDER BY created_at DESC "
+                )
                 .then(function (queryResult) {
                     var models = (queryResult && queryResult.rows) ? queryResult.rows : [];
                     callback(null, models);
@@ -646,7 +681,15 @@ Posts = function (PostGre) {
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
             query.whereRaw(
-                "LOWER(title || first_name || last_name || email || body || countries.name || cities.name) LIKE '%" + searchTerm + "%' "
+                "LOWER(title) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(concat(first_name || ' ' || last_name)) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(email) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(body) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(countries.name) LIKE '%" + searchTerm + "%' " +
+                "OR LOWER(cities.name) LIKE '%" + searchTerm + "%' " +
+                "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' "
             )
         }
 
@@ -655,7 +698,6 @@ Posts = function (PostGre) {
                 "country_id = " + cId
             )
         }
-
         query
             .count()
             .then(function (postsCount) {

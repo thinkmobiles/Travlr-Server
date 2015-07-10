@@ -168,11 +168,13 @@ define([
       this.current = new view(options);
     },
 
-    main: function () {
+    main: function (options) {
       if (!this.mainView) {
         this.mainView = new mainView();
         this.topBarView = new topMenuView();
         this.changeWrapperView(this.mainView);
+      } else {
+        this.topBarView = new topMenuView();
       }
     },
     changeWrapperView: function (wrapperView) {

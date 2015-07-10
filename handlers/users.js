@@ -173,7 +173,9 @@ Users = function (PostGre) {
                         'last_name',
                         'birthday',
                         'nationality',
-                        'gender'
+                        'gender',
+                        'lat',
+                        'lon'
                     ]
                 })
                 .then(function (user) {
@@ -216,7 +218,11 @@ Users = function (PostGre) {
 
                 if (searchTerm) {
                     searchTerm = searchTerm.toLowerCase();
-                    qb.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
+                    qb.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+                    "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+                    "OR to_char(users.birthday, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' ");
                 }
 
                 if (typeof sortObject === 'object') {
@@ -225,15 +231,18 @@ Users = function (PostGre) {
                     if (sortAliase === 'email') {
                         sortName = 'email';
                     } else if (sortAliase === 'name') {
-                        sortName = 'first_name';
+                        sortName = PostGre.knex.raw(TABLES.USERS + '.first_name || '+ TABLES.USERS + '.last_name');
                     } else if (sortAliase === 'birthday') {
                         sortName = 'birthday';
                     }
+                }
 
-                    if (sortName) {
-                        sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
-                        qb.orderBy(sortName, sortOrder);
-                    }
+
+                if (sortName) {
+                    sortOrder = (sortObject[sortAliase] === "1" ? 'ASC' : 'DESC');
+                    qb.orderBy(sortName, sortOrder);
+                } else {
+                    qb.orderBy('created_at', 'DESC');
                 }
 
                 qb.offset(( page - 1 ) * count);
@@ -244,7 +253,9 @@ Users = function (PostGre) {
                     'id',
                     'email',
                     'first_name',
-                    'last_name'
+                    'last_name',
+                    'lat',
+                    'lon'
                 ]
             })
             .then(function (users) {
@@ -259,7 +270,11 @@ Users = function (PostGre) {
 
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
-            query.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' OR LOWER(first_name) LIKE '%" + searchTerm + "%' OR LOWER(last_name) LIKE '%" + searchTerm + "%' " );
+            query.whereRaw("LOWER(email) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
+            "OR LOWER(concat(first_name, ' ', last_name)) LIKE '%" + searchTerm + "%' " +
+            "OR to_char(users.birthday, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' ");
         }
 
         query
@@ -274,6 +289,7 @@ Users = function (PostGre) {
     this.updateUser = function (req, res, next) {
         var options = req.body;
         var mailOptions;
+        var error;
         options.id = parseInt(req.params.id);
         if (options.change_email) {
             options.confirm_token = generator.generate(15);
@@ -326,6 +342,39 @@ Users = function (PostGre) {
         })
     };
 
+    this.updateUserLocation = function (req, res, next) {
+        var options = req.body;
+        var userId = req.session.userId;
+        var saveLocationObject;
+        var error;
+
+        if (options.lat && options.lon) {
+            saveLocationObject = {
+                lon: options.lon,
+                lat: options.lat
+            };
+
+            UserModel
+                .forge({
+                    id: userId
+                })
+                .save(saveLocationObject, {
+                    patch: true
+                })
+                .then(function (user) {
+                    res.status(201).send({
+                        success: RESPONSES.UPDATED_SUCCESS
+                    });
+                })
+                .otherwise(next)
+
+        } else {
+            error = new Error(RESPONSES.INVALID_PARAMETERS);
+            error.status = 400;
+            next(error);
+        }
+    };
+
     this.deleteUser = function (req, res, next) {
         var userId = parseInt(req.params.id);
 
@@ -371,68 +420,6 @@ Users = function (PostGre) {
             .otherwise(next)
     };
 
-    /*this.createUsersImage = function (req, res, next) {
-     var options = req.body;
-     var userId = req.session.userId;
-     var imageData = {
-     image: options.image,
-     imageable_type: TABLES.USERS,
-     imageable_id: userId
-     };
-
-     imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-     if (err) {
-     next(err);
-     } else {
-     res.status(201).send({success: RESPONSES.WAS_CREATED});
-     }
-     });
-     };*/
-
-    /*this.updateUsersImage = function (req, res, next) {
-     var options = req.body;
-     var userId = req.session.userId;
-     var imageType = TABLES.USERS;
-     var imageData;
-
-     async.series([
-     function (cb) {
-     imageData = {
-     imageable_id: userId,
-     imageable_type: imageType
-     };
-     imagesHelper.deleteImageByOptions(imageData, function (err) {
-     if (err) {
-     cb(err);
-     } else {
-     cb()
-     }
-     });
-     },
-     function (cb) {
-     imageData = {
-     image: options.image,
-     imageable_id: userId,
-     imageable_type: imageType
-     };
-     imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-     if (err) {
-     cb(err);
-     } else {
-     cb()
-     }
-     });
-     }
-     ], function (err) {
-     if (err) {
-     next(err)
-     } else {
-     res.status(200).send({success: RESPONSES.UPDATED_SUCCESS});
-     }
-     })
-
-     };*/
-
     this.deleteUsersImage = function (req, res, next) {
         var userId = req.params.id;
         var imageType = TABLES.USERS;
@@ -452,3 +439,4 @@ Users = function (PostGre) {
 };
 
 module.exports = Users;
+

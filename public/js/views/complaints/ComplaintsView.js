@@ -26,6 +26,7 @@ define([
         },
         events: {
             "click .viewButton": "viewPost",
+            "click #top-bar-editBtn": "viewPost",
             "click .remove": "removeComplaints",
             "click .deleteButton": "removeComplaints",
             "click .checkAll": "checkAll",
@@ -232,6 +233,7 @@ define([
                     $(this).prop("checked", false);
                 });
                 this.$el.find(".remove").hide();
+                this.$el.find(".edit").hide();
             }
         },
 
@@ -302,6 +304,7 @@ define([
         viewPost: function (e) {
             var id;
             var complainModel;
+            var self = this;
             var postModel;
             var targetClass = $(e.target).attr('class');
 
@@ -316,7 +319,7 @@ define([
             postModel = new PostModel(complainModel.get('post'));
             postModel.fetch({
                 success: function (model) {
-                    //model.bind('change', self.updateElement, self);
+                    model.bind('change', self.updateElement, self);
                     new EditPostView({model: model});
                 },
                 error: custom.errorHandler

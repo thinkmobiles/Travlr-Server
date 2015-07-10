@@ -15,8 +15,9 @@ define(
             streetRegExp = /^[a-zA-Z0-9\s][a-zA-Z0-9-,\s\.\/\s]+$/,
             moneyAmountRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/,
             emailRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            loggedRegExp = /\d{2}|^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?)$/;
-        lonlatRegExp = /(^\d{2})$|(^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?))$/;
+            loggedRegExp = /\d{2}|^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?)$/,
+        //lonlatRegExp = /(^\d{2})$|(^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?))$/;
+            lonlatRegExp = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
 
         var MIN_LENGTH = 2,
             LOGIN_MIN_LENGTH = 5,
@@ -86,8 +87,7 @@ define(
         };
 
         var validateLonLat = function (validatedString) {
-            var result = lonlatRegExp.test(validatedString);
-            return result;
+            return lonlatRegExp.test(validatedString);
         };
 
         var hasInvalidChars = function (validatedString) {
@@ -127,8 +127,8 @@ define(
                 }
 
             } else {
-                if (fieldValue) {
-                    if (validateLonLat(fieldValue)) {
+                if (fieldValue.length) {
+                    if (!validateLonLat(fieldValue)) {
                         errorArray.push([fieldName, errorMessages.invalidLatLonMsg].join(' '));
                         return;
                     }
@@ -550,6 +550,7 @@ define(
             validLoggedValue: validateLoggedValue,
             errorMessages: errorMessages,
             checkNumberField: checkNumberField,
+
             validStreet: validateStreet,
             validDate: validDate,
             validPhone: validatePhone,

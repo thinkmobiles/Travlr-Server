@@ -26,10 +26,18 @@ Cities = function (PostGre) {
                             CitiesModel
                                 .forge()
                                 .save(validOptions)
-                                .exec(callback);
+                                //.exec(callback);
+                                .then(function (cityModel) {
+                                    callback(null, cityModel);
+                                })
+                                .otherwise(function(err){
+                                    callback(err);
+                                });
                         }
                     })
-                    .otherwise(callback);
+                    .otherwise(function(err){
+                        callback(err);
+                    });
             }
         });
     };
