@@ -807,3 +807,6 @@ input:focus {
 .trumbowyg-editor {
   width: 100%;
 }
+#uploadInfo {
+  padding: 10px;
+}
