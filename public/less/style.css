@@ -3,16 +3,52 @@
   src: url("../font/icons.eot");
   src: url("../font/icons.eot?#iefix") format('embedded-opentype'), url("../font/icons.woff") format('woff'), url("../font/icons.ttf") format('truetype'), url("../font/icons .svg#quartzregular") format('svg');
 }
+@font-face {
+  font-family: "SegoeUIRegular";
+  src: url("../font/SegoeUIRegular.eot");
+  src: url("../font/SegoeUIRegular.eot?#iefix") format("embedded-opentype"), url("../font/SegoeUIRegular.woff") format("woff"), url("../font/SegoeUIRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "SegoeUIBold";
+  src: url("../font/SegoeUIBold.eot");
+  src: url("../font/SegoeUIBold.eot?#iefix") format("embedded-opentype"), url("../font/SegoeUIBold.woff") format("woff"), url("../font/SegoeUIBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "SegoeUIItalic";
+  src: url("../font/SegoeUIItalic.eot");
+  src: url("../font/SegoeUIItalic.eot?#iefix") format("embedded-opentype"), url("../font/SegoeUIItalic.woff") format("woff"), url("../font/SegoeUIItalic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "SegoeUILight";
+  src: url("../font/SegoeUILight.eot");
+  src: url("../font/SegoeUILight.eot?#iefix") format("embedded-opentype"), url("../font/SegoeUILight.woff") format("woff"), url("../font/SegoeUILight.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "SegoeUISemiBold";
+  src: url("../font/SegoeUISemiBold.eot");
+  src: url("../font/SegoeUISemiBold.eot?#iefix") format("embedded-opentype"), url("../font/SegoeUISemiBold.woff") format("woff"), url("../font/SegoeUISemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
 .mp {
   margin: 0;
   padding: 0;
 }
 html {
-  font-family: sans-serif;
+  font-family: "SegoeUIRegular", sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
 body {
+  font-family: "SegoeUIRegular", sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -28,6 +64,32 @@ input,
 input:focus {
   outline: none !important;
   outline-offset: 0 !important;
+}
+.table-bordered {
+  border: 2px solid #ddd;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 2px solid #ddd;
+}
+.table > thead > tr > td.info,
+.table > tbody > tr > td.info,
+.table > tfoot > tr > td.info,
+.table > thead > tr > th.info,
+.table > tbody > tr > th.info,
+.table > tfoot > tr > th.info,
+.table > thead > tr.info > td,
+.table > tbody > tr.info > td,
+.table > tfoot > tr.info > td,
+.table > thead > tr.info > th,
+.table > tbody > tr.info > th,
+.table > tfoot > tr.info > th {
+  background-color: #72d4fd;
+  color: #ffffff;
 }
 #wrapper {
   padding: 1px;
@@ -192,9 +254,10 @@ input:focus {
 #topMenu {
   margin: 0;
   padding: 0;
-  background-color: #4D5A75;
+  background-color: #dcdcdc;
   list-style: none;
   height: 31px;
+  border-bottom: 1px solid #000;
 }
 #topMenu li {
   float: left;
@@ -202,18 +265,18 @@ input:focus {
 #topMenu li a {
   display: block;
   padding: 0 10px;
-  line-height: 31px;
+  line-height: 30px;
   text-decoration: none;
-  color: #fff;
+  color: #000;
 }
 #topMenu li a:hover {
   text-decoration: underline;
 }
 #topMenu li.active > a {
-  background-color: #36a9e1;
+  background-color: #72d4fd;
   color: white;
   text-decoration: none;
-  height: 31px;
+  height: 30px;
 }
 #topMenu li.logout {
   float: right;
@@ -553,6 +616,53 @@ input:focus {
 #content-holder {
   margin-top: 68px;
 }
+#content-holder .userListContainer table,
+#content-holder .postListContainer table,
+#content-holder .feedbacksListContainer table,
+#content-holder .complaintsListContainer table {
+  max-width: 100%;
+  width: 100%;
+}
+#content-holder .userListContainer table tr td,
+#content-holder .postListContainer table tr td,
+#content-holder .feedbacksListContainer table tr td,
+#content-holder .complaintsListContainer table tr td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
+  max-width: 150px;
+}
+#content-holder .userListContainer table tr td.numberUser,
+#content-holder .postListContainer table tr td.numberUser,
+#content-holder .feedbacksListContainer table tr td.numberUser,
+#content-holder .complaintsListContainer table tr td.numberUser {
+  width: 50px;
+  max-width: 50px;
+  min-width: 50px;
+}
+#content-holder .userListContainer table tr td.userName,
+#content-holder .postListContainer table tr td.userName,
+#content-holder .feedbacksListContainer table tr td.userName,
+#content-holder .complaintsListContainer table tr td.userName {
+  width: 150px;
+  max-width: 150px;
+}
+#content-holder .userListContainer table tr td.complaintDate,
+#content-holder .postListContainer table tr td.complaintDate,
+#content-holder .feedbacksListContainer table tr td.complaintDate,
+#content-holder .complaintsListContainer table tr td.complaintDate {
+  width: 150px;
+  max-width: 150px;
+  min-width: 150px;
+}
+#content-holder .userListContainer table tr td .btn,
+#content-holder .postListContainer table tr td .btn,
+#content-holder .feedbacksListContainer table tr td .btn,
+#content-holder .complaintsListContainer table tr td .btn {
+  color: #ffffff;
+  background-color: #68e4bc;
+}
 .postsBody {
   max-width: 350px;
   white-space: nowrap;
@@ -647,18 +757,17 @@ input:focus {
   border: 1px solid rgba(0, 0, 0, 0.3);
   cursor: default;
 }
-.pagination .currentShowPageContainer {
-  margin-top: -2px;
-}
 .pagination #currentShowPage {
+  background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-right: 1px solid rgba(0, 0, 0, 0);
   width: 21px;
   height: 18px;
-  margin-left: 5px;
   font-size: 12px !important;
-  position: relative;
-  top: -1px;
+  line-height: normal;
+  margin: 0 0 0 5px;
+  display: inline-block;
+  vertical-align: top;
 }
 .pagination #pageList {
   margin: 0;
@@ -779,9 +888,23 @@ input:focus {
 }
 #searchTerm {
   margin-top: 5px;
+  border-radius: 3px;
+  border: 1px solid #dddddd;
+  padding: 3px 5px;
 }
 #searchContainer {
   float: right;
+}
+#searchButton {
+  border: none;
+  background: #68e4bc;
+  color: #ffffff;
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+#searchButton:active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 .ui-widget-overlay {
   background-color: #666666;
@@ -807,4 +930,7 @@ input:focus {
 .trumbowyg-box,
 .trumbowyg-editor {
   width: 100%;
+}
+#uploadInfo {
+  padding: 10px;
 }
