@@ -29,6 +29,19 @@ input, input:focus {
   outline-offset: 0 !important;
 }
 
+.table-bordered {
+  border: 2px solid #ddd;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+  border: 2px solid #ddd;
+}
+
+.table > thead > tr > td.info, .table > tbody > tr > td.info, .table > tfoot > tr > td.info, .table > thead > tr > th.info, .table > tbody > tr > th.info, .table > tfoot > tr > th.info, .table > thead > tr.info > td, .table > tbody > tr.info > td, .table > tfoot > tr.info > td, .table > thead > tr.info > th, .table > tbody > tr.info > th, .table > tfoot > tr.info > th {
+  background-color: #72d4fd;
+  color: #ffffff;
+}
+
 #wrapper {
   padding: 1px;
 }
@@ -221,9 +234,10 @@ input, input:focus {
 
 #topMenu {
   .mp;
-  background-color: #4D5A75;
+  background-color: #dcdcdc;
   list-style: none;
   height: 31px;
+  border-bottom: 1px solid #000;
   //width: 294px;
   li {
     float: left;
@@ -231,9 +245,9 @@ input, input:focus {
     a {
       display: block;
       padding: 0 10px;
-      line-height: 31px;
+      line-height: 30px;
       text-decoration: none;
-      color: #fff;
+      color: #000;
       &:hover {
         text-decoration: underline;
       }
@@ -244,7 +258,7 @@ input, input:focus {
         background-color: #36a9e1;
         color: white;
         text-decoration: none;
-        height: 31px;
+        height: 30px;
         //border-bottom: 1px solid #4d5a75;
       }
     }
