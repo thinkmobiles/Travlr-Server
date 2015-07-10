@@ -647,18 +647,17 @@ input:focus {
   border: 1px solid rgba(0, 0, 0, 0.3);
   cursor: default;
 }
-.pagination .currentShowPageContainer {
-  margin-top: -2px;
-}
 .pagination #currentShowPage {
+  background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-right: 1px solid rgba(0, 0, 0, 0);
   width: 21px;
   height: 18px;
-  margin-left: 5px;
   font-size: 12px !important;
-  position: relative;
-  top: -1px;
+  line-height: normal;
+  margin: 0 0 0 5px;
+  display: inline-block;
+  vertical-align: top;
 }
 .pagination #pageList {
   margin: 0;
