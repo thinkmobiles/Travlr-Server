@@ -643,8 +643,10 @@ input, input:focus {
   //    }
   //  }
   //}
-
-  .postListContainer {
+  .userListContainer,
+  .postListContainer,
+  .feedbacksListContainer,
+  .complaintsListContainer {
 
     table {
       max-width: 100%;
@@ -655,7 +657,26 @@ input, input:focus {
         td {
           white-space: nowrap;
           overflow: hidden;
+          text-overflow: ellipsis;
           padding: 5px;
+          max-width: 150px;
+
+          &.numberUser {
+            width: 50px;
+            max-width: 50px;
+            min-width: 50px;
+          }
+
+          &.userName {
+            width: 150px;
+            max-width: 150px;
+          }
+          
+          &.complaintDate {
+            width: 150px;
+            max-width: 150px;
+            min-width: 150px;
+          }
         }
       }
     }

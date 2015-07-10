@@ -580,14 +580,45 @@ input:focus {
 #content-holder {
   margin-top: 68px;
 }
-#content-holder .postListContainer table {
+#content-holder .userListContainer table,
+#content-holder .postListContainer table,
+#content-holder .feedbacksListContainer table,
+#content-holder .complaintsListContainer table {
   max-width: 100%;
   width: 100%;
 }
-#content-holder .postListContainer table tr td {
+#content-holder .userListContainer table tr td,
+#content-holder .postListContainer table tr td,
+#content-holder .feedbacksListContainer table tr td,
+#content-holder .complaintsListContainer table tr td {
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   padding: 5px;
+  max-width: 150px;
+}
+#content-holder .userListContainer table tr td.numberUser,
+#content-holder .postListContainer table tr td.numberUser,
+#content-holder .feedbacksListContainer table tr td.numberUser,
+#content-holder .complaintsListContainer table tr td.numberUser {
+  width: 50px;
+  max-width: 50px;
+  min-width: 50px;
+}
+#content-holder .userListContainer table tr td.userName,
+#content-holder .postListContainer table tr td.userName,
+#content-holder .feedbacksListContainer table tr td.userName,
+#content-holder .complaintsListContainer table tr td.userName {
+  width: 150px;
+  max-width: 150px;
+}
+#content-holder .userListContainer table tr td.complaintDate,
+#content-holder .postListContainer table tr td.complaintDate,
+#content-holder .feedbacksListContainer table tr td.complaintDate,
+#content-holder .complaintsListContainer table tr td.complaintDate {
+  width: 150px;
+  max-width: 150px;
+  min-width: 150px;
 }
 .postsBody {
   max-width: 350px;
