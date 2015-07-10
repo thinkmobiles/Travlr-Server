@@ -19,6 +19,7 @@ define([
       this.$el.find("#topMenu>li.active").removeClass("active");
 
       var hash = window.location.hash.toString().split("list")[0];
+      hash = hash.split("/")[0];
       var li = this.$el.find("#topMenu a[href='" + hash + "']").parents("li");
       li.addClass("active");
 
