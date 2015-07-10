@@ -580,6 +580,15 @@ input:focus {
 #content-holder {
   margin-top: 68px;
 }
+#content-holder .postListContainer table {
+  max-width: 100%;
+  width: 100%;
+}
+#content-holder .postListContainer table tr td {
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 5px;
+}
 .postsBody {
   max-width: 350px;
   white-space: nowrap;
