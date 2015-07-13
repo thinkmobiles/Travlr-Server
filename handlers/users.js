@@ -424,6 +424,7 @@ Users = function (PostGre) {
         var email = req.body.email;
         var newPass = generator.generate(8);
         var mailOptions;
+        var error;
 
         UserModel
             .forge({
@@ -431,22 +432,28 @@ Users = function (PostGre) {
             })
             .fetch()
             .then(function (user) {
-                user
-                    .save({
-                        password: cryptoPass.getEncryptedPass(newPass)
-                    }, {
-                        patch: true
-                    })
-                    .then(function () {
-                        mailOptions = {
-                            password: newPass,
-                            email: email
-                        };
+                if (user && (user.get('confirm_status') === CONSTANTS.CONFIRM_STATUS.CONFIRMED)){
+                    user
+                        .save({
+                            password: cryptoPass.getEncryptedPass(newPass)
+                        }, {
+                            patch: true
+                        })
+                        .then(function () {
+                            mailOptions = {
+                                password: newPass,
+                                email: email
+                            };
 
-                        mailer.forgotPassword(mailOptions);
-                        res.status(200).send({success: RESPONSES.CHANGE_PASSWORD})
-                    })
-                    .otherwise(next)
+                            mailer.forgotPassword(mailOptions);
+                            res.status(200).send({success: RESPONSES.CHANGE_PASSWORD})
+                        })
+                        .otherwise(next)
+                } else {
+                    error = new Error(RESPONSES.UNCOFIRMED_EMAIL);
+                    error.status = 400;
+                    next(error);
+                }
             })
             .otherwise(next)
     };
