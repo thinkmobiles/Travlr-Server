@@ -38,11 +38,6 @@ module.exports = function (app) {
 
     function deliver(mailOptions, cb) {
         var transport = nodemailer.createTransport(smtpTransport({
-            /*service: 'gmail',
-            auth: {
-                user: "gogi.gogishvili",
-                pass: "gogi123456789"
-            }*/
             service: process.env.MAIL_SERVICE,
             auth: {
                 user: process.env.MAIL_USERNAME,
