@@ -18,7 +18,7 @@ define([
       "feedbacks(/p=:page)(/c=:countPerPage)(/sort=:sort)": "feedbacks",
       "complaints(/p=:page)(/c=:countPerPage)(/sort=:sort)": "complaints",
       "posts(/p=:page)(/c=:countPerPage)(/sort=:sort)": "posts",
-      "info/": "static",
+      "info": "static",
       "*any": "any"
     },
 
