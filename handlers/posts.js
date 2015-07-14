@@ -707,7 +707,24 @@ Posts = function (PostGre) {
                 cb(null, postsCount[0]);
             })
             .otherwise(cb)
-    }
+    };
+
+    this.deleteImageFromPost = function(req, res, next) {
+        var postId = req.params.id;
+        var imageType = TABLES.POSTS;
+        var imageData = {
+            imageable_id: postId,
+            imageable_type: imageType
+        };
+
+        imagesHelper.deleteImageByOptions(imageData, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY});
+            }
+        });
+    };
 };
 
 module.exports = Posts;

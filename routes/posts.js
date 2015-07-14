@@ -18,6 +18,8 @@ module.exports = function (PostGre, app) {
     router.get('/feesPoints/:uId', session.isAuthorized, postsHandler.getFeesPoints);
     router.get('/feesCountryCount/:uId', session.isAuthorized, postsHandler.getFeesCountByCountry);
 
+    router.delete('/deleteImage/:id', session.checkAccessRights, postsHandler.deleteImageFromPost);
+
     router.route('/:id')
         .get(session.isAuthorized, postsHandler.getPostById)
         .delete(session.checkAccessRights, postsHandler.deletePost)
