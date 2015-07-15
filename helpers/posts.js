@@ -12,14 +12,14 @@ Posts = function (PostGre) {
   var PostsModel = PostGre.Models[MODELS.POST];
 
   this.checkCreatePostOptions = new Validation.Check({
-    body: ['required'],
-    author_id: ['required'],
-    title: ['required'],
+    body: ['isString'],
+    author_id: ['isInt'],
+    title: ['isString'],
     lon: ['required'],
     lat: ['required'],
     type: ['isArray'],
-    city_id: ['required'],
-    country_id: ['required']
+    city_id: ['isInt'],
+    country_id: ['isInt']
   });
 
   this.checkUpdatePostOptions = new Validation.Check({

@@ -1,7 +1,8 @@
 define([
     'text!/templates/login/LoginTemplate.html',
-    'custom'
-], function (LoginTemplate, Custom) {
+    'custom',
+    'constants/constants'
+], function (LoginTemplate, Custom, Constants) {
 
     var LoginView = Backbone.View.extend({
         el: '#wrapper',
@@ -27,8 +28,13 @@ define([
                 url: "/users/signIn",
                 type: "POST",
                 data: data,
-                success: function () {
-                    Custom.runApplication(true);
+                success: function (resp) {
+                    if(resp.role == Constants.ADMIN_ROLE){
+                        Custom.runApplication(true);
+                    }else{
+                        $("#loginForm").addClass("notRegister");
+                        $("#loginForm .error").text("This user doesn't has permission").show();
+                    }
                 },
                 error: function () {
                     $("#loginForm").addClass("notRegister");
