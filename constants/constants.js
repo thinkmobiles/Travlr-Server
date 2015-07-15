@@ -1,5 +1,8 @@
 module.exports = {
 
+    MAILER_DEFAULT_FROM: "Elsewhere",
+    MAILER_DEFAULT_EMAIL_ADDRESS: "admin@elsewhere.com",
+
     USERS_ROLES: {
         USER: '0',
         ADMIN: '1'

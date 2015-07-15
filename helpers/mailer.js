@@ -1,3 +1,4 @@
+var CONSTANTS = require('../constants/constants');
 module.exports = function (app) {
     var _ = require('../public/js/libs/underscore/underscore.js');
     var nodemailer = require("nodemailer");
@@ -10,7 +11,7 @@ module.exports = function (app) {
             password: options.password
         };
         var mailOptions = {
-            from: 'Elsewhere',
+            from:  CONSTANTS.MAILER_DEFAULT_FROM + ' <' + CONSTANTS.MAILER_DEFAULT_EMAIL_ADDRESS + '>',
             to: options.email,
             subject: 'Your Elsewhere password has been reset',
             generateTextFromHTML: true,
@@ -26,7 +27,7 @@ module.exports = function (app) {
             url: process.env.APP_HOST + ':' + process.env.PORT + '/users/confirm?token=' + options.confirm_token
         };
         var mailOptions = {
-            from: 'Elsewhere',
+            from:  CONSTANTS.MAILER_DEFAULT_FROM + ' <' + CONSTANTS.MAILER_DEFAULT_EMAIL_ADDRESS + '>',
             to: options.email,
             subject: 'Please confirm your Elsewhere account request',
             generateTextFromHTML: true,
