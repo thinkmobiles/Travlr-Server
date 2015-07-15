@@ -10,9 +10,9 @@ module.exports = function (app) {
             password: options.password
         };
         var mailOptions = {
-            from: 'Test',
+            from: 'Elsewhere',
             to: options.email,
-            subject: 'New password',
+            subject: 'Your Elsewhere password has been reset',
             generateTextFromHTML: true,
             html: _.template(fs.readFileSync('public/templates/mailer/forgotPassword.html', encoding = "utf8"))(templateOptions)
         };
@@ -26,9 +26,9 @@ module.exports = function (app) {
             url: process.env.APP_HOST + ':' + process.env.PORT + '/users/confirm?token=' + options.confirm_token
         };
         var mailOptions = {
-            from: 'Test',
+            from: 'Elsewhere',
             to: options.email,
-            subject: 'Confirm email',
+            subject: 'Please confirm your Elsewhere account request',
             generateTextFromHTML: true,
             html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"))(templateOptions)
         };
