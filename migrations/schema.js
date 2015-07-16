@@ -37,8 +37,8 @@ module.exports = function (knex, Promise) {
                 createTable(TABLES.POSTS, function (row) {
                         row.increments('id').primary();
                         row.integer('author_id').index().notNullable();
-                        row.string('title',100).notNullable();
-                        row.string('body', 3000).notNullable();
+                        row.string('title',100);
+                        row.string('body', 3000);
                         row.string('lat').notNullable();
                         row.string('lon').notNullable();
                         row.integer('city_id').index();

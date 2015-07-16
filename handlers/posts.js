@@ -366,23 +366,31 @@ Posts = function (PostGre) {
                             next(err);
                         } else {
                             if (resp && resp.id) {
-                                imageData = {
-                                    image: options.image,
-                                    imageable_type: TABLES.POSTS,
-                                    imageable_id: resp.id
-                                };
                                 postId = resp.id;
-                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                    if (err) {
-                                        next(err);
-                                    } else {
-                                        redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.userId, date.valueOf());
-                                        res.status(201).send({
-                                            message: RESPONSES.WAS_CREATED,
-                                            id: postId
-                                        });
-                                    }
-                                });
+                                if (options.image) {
+                                    imageData = {
+                                        image: options.image,
+                                        imageable_type: TABLES.POSTS,
+                                        imageable_id: resp.id
+                                    };
+                                    imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                        if (err) {
+                                            next(err);
+                                        } else {
+                                            redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.userId, date.valueOf());
+                                            res.status(201).send({
+                                                message: RESPONSES.WAS_CREATED,
+                                                id: postId
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    res.status(201).send({
+                                        message: RESPONSES.WAS_CREATED,
+                                        id: postId
+                                    });
+                                }
+
                             }
                         }
                     });
