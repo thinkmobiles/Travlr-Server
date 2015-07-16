@@ -37,7 +37,7 @@ Posts = function (PostGre) {
 
             var page = options.page || 1;
             var limit = options.count || 25;
-            var sortObject = req.query.sort || {'createdDate': 1};
+            var sortObject = req.query.sort || {'created_at': 1};
 
             var searchTerm = options.searchTerm;
             var countryId = parseInt(options.cId);
@@ -62,6 +62,8 @@ Posts = function (PostGre) {
 
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
+                        searchTerm = searchTerm.replace("'", "''");
+
                         qb.whereRaw(
                             "LOWER(title) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
@@ -118,9 +120,6 @@ Posts = function (PostGre) {
                                 sortName = TABLES.CITIES + '.name';
                                 break;
                             case 'created_at':
-                                sortName = TABLES.POSTS + '.created_at';
-                                break;
-                            case 'createdDate':
                                 sortName = TABLES.POSTS + '.created_at';
                                 break;
                         }
@@ -239,6 +238,7 @@ Posts = function (PostGre) {
                         'id',
                         'title',
                         'body',
+                        'type',
                         'lat',
                         'lon',
                         'author_id',
@@ -366,23 +366,31 @@ Posts = function (PostGre) {
                             next(err);
                         } else {
                             if (resp && resp.id) {
-                                imageData = {
-                                    image: options.image,
-                                    imageable_type: TABLES.POSTS,
-                                    imageable_id: resp.id
-                                };
                                 postId = resp.id;
-                                imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
-                                    if (err) {
-                                        next(err);
-                                    } else {
-                                        redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.userId, date.valueOf());
-                                        res.status(201).send({
-                                            message: RESPONSES.WAS_CREATED,
-                                            id: postId
-                                        });
-                                    }
-                                });
+                                if (options.image) {
+                                    imageData = {
+                                        image: options.image,
+                                        imageable_type: TABLES.POSTS,
+                                        imageable_id: resp.id
+                                    };
+                                    imagesHelper.createImageByOptions(imageData, function (err, imageModel) {
+                                        if (err) {
+                                            next(err);
+                                        } else {
+                                            redisClient.cacheStore.writeToStorage(CONSTANTS.REDIS_NAME.COUNTRY + options.userId, date.valueOf());
+                                            res.status(201).send({
+                                                message: RESPONSES.WAS_CREATED,
+                                                id: postId
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    res.status(201).send({
+                                        message: RESPONSES.WAS_CREATED,
+                                        id: postId
+                                    });
+                                }
+
                             }
                         }
                     });
@@ -487,6 +495,7 @@ Posts = function (PostGre) {
                     'id',
                     'title',
                     'body',
+                    'type',
                     'lat',
                     'lon',
                     'author_id',
@@ -680,6 +689,8 @@ Posts = function (PostGre) {
 
         if (searchTerm) {
             searchTerm = searchTerm.toLowerCase();
+            searchTerm = searchTerm.replace("'", "''");
+
             query.whereRaw(
                 "LOWER(title) LIKE '%" + searchTerm + "%' " +
                 "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
@@ -704,7 +715,24 @@ Posts = function (PostGre) {
                 cb(null, postsCount[0]);
             })
             .otherwise(cb)
-    }
+    };
+
+    this.deleteImageFromPost = function(req, res, next) {
+        var postId = req.params.id;
+        var imageType = TABLES.POSTS;
+        var imageData = {
+            imageable_id: postId,
+            imageable_type: imageType
+        };
+
+        imagesHelper.deleteImageByOptions(imageData, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY});
+            }
+        });
+    };
 };
 
 module.exports = Posts;

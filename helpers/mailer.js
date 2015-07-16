@@ -1,3 +1,4 @@
+var CONSTANTS = require('../constants/constants');
 module.exports = function (app) {
     var _ = require('../public/js/libs/underscore/underscore.js');
     var nodemailer = require("nodemailer");
@@ -10,9 +11,9 @@ module.exports = function (app) {
             password: options.password
         };
         var mailOptions = {
-            from: 'Test',
+            from:  CONSTANTS.MAILER_DEFAULT_FROM + ' <' + CONSTANTS.MAILER_DEFAULT_EMAIL_ADDRESS + '>',
             to: options.email,
-            subject: 'New password',
+            subject: 'Your Elsewhere password has been reset',
             generateTextFromHTML: true,
             html: _.template(fs.readFileSync('public/templates/mailer/forgotPassword.html', encoding = "utf8"))(templateOptions)
         };
@@ -26,9 +27,9 @@ module.exports = function (app) {
             url: process.env.APP_HOST + ':' + process.env.PORT + '/users/confirm?token=' + options.confirm_token
         };
         var mailOptions = {
-            from: 'Test',
+            from:  CONSTANTS.MAILER_DEFAULT_FROM + ' <' + CONSTANTS.MAILER_DEFAULT_EMAIL_ADDRESS + '>',
             to: options.email,
-            subject: 'Confirm email',
+            subject: 'Please confirm your Elsewhere account request',
             generateTextFromHTML: true,
             html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"))(templateOptions)
         };
@@ -38,10 +39,10 @@ module.exports = function (app) {
 
     function deliver(mailOptions, cb) {
         var transport = nodemailer.createTransport(smtpTransport({
-            service: 'gmail',
+            service: process.env.MAIL_SERVICE,
             auth: {
-                user: "gogi.gogishvili",
-                pass: "gogi123456789"
+                user: process.env.MAIL_USERNAME,
+                pass: process.env.MAIL_PASSWORD
             }
         }));
 

@@ -23,8 +23,10 @@ module.exports = function (knex, Promise) {
                     row.string('facebook_id').index();
                     row.integer('role');
 
-                    row.string('lat').notNullable();
-                    row.string('lon').notNullable();
+                    row.string('lat');
+                    row.string('lon');
+
+                    row.boolean('isFirstLogin').default(false);
 
                     row.timestamp('updated_at', true);
                     row.timestamp('created_at', true);
@@ -35,8 +37,8 @@ module.exports = function (knex, Promise) {
                 createTable(TABLES.POSTS, function (row) {
                         row.increments('id').primary();
                         row.integer('author_id').index().notNullable();
-                        row.string('title',100).notNullable();
-                        row.string('body', 3000).notNullable();
+                        row.string('title',100);
+                        row.string('body', 3000);
                         row.string('lat').notNullable();
                         row.string('lon').notNullable();
                         row.integer('city_id').index();
@@ -48,14 +50,14 @@ module.exports = function (knex, Promise) {
                     },
                     function (err) {
                         if (!err) {
-                            knex.raw('ALTER TABLE posts ADD COLUMN location GEOGRAPHY(POINT,4326)')
+                            /*knex.raw('ALTER TABLE posts ADD COLUMN location GEOGRAPHY(POINT,4326)')
                                 .then(function () {
                                      knex.raw('CREATE INDEX posts_location_index ON posts USING GIST (location)')
                                         .exec(cb);
                                 })
                                 .catch(function (err) {
                                     cb(err);
-                                });
+                                });*/
                         } else {
                             cb(err);
                         }
