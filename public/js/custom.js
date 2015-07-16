@@ -43,7 +43,8 @@ define(['constants/responses'], function (RESPONSES) {
         var img = new Image();
         img.onload = function () {
             var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 150, 100); //140 140
+            var kof =  140 / img.width;
+            ctx.drawImage(img, 0, 0, 140, img.height * kof); //140 140
         };
         if (options.url) {
             img.src = options.url;
@@ -99,11 +100,12 @@ define(['constants/responses'], function (RESPONSES) {
                         if (parseInt(sellictions.w) > 0) {
                             var img = $('.image_input img')[0];
                             var canvasCrop = document.createElement('canvas');
-                            canvasCrop.height = 100; //140
-                            canvasCrop.width = 150; //140
+                            canvasCrop.height = sellictions.h; //140
+                            canvasCrop.width = sellictions.w; //140
                             var ctx = canvasCrop.getContext('2d');
                             ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
-                            $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
+
+                            $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg')).css('height', 100);
                             ctx.clearRect(0, 0, canvas.width, canvas.height);
                         }
                     }
