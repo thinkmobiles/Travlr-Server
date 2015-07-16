@@ -43,7 +43,14 @@ define(['constants/responses'], function (RESPONSES) {
         var img = new Image();
         img.onload = function () {
             var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 150, 100); //140 140
+            if (context.model.attributes.body) {
+                ctx.drawImage(img, 0, 0, 150, 100); //140 140
+            } else {
+                ctx.drawImage(img, 0, 0, 140, 140); //140 140
+            }
+
+            //ctx.drawImage(img, 0, 0, 150, 100); //140 140
+            //ctx.drawImage(img, 0, 0, 140, 140); //140 140
         };
         if (options.url) {
             img.src = options.url;
@@ -60,6 +67,15 @@ define(['constants/responses'], function (RESPONSES) {
         var context = (_context) ? _context : this;
         var canvas = context.$('#avatar')[0];
         var inputFile = context.$('#inputImg');
+        var aspectRatio;
+        var flag;
+        if (context.model.attributes.body){
+            aspectRatio = 1.5;
+            flag = 'posts';
+        } else {
+            aspectRatio = 1;
+            flag = 'users';
+        }
         inputFile.prop('accept', "image/*");
         inputFile.on('change', function (e) {
             e.preventDefault();
@@ -81,12 +97,12 @@ define(['constants/responses'], function (RESPONSES) {
                             $(".crop-images-dialog").css({"top": ($(window).height() - h) / 2 + "px"});
                         }
                     });
-
                     $('.image_input img').Jcrop({
                         bgColor: 'white',
                         bgOpacity: .6,
                         setSelect: [0, 0, 100, 100],
-                        aspectRatio: 1.5,
+                        //aspectRatio: 1.5,
+                        aspectRatio: aspectRatio,
                         onSelect: imgSelect,
                         onChange: imgSelect,
                         boxWidth: 650,
@@ -99,8 +115,14 @@ define(['constants/responses'], function (RESPONSES) {
                         if (parseInt(sellictions.w) > 0) {
                             var img = $('.image_input img')[0];
                             var canvasCrop = document.createElement('canvas');
-                            canvasCrop.height = 100; //140
-                            canvasCrop.width = 150; //140
+                            if (flag === 'posts') {
+                                canvasCrop.height = 100; //140
+                                canvasCrop.width = 150; //140
+                            } else if (flag === 'users'){
+                                canvasCrop.height = 140;
+                                canvasCrop.width = 140;
+
+                            }
                             var ctx = canvasCrop.getContext('2d');
                             ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
                             $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
@@ -114,7 +136,7 @@ define(['constants/responses'], function (RESPONSES) {
                         autoOpen: true,
                         resizable: true,
                         title: "Crop Images",
-                        width: "900px",
+                        width: "950px",
                         appendTo: "#dialog-overflow",
                         modal: true,
                         open: function(){
