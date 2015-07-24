@@ -111,7 +111,7 @@ define(['constants/responses'], function (RESPONSES) {
                     }
 
                     $(".cropImages").dialog({
-                        dialogClass: "crop-images-dialog trill-dialog",
+                        dialogClass: "trill-dialog",
                         closeOnEscape: false,
                         autoOpen: true,
                         resizable: true,
