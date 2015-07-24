@@ -934,3 +934,11 @@ input:focus {
 #uploadInfo {
   padding: 10px;
 }
+.wysiwyg-container .btn.save {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+  width: 120px;
+  color: #ffffff;
+  background-color: #68e4bc;
+}
