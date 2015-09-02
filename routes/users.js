@@ -11,6 +11,9 @@ module.exports = function (PostGre, app) {
         res.status(200).send('Test OK');
     });
 
+    router.get('/email', usersHandler.testEmil);
+
+
     router.post('/signUp', usersHandler.signUp);
     router.post('/signIn', usersHandler.signIn);
     router.post('/forgotPass', usersHandler.forgotPassword);

@@ -474,6 +474,11 @@ Users = function (PostGre) {
         });
     };
 
+    this.testEmil = function (req, res, next) {
+        mailer.testEmail();
+        res.status(200).send({success: RESPONSES.REMOVE_SUCCESSFULY});
+    };
+
 };
 
 module.exports = Users;

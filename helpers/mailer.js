@@ -37,6 +37,22 @@ module.exports = function (app) {
         deliver(mailOptions);
     };
 
+    this.testEmail = function (options){
+        var templateOptions = {
+            email: 'ownmass@gmail.com',
+            url: process.env.APP_HOST + ':' + process.env.PORT + '/users/confirm?token='
+        };
+        var mailOptions = {
+            from:  CONSTANTS.MAILER_DEFAULT_FROM + ' <' + CONSTANTS.MAILER_DEFAULT_EMAIL_ADDRESS + '>',
+            to: 'ownmass@gmail.com',
+            subject: 'Please confirm your Elsewhere account request',
+            generateTextFromHTML: true,
+            html: _.template(fs.readFileSync('public/templates/mailer/confirmEmail.html', encoding = "utf8"))(templateOptions)
+        };
+
+        deliver(mailOptions);
+    };
+
     function deliver(mailOptions, cb) {
         var transport = nodemailer.createTransport(smtpTransport({
             service: process.env.MAIL_SERVICE,
