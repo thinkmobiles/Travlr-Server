@@ -60,12 +60,16 @@ Posts = function (PostGre) {
                     qb.leftJoin(TABLES.CITIES, TABLES.CITIES + '.id', TABLES.POSTS + '.city_id');
                     qb.leftJoin(TABLES.USERS, TABLES.POSTS + '.author_id', TABLES.USERS + '.id');
 
+                    if (countryId) {
+                        qb.andWhere('country_id', countryId);
+                    }
+                    
                     if (searchTerm) {
                         searchTerm = searchTerm.toLowerCase();
                         searchTerm = searchTerm.replace("'", "''");
 
                         qb.whereRaw(
-                            "LOWER(title) LIKE '%" + searchTerm + "%' " +
+                            "( LOWER(title) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(first_name) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(last_name) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(concat(first_name || ' ' || last_name)) LIKE '%" + searchTerm + "%' " +
@@ -73,16 +77,12 @@ Posts = function (PostGre) {
                             "OR LOWER(body) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(countries.name) LIKE '%" + searchTerm + "%' " +
                             "OR LOWER(cities.name) LIKE '%" + searchTerm + "%' " +
-                            "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%' "
+                            "OR to_char(posts.created_at, 'DD/MM/YYYY') LIKE '%" + searchTerm + "%'  )"
                         )
                     }
 
-                    if (countryId) {
-                        qb.where('country_id', countryId);
-                    }
-
                     if (userId) {
-                        qb.where('author_id', userId);
+                        qb.andWhere('author_id', userId);
                     }
 
                     if (filters) {

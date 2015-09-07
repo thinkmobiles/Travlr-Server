@@ -10,21 +10,18 @@ module.exports = function (knex, Promise) {
             function (cb) {
                 createTable(TABLES.USERS, function (row) {
                     row.increments('id').primary();
+                    row.string('facebook_id').unique();
                     row.string('first_name', 50);
                     row.string('last_name', 50);
-                    row.string('email', 50).unique();
-                    row.string('change_email', 50);
-                    row.string('password');
-                    row.string('gender', 10);
-                    row.string('confirm_token',75);
-                    row.string('nationality',75);
-                    row.integer('confirm_status');
+                    row.integer('country_id');
+                    row.integer('language_id');
+                    row.integer('gender');
                     row.timestamp('birthday');
                     row.string('facebook_id').index();
                     row.integer('role');
 
-                    row.string('lat');
-                    row.string('lon');
+                    row.string('lat').notNullable();
+                    row.string('lon').notNullable();
 
                     row.boolean('isFirstLogin').default(false);
 

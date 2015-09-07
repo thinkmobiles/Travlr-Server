@@ -38,7 +38,7 @@ var bookshelf = require('bookshelf')(knex);
 var app = express();
 var server = http.createServer(app);
 
-app.configure(function () {
+/*app.configure(function () {
     app.set('port', 8081);
     app.use(express.favicon());
     app.use(express.logger('dev'));
@@ -51,7 +51,7 @@ app.configure(function () {
 
 app.configure('development', function () {
     app.use(express.errorHandler());
-});
+});*/
 
 String.prototype.getBytes = function () {
     var bytes = [];
